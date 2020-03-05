@@ -1,7 +1,10 @@
 .idea/
 .mvn/
+target/
 *.iml
 .classpath
 .project
 .settings
+target
 logs/
+bin/

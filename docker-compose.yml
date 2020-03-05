@@ -1,24 +1,10 @@
-# Bootstraps entire app, frontend, backend and supporting artifacts (persistence, etc)
-# from images built for a production release
-#
-# NOTE: Since I host sources on github I would prefer to use github packages to host docker images, but as of
-# March 2, 2020 github still requires auth to pull from public repos. Screw that. For now, I mirror build to dockerhub.
-#
-# https://github.community/t5/GitHub-Actions/docker-pull-from-public-GitHub-Package-Registry-fail-with-quot/m-p/34983#M2067
+# builds backend docker image and bootstraps backend only
 #
 version: '3.3'
 services:
-  frontend:
-    #image: docker.pkg.github.com/mrazjava/booklink/web-master:latest # see NOTE
-    image: docker.io/mrazjava/booklink-web-master:latest
-    ports:
-      - "8090:80"
-    environment:
-      VUE_APP_BACKEND_HOST: http://localhost:8080
-      VUE_APP_ENV: local
   backend:
-    #image: docker.pkg.github.com/mrazjava/booklink/backend-master:latest # see NOTE
-    image: docker.io/mrazjava/booklink-backend-master:latest
+    build: .
+    image: localhost/backend-master:latest
     ports:
     - "8080:8080"
     environment:
