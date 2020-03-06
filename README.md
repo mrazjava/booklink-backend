@@ -6,4 +6,4 @@ Backend business logic of a booklink service. Exposes operations via REST. Used 
 - Java 11
 - Spring Boot
 - REST / Swagger
-- MySql
+- MySql / Hibernate
