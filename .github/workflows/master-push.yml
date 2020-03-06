@@ -13,7 +13,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Maven Master Build
+    name: Test and Build
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v1
@@ -22,59 +22,59 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Use JDK 11
+      - name: setup jdk 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Build JAR
+      - name: test, then build jar
         id: mvn-jar
         run: |
           mvn -B clean package
-      - name: Upload JAR artifact
+      - name: upload jar artifact
         uses: actions/upload-artifact@v1
         with:
           name: build
           path: target/booklink-backend.jar
-      - name: Upload Dockerfile artifact
+      - name: upload dockerfile artifact
         uses: actions/upload-artifact@v1
         with:
           name: build
           path: Dockerfile
-      - name: Upload AWS taskdef artifact
+      - name: upload aws deployment artifact
         uses: actions/upload-artifact@v1
         with:
           name: build
           path: .aws/pre-release.json
   publish:
     runs-on: ubuntu-latest
-    name: Prepare Docker Image
+    name: Package and Deploy
     needs: build
     steps:
-      - name: Download Maven build artifact
+      - name: download build artifacts
         uses: actions/download-artifact@v1
         with:
           name: build
-      - name: Build Docker Image
+      - name: assemble docker image
         id: dockerize
         run: |
           mkdir -p target
           mv build/booklink-backend.jar target/
           mv build/Dockerfile .
           docker build -t $DOCKER_IMAGE .
-      - name: Push image to dockerhub
+      - name: push image to dockerhub
         run: |
           docker login -u ${{ secrets.DOCKERHUB_LOGIN }} -p ${{ secrets.DOCKERHUB_PASSWORD }} docker.io
           docker push $DOCKER_IMAGE:latest
-      - name: Configure AWS credentials
+      - name: configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1.1.2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
-      - name: Login to Amazon ECR
+      - name: login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1.0.3
-      - name: Push image to Amazon ECR
+      - name: push image to Amazon ECR
         id: push-image-to-aws
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -84,14 +84,14 @@ jobs:
           docker tag $DOCKER_IMAGE $ECR_REGISTRY/$ECR_REPOSITORY
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY"
-      - name: Fill in the new image ID in the Amazon ECS task definition
+      - name: fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1.0.2
         with:
           task-definition: build/pre-release.json
           container-name: booklink-backend-contr
           image: ${{ steps.push-image-to-aws.outputs.image }}
-      - name: Deploy Amazon ECS task definition
+      - name: deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1.0.3
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
