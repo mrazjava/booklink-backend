@@ -8,8 +8,8 @@ on:
       - README.md
       - .aws/README.md
       - scripts/README.md
-asdfasdf
-easdfnv:
+
+env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend-master
 
 jobs:
