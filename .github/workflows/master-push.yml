@@ -3,9 +3,9 @@ name: pre-release
 on:
   push:
     branches:
-      - 'master'
+      - master
     paths-ignore:
-      - '**/*.md'
+      - README.md
 
 env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend-master
