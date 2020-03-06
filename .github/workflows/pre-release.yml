@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Test and Build
     steps:
-      - uses: actions/checkout@v2dddddddddddddddddd
+      - uses: actions/checkout@v2
       - uses: actions/cache@v1
         with:
           path: ~/.m2/repository
