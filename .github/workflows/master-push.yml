@@ -14,7 +14,7 @@ env:
 
 jobs:
   build:
-    if: !startsWith(github.event.commits[0].message, '[skip-ci]')
+    if: github.event_name == 'push' && contains(toJson(github.event.commits), '[skip-ci]') == false
     runs-on: ubuntu-latest
     name: Test and Build
     steps:
