@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: build
-          path: target/Dockerfile
+          path: Dockerfile
       - name: Upload AWS taskdef artifact
         uses: actions/upload-artifact@v1
         with:
