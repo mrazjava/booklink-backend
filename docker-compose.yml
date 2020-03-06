@@ -1,5 +1,5 @@
 # builds backend docker image and bootstraps it with all the dependencies
-#
+##
 version: '3.3'
 services:
   backend:
