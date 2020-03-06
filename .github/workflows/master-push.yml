@@ -1,13 +1,15 @@
-name: backend-master
-#-$(echo `date '+%Y%m%d%H%M%S'`)
+name: pre-release
+
 on:
   push:
     branches:
-      - master
-    tags:
-      - v1
-    paths:
-      - 'booklink-backend/**'
+      - 'master'
+    paths-ignore:
+      - '**/*.md'
+
+env:
+  DOCKER_IMAGE: docker.io/mrazjava/booklink-backend-master
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,53 +26,45 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Maven Package
-        working-directory: booklink-backend
-        run: mvn -B clean package --file pom.xml
-      - name: Upload Maven build artifact
+      - name: Build JAR
+        id: mvn-jar
+        run: |
+          mvn -B clean package
+      - name: Upload JAR artifact
         uses: actions/upload-artifact@v1
         with:
-          name: artifact
-          path: booklink-backend/target/booklink-backend.jar
+          name: build
+          path: target/booklink-backend.jar
+      - name: Upload Dockerfile artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: target/Dockerfile
+      - name: Upload AWS taskdef artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: .aws/pre-release.json
   publish:
     runs-on: ubuntu-latest
     name: Prepare Docker Image
     needs: build
     steps:
-      - uses: actions/checkout@v2
       - name: Download Maven build artifact
         uses: actions/download-artifact@v1
         with:
-          name: artifact
+          name: build
       - name: Build Docker Image
         id: dockerize
-        working-directory: booklink-backend
         run: |
           mkdir -p target
-          mv ../artifact/booklink-backend.jar target/
-          docker build -t docker.pkg.github.com/mrazjava/booklink/backend-master .
-          docker tag docker.pkg.github.com/mrazjava/booklink/backend-master docker.io/mrazjava/booklink-backend-master
-      - name: Push image to Github Packages
-        run: |
-          docker login -u mrazjava -p ${{ secrets.GITHUB_PACKAGES }} docker.pkg.github.com
-          docker push docker.pkg.github.com/mrazjava/booklink/backend-master
+          mv build/booklink-backend.jar target/
+          mv build/Dockerfile .
+          docker build -t $DOCKER_IMAGE .
       - name: Push image to dockerhub
         run: |
           docker login -u ${{ secrets.DOCKERHUB_LOGIN }} -p ${{ secrets.DOCKERHUB_PASSWORD }} docker.io
-          docker push docker.io/mrazjava/booklink-backend-master
-  deploy:
-    runs-on: ubuntu-latest
-    name: Deploy to AWS
-    needs: publish
-    steps:
-      - name: Pull latest image from Github Packages
-        id: pull-image-from-github
-        run: |
-          # pull image we just built from github packages
-          docker login -u mrazjava -p ${{ secrets.GITHUB_PACKAGES }} docker.pkg.github.com
-          docker pull docker.pkg.github.com/mrazjava/booklink/backend-master
-      - name: Checkout pipeline commit
-        uses: actions/checkout@v2
+          docker push $DOCKER_IMAGE:latest
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1.1.2
         with:
@@ -87,14 +81,14 @@ jobs:
           ECR_REPOSITORY: booklink-backend
         run: |
           # Push image to ECR so that it can be deployed to ECS.
-          docker tag docker.pkg.github.com/mrazjava/booklink/backend-master $ECR_REGISTRY/$ECR_REPOSITORY
+          docker tag $DOCKER_IMAGE $ECR_REGISTRY/$ECR_REPOSITORY
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY"
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1.0.2
         with:
-          task-definition: .aws/backend-pre.json
+          task-definition: build/pre-release.json
           container-name: booklink-backend-contr
           image: ${{ steps.push-image-to-aws.outputs.image }}
       - name: Deploy Amazon ECS task definition
@@ -104,10 +98,3 @@ jobs:
           service: booklink-backend-svc
           cluster: booklink-ec2lx-cluster
           wait-for-service-stability: false
-
-# enable ssh session to debug actions runner
-# https://github.com/marketplace/actions/debugging-with-tmate
-#    steps:
-#      - uses: actions/checkout@v1
-#      - name: Setup tmate session
-#        uses: mxschmitt/action-tmate@v1
