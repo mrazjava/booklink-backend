@@ -8,6 +8,7 @@ on:
       - README.md
       - .aws/README.md
       - scripts/README.md
+      - docker-compose.yml
 
 env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend-master

@@ -1,6 +1,3 @@
-booklink:
-  security:
-    cors-allow-origins: http://localhost:808*
 logging:
   pattern:
     console: "%d{HH:mm:ss.SSS} [%M] %-5level %logger{36} - %msg%n"
