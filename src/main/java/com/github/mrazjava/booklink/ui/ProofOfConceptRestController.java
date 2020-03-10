@@ -1,6 +1,6 @@
 package com.github.mrazjava.booklink.ui;
 
-import com.github.mrazjava.booklink.service.BookService;
+import com.github.mrazjava.booklink.service.ProofOfConceptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -19,24 +19,25 @@ import javax.ws.rs.Produces;
  * @since 0.1.0
  */
 @Api(
-        tags = {"Books"}
+        description = "Experiments for initial deployment setup and other new concepts.",
+        tags = {"Proof of Concept"}
 )
 @RestController
-@RequestMapping("rest/v1/book")
-public class BookRestController {
+@RequestMapping("rest/v1/poc")
+public class ProofOfConceptRestController {
 
     @Inject
     private Logger log;
 
     @Inject
-    private BookService bookService;
+    private ProofOfConceptService pocService;
 
 
     @ApiOperation(
-            value = "Book count",
+            value = "Randomized value over the entire domain of java.lang.Integer",
             consumes = "application/json"
     )
-    @GetMapping("count-all")
+    @GetMapping("random-count")
     @Produces("application/json")
     @ApiResponses(
             {
@@ -47,6 +48,6 @@ public class BookRestController {
             }
     )
     public ResponseEntity<Integer> countAll() {
-        return new ResponseEntity<>(bookService.totalCount(), HttpStatus.OK);
+        return new ResponseEntity<>(pocService.randomCount(), HttpStatus.OK);
     }
 }

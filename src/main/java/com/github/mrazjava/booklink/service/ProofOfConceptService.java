@@ -10,12 +10,12 @@ import java.util.Random;
  * @since 0.1.0
  */
 @Component
-public class BookService {
+public class ProofOfConceptService {
 
     @Inject
     private Logger log;
 
-    public int totalCount() {
+    public int randomCount() {
         int count = new Random().nextInt();
         log.debug("computed count: {}", count);
         return count;
