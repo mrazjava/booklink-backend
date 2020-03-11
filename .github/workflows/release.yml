@@ -3,14 +3,14 @@ name: release
 on:
   push:
     tags:
-      - '0.*'
-      - '1.*'
+      - '0.*' # we are on 0.x major release (alpha) so no other releases allowed
 
 env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend-master
 
 jobs:
   build:
+    if: endsWith(github.ref, 'master')
     runs-on: ubuntu-latest
     name: Test and Build
     steps:
