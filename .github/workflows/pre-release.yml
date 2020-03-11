@@ -6,6 +6,8 @@ on:
       - master
     paths:
       - 'src/*'
+      - 'pom.xml'
+      - 'Dockerfile'
 
 env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend-master
