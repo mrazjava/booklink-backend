@@ -1,0 +1,88 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 0.*
+      - 1.*
+
+env:
+  DOCKER_IMAGE: docker.io/mrazjava/booklink-backend-master
+
+jobs:
+  build:
+    if: github.event.base_ref == 'refs/head/master'
+    runs-on: ubuntu-latest
+    name: Test and Build
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+      - name: Evaluate dependency cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: use JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: build JAR
+        id: mvn-pkg
+        run: |
+          mvn -B clean package
+      - name: upload jar artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: release-build
+          path: target/booklink-backend.jar
+      - name: upload dockerfile artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: release-build
+          path: Dockerfile
+  publish:
+    runs-on: ubuntu-latest
+    name: Package and Release
+    needs: build
+    steps:
+      - name: download build artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: release-build
+      - name: extract git-tagged version
+        id: extract-tagged-version
+        run: |
+          echo ::set-output name=tag-version::${GITHUB_REF/refs\/tags\//}
+        env:
+          DOCKER_IMG_TAG: ${{ steps.extract-tagged-version.outputs.tag-version }}
+      - name: assemble docker image
+        id: dockerize
+        run: |
+          mkdir -p target
+          mv release-build/booklink-backend.jar target/
+          mv release-build/Dockerfile .
+          docker build -t $DOCKER_IMAGE:$DOCKER_IMG_TAG .
+      - name: push image to dockerhub
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_LOGIN }} -p ${{ secrets.DOCKERHUB_PASSWORD }} docker.io
+          docker push $DOCKER_IMAGE:$DOCKER_IMG_TAG
+      - name: configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1.1.2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+      - name: login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1.0.3
+      - name: push image to Amazon ECR
+        id: push-image-to-aws
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: booklink-backend
+        run: |
+          # Push image to ECR so that it can be deployed to ECS.
+          docker tag $DOCKER_IMAGE:$DOCKER_IMG_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$DOCKER_IMG_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$DOCKER_IMG_TAG
