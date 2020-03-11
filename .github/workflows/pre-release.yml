@@ -6,8 +6,6 @@ on:
       - master
     paths:
       - 'src/*'
-    paths-ignore:
-      - README.md
 
 env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend-master
