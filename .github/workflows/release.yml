@@ -53,10 +53,7 @@ jobs:
       - name: extract git-tagged version
         id: extract-tagged-version
         run: |
-          echo "::set-output name=tag-version::${GITHUB_REF/refs\/tags\//}"
-      - name: bind tag version to env
-        env:
-          DOCKER_IMG_TAG: ${{ steps.extract-tagged-version.outputs.tag-version }}
+          echo "::set-env name=DOCKER_IMG_TAG::${GITHUB_REF/refs\/tags\//}"
       - name: assemble docker image
         id: dockerize
         run: |
