@@ -3,8 +3,8 @@ name: release
 on:
   push:
     tags:
-      - 0.*
-      - 1.*
+      - '0.*'
+      - '1.*'
 
 env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend-master
