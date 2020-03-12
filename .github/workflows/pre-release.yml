@@ -14,6 +14,7 @@ on:
 env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend
   DOCKER_IMG_TAG: master
+  ARTIFACT_DIR: build
 
 jobs:
   build:
@@ -39,17 +40,17 @@ jobs:
       - name: upload jar artifact
         uses: actions/upload-artifact@v1
         with:
-          name: build
+          name: $ARTIFACT_DIR
           path: target/booklink-backend.jar
       - name: upload dockerfile artifact
         uses: actions/upload-artifact@v1
         with:
-          name: build
+          name: $ARTIFACT_DIR
           path: Dockerfile
       - name: upload aws deployment artifact
         uses: actions/upload-artifact@v1
         with:
-          name: build
+          name: $ARTIFACT_DIR
           path: .aws/pre-release.json
   publish:
     runs-on: ubuntu-latest
@@ -59,13 +60,13 @@ jobs:
       - name: download build artifacts
         uses: actions/download-artifact@v1
         with:
-          name: build
+          name: $ARTIFACT_DIR
       - name: assemble docker image
         id: dockerize
         run: |
           mkdir -p target
-          mv build/booklink-backend.jar target/
-          mv build/Dockerfile .
+          mv $ARTIFACT_DIR/booklink-backend.jar target/
+          mv $ARTIFACT_DIR/Dockerfile .
           docker build -t $DOCKER_IMAGE:$DOCKER_IMG_TAG .
       - name: push image to dockerhub
         run: |
@@ -94,7 +95,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1.0.2
         with:
-          task-definition: build/pre-release.json
+          task-definition: $ARTIFACT_DIR/pre-release.json
           container-name: booklink-backend-contr
           image: ${{ steps.push-image-to-aws.outputs.image }}
       - name: deploy Amazon ECS task definition
