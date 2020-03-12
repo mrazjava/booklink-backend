@@ -40,17 +40,17 @@ jobs:
       - name: upload jar artifact
         uses: actions/upload-artifact@v1
         with:
-          name: {{ $ARTIFACT_DIR }}
+          name: ${{ env.ARTIFACT_DIR }}
           path: target/booklink-backend.jar
       - name: upload dockerfile artifact
         uses: actions/upload-artifact@v1
         with:
-          name: {{ $ARTIFACT_DIR }}
+          name: ${{ env.ARTIFACT_DIR }}
           path: Dockerfile
       - name: upload aws deployment artifact
         uses: actions/upload-artifact@v1
         with:
-          name: {{ $ARTIFACT_DIR }}
+          name: ${{ env.ARTIFACT_DIR }}
           path: .aws/pre-release.json
   publish:
     runs-on: ubuntu-latest
@@ -60,7 +60,7 @@ jobs:
       - name: download build artifacts
         uses: actions/download-artifact@v1
         with:
-          name: {{ $ARTIFACT_DIR }}
+          name: ${{ env.ARTIFACT_DIR }}
       - name: assemble docker image
         id: dockerize
         run: |
