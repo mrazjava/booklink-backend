@@ -6,6 +6,7 @@ on:
 
 env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend
+  ARTIFACT_DIR: release_build
 
 jobs:
   build:
@@ -32,12 +33,12 @@ jobs:
       - name: upload jar artifact
         uses: actions/upload-artifact@v1
         with:
-          name: release-build
+          name: ${{ env.ARTIFACT_DIR }}
           path: target/booklink-backend.jar
       - name: upload dockerfile artifact
         uses: actions/upload-artifact@v1
         with:
-          name: release-build
+          name: ${{ env.ARTIFACT_DIR }}
           path: Dockerfile
   publish:
     runs-on: ubuntu-latest
@@ -47,7 +48,7 @@ jobs:
       - name: download build artifacts
         uses: actions/download-artifact@v1
         with:
-          name: release-build
+          name: ${{ env.ARTIFACT_DIR }}
       - name: extract git-tagged version
         id: extract-tagged-version
         run: |
@@ -56,8 +57,8 @@ jobs:
         id: dockerize
         run: |
           mkdir -p target
-          mv release-build/booklink-backend.jar target/
-          mv release-build/Dockerfile .
+          mv $ARTIFACT_DIR/booklink-backend.jar target/
+          mv $ARTIFACT_DIR/Dockerfile .
           docker build -t $DOCKER_IMAGE:$DOCKER_IMG_TAG .
       - name: push image to dockerhub
         run: |
