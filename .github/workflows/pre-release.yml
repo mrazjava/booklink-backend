@@ -95,7 +95,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1.0.2
         with:
-          task-definition: $ARTIFACT_DIR/pre-release.json
+          task-definition: ${{ env.ARTIFACT_DIR }}/pre-release.json
           container-name: booklink-backend-contr
           image: ${{ steps.push-image-to-aws.outputs.image }}
       - name: deploy Amazon ECS task definition
