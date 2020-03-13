@@ -13,7 +13,7 @@ on:
 env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend
   DOCKER_IMG_TAG: develop
-  ARTIFACT_DIR: snapshot_${{ env.GITHUB_SHA }}
+  ARTIFACT_DIR: snapshot_$GITHUB_SHA
 
 jobs:
   build:
