@@ -18,7 +18,9 @@ mvn clean spring-boot:run
 Backend will run on port `8080`. PostgreSQL will run on port `5432`. PgAdmin4 will run on port `8100`.
 
 ## pgAdmin4
-To log into `pgAdmin4` enter the following credentials:
+Access to `pgAdmin4` is not required to try the backend locally, or even to develop some basic functions. However, 
+sooner or later administering the database during the development will become a necessity. To log into `pgAdmin4` 
+enter the following credentials:
 
 * Login e-mail address: value of `PGADMIN_DEFAULT_EMAIL` defined in `docker-compose.yml`
 * Login password: value of `PGADMIN_DEFAULT_PASSWORD` defined in `docker-compose.yml`

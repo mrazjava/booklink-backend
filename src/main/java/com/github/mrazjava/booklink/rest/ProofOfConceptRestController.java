@@ -1,5 +1,6 @@
-package com.github.mrazjava.booklink.ui;
+package com.github.mrazjava.booklink.rest;
 
+import com.github.mrazjava.booklink.model.DbInfoResponse;
 import com.github.mrazjava.booklink.service.ProofOfConceptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.ws.rs.Produces;
+import java.sql.SQLException;
 
 /**
  * @since 0.1.0
@@ -49,5 +51,23 @@ public class ProofOfConceptRestController {
     )
     public ResponseEntity<Integer> countAll() {
         return new ResponseEntity<>(pocService.randomCount(), HttpStatus.OK);
+    }
+
+    @ApiOperation(
+            value = "Database info",
+            consumes = "application/json"
+    )
+    @GetMapping("db-info")
+    @Produces("application/json")
+    @ApiResponses(
+            {
+                    @ApiResponse(
+                            message = "ok",
+                            code = 200
+                    )
+            }
+    )
+    public ResponseEntity<DbInfoResponse> dbInfo() throws SQLException {
+        return new ResponseEntity<>(pocService.dbInfo(), HttpStatus.OK);
     }
 }
