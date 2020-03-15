@@ -29,9 +29,6 @@ public class CustomBuildInfoContributor extends BuildInfoContributor {
     @Value("${spring.profiles.active}")
     private String runningEnvironment;
 
-    @Inject
-    private AllowedCorsEntries corsConfig;
-
     public CustomBuildInfoContributor(BuildProperties buildProperties) {
         super(buildProperties);
     }
@@ -56,7 +53,7 @@ public class CustomBuildInfoContributor extends BuildInfoContributor {
         replaceValue(content, "time", dateFormat.format(Date.from(buildProps.getTime())));
         content.put("maven", maven);
         content.put("environment", runningEnvironment);
-        content.put("cors-allow-origins", corsConfig.getAllowedEntries());
+
         content.remove("name");
         content.remove(KEY_ARTIFACT);
         content.remove(KEY_GROUP);

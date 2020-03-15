@@ -9,6 +9,7 @@ spring:
     hibernate:
       ddl-auto: ${APP_BE_HIBERNATE_DDL_AUTO:create}
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
   datasource:
     url: ${APP_BE_DB_URL:jdbc:postgresql://localhost:5432/booklink}
     username: ${APP_BE_DB_USERNAME:bookworm}

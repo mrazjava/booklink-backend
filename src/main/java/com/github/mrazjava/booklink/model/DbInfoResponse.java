@@ -20,6 +20,8 @@ public class DbInfoResponse {
 
     private String connectedUsername;
 
+    private String initError;
+
     public String getDriverVersion() {
         return driverVersion;
     }
@@ -58,5 +60,13 @@ public class DbInfoResponse {
 
     public void setConnectedUsername(String connectedUsername) {
         this.connectedUsername = connectedUsername;
+    }
+
+    public String getInitError() {
+        return initError;
+    }
+
+    public void setInitError(String initError) {
+        this.initError = initError;
     }
 }
