@@ -1,4 +1,4 @@
-package com.github.mrazjava.booklink.ui;
+package com.github.mrazjava.booklink.rest;
 
 import com.github.mrazjava.booklink.service.ProofOfConceptService;
 import io.swagger.annotations.Api;

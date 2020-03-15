@@ -1,6 +1,5 @@
 package com.github.mrazjava.booklink.actuator;
 
-import com.github.mrazjava.booklink.config.AllowedCorsEntries;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.info.BuildInfoContributor;
 import org.springframework.boot.actuate.info.Info;
@@ -8,7 +7,6 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -28,9 +26,6 @@ public class CustomBuildInfoContributor extends BuildInfoContributor {
 
     @Value("${spring.profiles.active}")
     private String runningEnvironment;
-
-    @Inject
-    private AllowedCorsEntries corsConfig;
 
     public CustomBuildInfoContributor(BuildProperties buildProperties) {
         super(buildProperties);
@@ -56,7 +51,7 @@ public class CustomBuildInfoContributor extends BuildInfoContributor {
         replaceValue(content, "time", dateFormat.format(Date.from(buildProps.getTime())));
         content.put("maven", maven);
         content.put("environment", runningEnvironment);
-        content.put("cors-allow-origins", corsConfig.getAllowedEntries());
+
         content.remove("name");
         content.remove(KEY_ARTIFACT);
         content.remove(KEY_GROUP);

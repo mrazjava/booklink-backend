@@ -5,6 +5,16 @@ spring:
   cache:
     jcache:
       config: classpath:ehcache.xml
+  jpa:
+    hibernate:
+      ddl-auto: ${APP_BE_HIBERNATE_DDL_AUTO:create}
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+  datasource:
+    url: ${APP_BE_DB_URL:jdbc:postgresql://localhost:5432/booklink}
+    username: ${APP_BE_DB_USERNAME:bookworm}
+    password: ${APP_BE_DB_PASSWORD:BL}
+
 info:
   app:
     home-page: ${APP_BASE_URL:http://localhost:8080}/swagger-ui.html
