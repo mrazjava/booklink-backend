@@ -15,10 +15,12 @@ Backend business logic of a booklink service. Exposes operations via REST. Used 
 docker-compose up
 mvn clean spring-boot:run
 ```
-Backend will run on port `8080`. PostgreSQL will run on port `5432`. PgAdmin4 will run on port `8100`. See 
-`docker-compose.yml` for login details to pgAdmin.
+Backend will run on port `8080`. PostgreSQL will run on port `5432`. PgAdmin4 will run on port `8100`.
 
 ## pgAdmin4
+To log into `pgAdmin4` enter the following credentials:
+* Login e-mail address: value of `PGADMIN_DEFAULT_EMAIL` defined in `docker-compose.yml`
+* Login password: value of `PGADMIN_DEFAULT_PASSWORD` defined in `docker-compose.yml`
 Upon a first login to `pgAdmin4` server connection to docker container running postgres must be established. Right 
 click `Servers`, choose `Create->Server...`:
 * Tab: `General`
