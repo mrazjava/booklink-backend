@@ -7,12 +7,12 @@ spring:
       config: classpath:ehcache.xml
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: ${APP_BE_HIBERNATE_DDL_AUTO:create}
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://localhost:5432/booklink
-    username: bookworm
-    password: BL
+    url: ${APP_BE_DB_URL:jdbc:postgresql://localhost:5432/booklink}
+    username: ${APP_BE_DB_USERNAME:bookworm}
+    password: ${APP_BE_DB_PASSWORD:BL}
 
 info:
   app:
