@@ -27,10 +27,10 @@ Upon a first login to `pgAdmin4` server connection to docker container running p
 click `Servers`, choose `Create->Server...`:
 
 * Tab: `General`
- - Field: `Name` set to `docker`
+    - Field: `Name` set to `docker`
 * Tab: `Connection`
- - Field: `Host` set to `pg`
- - Field: `Username` set to value of `POSTGRES_USER` defined in `docker-compose.yml`
- - Field: `Password` set to value of `POSTGRES_PASSWORD` defined in `docker-compose.yml`
+    - Field: `Host` set to `pg`
+    - Field: `Username` set to value of `POSTGRES_USER` defined in `docker-compose.yml`
+    - Field: `Password` set to value of `POSTGRES_PASSWORD` defined in `docker-compose.yml`
 
 Leave all other fields as set, click `Save`. Connection to database should be established.
