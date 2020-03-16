@@ -17,6 +17,19 @@ mvn clean spring-boot:run
 ```
 Backend will run on port `8080`. PostgreSQL will run on port `5432`. PgAdmin4 will run on port `8100`.
 
+## Local Docker Image
+Booklink [sandbox](https://github.com/mrazjava/booklink#sandbox) can run off a local image too. This is helpful when testing new feature prior merging to `develop` 
+ensuring that staging environment will not be negatively impacted by things like database schema changes or other high 
+impact refactoring efforts. In other words, running local image via sandbox is like simulating a staging environment; 
+one can make sure that all automated upgrade scripts migrate correctly to central `develop` branch and that all tests are passing.
+
+We build a local image just like any other image, except we build it off a custom branch and tag it as `local`:
+```
+mvn clean package
+docker build -t mrazjava/booklink-backend:local .
+```
+See sandbox for details on how to run off a local image.
+
 ## pgAdmin4
 Access to `pgAdmin4` is not required to try the backend locally, or even to develop some basic functions. However, 
 sooner or later administering the database during the development will become a necessity. To log into `pgAdmin4` 
