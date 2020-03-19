@@ -19,5 +19,6 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: pg@docker # used as a login id
       PGADMIN_DEFAULT_PASSWORD: admin
+      GUNICORN_ACCESS_LOGFILE: /tmp/pgadmin4.log
     ports:
       - 127.0.0.1:5500:80
