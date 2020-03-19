@@ -27,5 +27,5 @@ that persistence layer runs off docker engine so for pgAdmin4 sees the database 
 
 ## Sandbox
 It is possible to run against [sandbox](https://github.com/mrazjava/booklink#sandbox) local database, in which case 
-`APP_BE_DB_URL` must be overriden.  It's also desirable to compare sandbox staging database to actively developed 
+`APP_BE_DB_URL` must be overriden.  It's also helpful to compare sandbox staging database to actively developed 
 (latest) database version in order to compare schemas, etc.
