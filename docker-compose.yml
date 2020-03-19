@@ -20,4 +20,4 @@ services:
       PGADMIN_DEFAULT_EMAIL: pg@docker # used as a login id
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - 127.0.0.1:8100:80
+      - 127.0.0.1:5500:80
