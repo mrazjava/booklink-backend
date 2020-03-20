@@ -6,9 +6,10 @@ spring:
     jcache:
       config: classpath:ehcache.xml
   jpa:
+    generate-ddl: ${APP_BE_JPA_GEN_DDL:false}
     hibernate:
       ddl-auto: ${APP_BE_HIBERNATE_DDL_AUTO:create}
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     open-in-view: false
   datasource:
     url: ${APP_BE_DB_URL:jdbc:postgresql://localhost:5432/booklink}

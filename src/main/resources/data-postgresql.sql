@@ -1,0 +1,1 @@
+-- used only when spring.jpa.generate-ddl=true (sandbox stg,pre,live)
