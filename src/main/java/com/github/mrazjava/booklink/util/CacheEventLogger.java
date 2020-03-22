@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Adam Zimowski (<a href="mailto:adam.zimowski@freenetdigital.com">azimowski</a>)
+ * @author AZ (mrazjava)
  * @since 0.1.0
  */
 public class CacheEventLogger implements CacheEventListener<Object, Object> {
