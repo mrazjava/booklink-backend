@@ -1,12 +1,10 @@
 package com.github.mrazjava.booklink.actuator;
 
-import com.github.mrazjava.booklink.model.DbInfoResponse;
+import com.github.mrazjava.booklink.rest.model.DbInfoResponse;
 import com.github.mrazjava.booklink.service.DbMetaInfoService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.actuate.info.BuildInfoContributor;
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -14,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @author AZ (mrazjava)
  * @since 0.2.0
  */
 @Component

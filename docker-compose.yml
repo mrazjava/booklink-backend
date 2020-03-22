@@ -15,7 +15,6 @@ services:
       - 127.0.0.1:5432:5432
   admin:
     image: dpage/pgadmin4 # https://hub.docker.com/r/dpage/pgadmin4/
-    restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: pg@docker # used as a login id
       PGADMIN_DEFAULT_PASSWORD: admin

@@ -1,12 +1,14 @@
 package com.github.mrazjava.booklink.persistence.model;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 
 /**
  * @since 0.2.0
  */
 @Entity(name = "bl_role")
-public class Role {
+public class RoleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

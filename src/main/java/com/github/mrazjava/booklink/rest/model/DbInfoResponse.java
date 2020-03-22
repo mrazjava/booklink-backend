@@ -1,11 +1,7 @@
-package com.github.mrazjava.booklink.model;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+package com.github.mrazjava.booklink.rest.model;
 
 /**
- * @author mrazjava
+ * @author AZ (mrazjava)
  * @since 0.2.0
  */
 public class DbInfoResponse {
