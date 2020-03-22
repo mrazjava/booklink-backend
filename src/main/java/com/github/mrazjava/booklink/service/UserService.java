@@ -6,6 +6,7 @@ import com.github.mrazjava.booklink.persistence.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -27,6 +28,9 @@ public class UserService {
     @Inject
     private UserRepository userRepository;
 
+    @Inject
+    private PasswordEncoder passwordEncoder;
+
     private final Pattern uuidPattern = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$");
 
 
@@ -38,16 +42,16 @@ public class UserService {
         if(userResult.isPresent()) {
             UserEntity user = userResult.get();
             log.debug("user exists:\n{}", user);
-            log.trace("auth pwd: {}, user pwd: {}", password, user.getPassword());
-            if(user.getPassword().equals(password)) {
+            log.trace("provided pwd: {}, stored pwd: {}", password, user.getPassword());
+            if(passwordEncoder.matches(password, user.getPassword())) {
                 return user;
             }
             else {
-                error = "pwd mismatch";
+                error = String.format("pwd mismatch: [%s]", password);
             }
         }
         else {
-            error = String.format("user not found; email=%s, pwd=%s", email, password);
+            error = String.format("user not found; email=%s", email);
         }
 
         if(error == null) {
