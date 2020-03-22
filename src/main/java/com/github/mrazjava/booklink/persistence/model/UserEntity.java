@@ -20,13 +20,13 @@ public class UserEntity {
     @Column(unique = true)
     private String email;
 
-    @Column
+    @Column(name = "pwd")
     private String password;
 
-    @Column(unique = true)
+    @Column(name = "auth_token", unique = true)
     private String token;
 
-    @Column(name = "token_expiry")
+    @Column(name = "auth_token_expiry")
     private OffsetDateTime tokenExpiry;
 
     @Column(name = "first_name")
