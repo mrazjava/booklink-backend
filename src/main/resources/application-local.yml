@@ -2,3 +2,6 @@ booklink:
   security:
     cors-allow-origins:
       - http://localhost:8090
+logging:
+  pattern:
+    console: '%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr([%30.30M]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n'
