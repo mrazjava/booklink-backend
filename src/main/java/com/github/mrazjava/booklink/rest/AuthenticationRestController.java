@@ -4,14 +4,14 @@ import com.github.mrazjava.booklink.config.SwaggerConfiguration;
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
 import com.github.mrazjava.booklink.rest.model.ErrorResponse;
 import com.github.mrazjava.booklink.rest.model.LoginRequest;
-import com.github.mrazjava.booklink.rest.model.LoginResponse;
 import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
 import com.github.mrazjava.booklink.service.UserService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,10 +36,10 @@ public class AuthenticationRestController {
     private Logger log;
 
     @Inject
-    private UserService userService;
+    private AuthenticationManager authenticationManager;
 
-    @Value("${spring.profiles.active}")
-    private String environment;
+    @Inject
+    private UserService userService;
 
 
     @ApiOperation(
@@ -52,8 +52,7 @@ public class AuthenticationRestController {
             {
                     @ApiResponse(
                             message = "successful login",
-                            code = 200,
-                            response = LoginResponse.class
+                            code = 200
                     ),
                     @ApiResponse(
                             message = "invalid login",
@@ -68,14 +67,20 @@ public class AuthenticationRestController {
             value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
             allowEmptyValue = true
     ))
-    public ResponseEntity<LoginResponse> login(
+    public ResponseEntity<String> login(
             @RequestBody(required = true) LoginRequest loginRequest, HttpServletRequest request) {
 
         log.debug("login request: {}", loginRequest.getEmail());
 
-        UserEntity user = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
-        user = userService.ensureValidToken(user);
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
 
-        return new ResponseEntity(new LoginResponse(user), HttpStatus.OK);
+        UserEntity userEntity = userService.ensureValidToken(authentication.getPrincipal());
+
+        return ResponseEntity.ok(userEntity.getToken());
     }
 }

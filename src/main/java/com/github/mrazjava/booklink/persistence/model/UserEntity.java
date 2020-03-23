@@ -1,17 +1,26 @@
 package com.github.mrazjava.booklink.persistence.model;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @since 0.2.0
  */
 @Entity(name = "bl_user")
-public class UserEntity {
+public class UserEntity implements UserDetails {
+
+    static final int STATUS_ACTIVE = 1;
+
+    static final int STATUS_LOCKED = 2;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,16 +32,19 @@ public class UserEntity {
     @Column(name = "pwd")
     private String password;
 
+    @Column(name = "last_login_on")
+    private OffsetDateTime lastLoginOn;
+
     @Column(name = "auth_token", unique = true)
     private String token;
 
     @Column(name = "auth_token_expiry")
     private OffsetDateTime tokenExpiry;
 
-    @Column(name = "first_name")
+    @Column(name = "f_name")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "l_name")
     private String lastName;
 
     @Column
@@ -74,6 +86,44 @@ public class UserEntity {
         this.email = email;
     }
 
+    @Transient
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(String.format("ROLE_%s", role.getName())))
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Transient
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Transient
+    @Override
+    public boolean isAccountNonExpired() {
+        return OffsetDateTime.now().isBefore(getTokenExpiry());
+    }
+
+    @Transient
+    @Override
+    public boolean isAccountNonLocked() {
+        return getActive() != STATUS_LOCKED;
+    }
+
+    @Transient
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return getActive() == STATUS_ACTIVE;
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
@@ -96,6 +146,14 @@ public class UserEntity {
 
     public void setTokenExpiry(OffsetDateTime tokenExpiry) {
         this.tokenExpiry = tokenExpiry;
+    }
+
+    public OffsetDateTime getLastLoginOn() {
+        return lastLoginOn;
+    }
+
+    public void setLastLoginOn(OffsetDateTime lastLoginOn) {
+        this.lastLoginOn = lastLoginOn;
     }
 
     public String getFirstName() {
