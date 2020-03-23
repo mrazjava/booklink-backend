@@ -45,6 +45,7 @@ public class InvalidAuthTokenEntryPoint implements AuthenticationEntryPoint {
             HttpServletResponse response,
             AuthenticationException authException) throws IOException {
 
+        // see if we have an error message produced by the token filter which runs first
         Object requestError = request.getAttribute(ATTR_AUTH_TOKEN_STATUS);
         String errorMsg = requestError == null ? authException.getMessage() : requestError.toString();
 

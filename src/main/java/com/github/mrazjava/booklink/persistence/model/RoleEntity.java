@@ -1,7 +1,5 @@
 package com.github.mrazjava.booklink.persistence.model;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import javax.persistence.*;
 
 /**
