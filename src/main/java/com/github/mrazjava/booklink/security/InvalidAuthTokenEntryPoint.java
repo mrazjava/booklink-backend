@@ -10,17 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.github.mrazjava.booklink.security.AccessTokenSecurityFilter.ATTR_ERROR_MESSAGE;
+import static com.github.mrazjava.booklink.security.AccessTokenSecurityFilter.ATTR_AUTH_TOKEN_STATUS;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 /**
- * Handler for requests with invalid auth token. By explicitly throwing a HTTP 401, we prevent
- * default boot mechanism of redirect to a login page. Since we provide restful api, we want to
- * return an error so that whatever front end UI connects to it can decide if (and how) it wants
- * to redirect.
+ * Handler for requests which require authentication. Not invoked on endpoints configured
+ * for public access.
+ *
+ * By explicitly throwing a HTTP 401, we prevent default boot mechanism of redirect to a
+ * login page. Since we provide restful api, we want to return an error so that whatever
+ * front end UI connects to it can decide if (and how) it wants to redirect.
  *
  * @author AZ (mrazjava)
  * @since 0.2.0
+ * @see com.github.mrazjava.booklink.config.SecurityConfiguration
  */
 @Component
 public class InvalidAuthTokenEntryPoint implements AuthenticationEntryPoint {
@@ -42,7 +45,7 @@ public class InvalidAuthTokenEntryPoint implements AuthenticationEntryPoint {
             HttpServletResponse response,
             AuthenticationException authException) throws IOException {
 
-        Object requestError = request.getAttribute(ATTR_ERROR_MESSAGE);
+        Object requestError = request.getAttribute(ATTR_AUTH_TOKEN_STATUS);
         String errorMsg = requestError == null ? authException.getMessage() : requestError.toString();
 
         if(log.isDebugEnabled()) {

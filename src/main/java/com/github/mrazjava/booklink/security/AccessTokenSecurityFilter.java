@@ -37,7 +37,14 @@ public class AccessTokenSecurityFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(AccessTokenSecurityFilter.class);
 
-    public static final String ATTR_ERROR_MESSAGE = "error";
+    /**
+     * Auth token status is set every time if token is detected in the request.
+     * It is validated even on requests which do not require auth token but
+     * may have provided it in the header under {@link #AUTHORIZATION_HEADER_NAME}.
+     * Requests which do not require authentication but provided a token are not
+     * affected by this status.
+     */
+    public static final String ATTR_AUTH_TOKEN_STATUS = "AUTH-TOKEN";
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
 
     @Inject
@@ -59,11 +66,11 @@ public class AccessTokenSecurityFilter extends OncePerRequestFilter {
                     log.info("user [{}] granted access:\n{}", user.getEmail(), authentication);
                 } else {
                     log.warn("auth token expired! (user: {})", user.getEmail());
-                    request.setAttribute(ATTR_ERROR_MESSAGE, "expired token");
+                    request.setAttribute(ATTR_AUTH_TOKEN_STATUS, "expired token");
                 }
             } else {
-                log.trace("!auth token [{}] is invalid", authToken);
-                request.setAttribute(ATTR_ERROR_MESSAGE, "bad access token");
+                log.trace("auth token [{}] is invalid", authToken);
+                request.setAttribute(ATTR_AUTH_TOKEN_STATUS, "bad access token");
             }
         }
 

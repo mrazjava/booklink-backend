@@ -1,6 +1,6 @@
 package com.github.mrazjava.booklink.rest;
 
-import com.github.mrazjava.booklink.config.SwaggerDocumentationConfiguration;
+import com.github.mrazjava.booklink.config.SwaggerConfiguration;
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
 import com.github.mrazjava.booklink.rest.model.ErrorResponse;
 import com.github.mrazjava.booklink.rest.model.LoginRequest;
@@ -65,7 +65,7 @@ public class AuthenticationRestController {
     @ApiImplicitParams(@ApiImplicitParam(
             name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
             paramType = "header",
-            value = SwaggerDocumentationConfiguration.HEADER_NOT_USED_MSG,
+            value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
             allowEmptyValue = true
     ))
     public ResponseEntity<LoginResponse> login(

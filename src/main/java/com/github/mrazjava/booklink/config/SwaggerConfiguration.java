@@ -25,7 +25,7 @@ import java.util.Optional;
  * @since 0.1.0
  */
 @Configuration
-public class SwaggerDocumentationConfiguration {
+public class SwaggerConfiguration {
 
     public static final String HEADER_NOT_USED_MSG = "NOT USED - ignore";
 

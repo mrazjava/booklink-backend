@@ -1,6 +1,6 @@
 package com.github.mrazjava.booklink.rest;
 
-import com.github.mrazjava.booklink.config.SwaggerDocumentationConfiguration;
+import com.github.mrazjava.booklink.config.SwaggerConfiguration;
 import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
 import com.github.mrazjava.booklink.service.ProofOfConceptService;
 import io.swagger.annotations.*;
@@ -55,7 +55,7 @@ public class ProofOfConceptRestController {
     @ApiImplicitParams(@ApiImplicitParam(
             name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
             paramType = "header",
-            value = SwaggerDocumentationConfiguration.HEADER_NOT_USED_MSG,
+            value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
             allowEmptyValue = true
     ))
     public ResponseEntity<Integer> countAll() {
@@ -70,7 +70,7 @@ public class ProofOfConceptRestController {
     @ApiImplicitParams(@ApiImplicitParam(
             name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
             paramType = "header",
-            value = SwaggerDocumentationConfiguration.HEADER_NOT_USED_MSG,
+            value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
             allowEmptyValue = true
     ))
     public String securedHello() {
