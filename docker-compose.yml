@@ -12,7 +12,7 @@ services:
       POSTGRES_USER: bookworm
       POSTGRES_PASSWORD: BL
     ports:
-      - 127.0.0.1:5432:5432
+      - 127.0.0.1:5433:5432
   admin:
     image: dpage/pgadmin4 # https://hub.docker.com/r/dpage/pgadmin4/
     environment:
@@ -20,4 +20,4 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
       GUNICORN_ACCESS_LOGFILE: /tmp/pgadmin4.log
     ports:
-      - 127.0.0.1:5500:80
+      - 127.0.0.1:5501:80
