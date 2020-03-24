@@ -15,7 +15,7 @@ Backend business logic of a booklink service. Exposes operations via REST. Used 
 docker-compose up
 mvn clean spring-boot:run
 ```
-Backend will run on port `8080`. PostgreSQL will run on port `5432`. PgAdmin4 will run on port `5500`.
+Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 will run on port `5501`.
 
 To run against local `sandbox` environment:
 ```
