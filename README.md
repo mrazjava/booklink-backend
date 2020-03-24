@@ -19,18 +19,19 @@ Backend will run on port `8080`. PostgreSQL will run on port `5432`. PgAdmin4 wi
 
 To run against local `sandbox` environment:
 ```
-# skip docker-compose
 cd [BOOKLINK_SANDBOX_PROJECT_DIR]
 ./sandbox.sh local # launch persistence only
 cd [BOOKLINK_BACKEND_PROJECT_DIR]
 mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:postgresql://localhost:5432/booklink_sndbx_local -DAPP_BE_HIBERNATE_DDL_AUTO=validate"
 ```
+Note that in lieu of running `docker-compose up` we run sandbox which does the same thing bringing up the database, 
+only for a different environment.
 
 To dump latest database schema, run the app with additional profile, almost always in local dev:
 ```
 mvn clean spring-boot:run -Dspring-boot.run.profiles=local,dump-db-schema
 ```
-Schema will be generated to `target/target/db-schema-latest.sql`. A schema is then compared with schema dump from 
+Schema will be generated to `target/db-schema-latest.sql`. A schema is then compared with schema dump from 
 stable branch, say staging, and migration script is determined off a difference between the two.
 
 ## Local Docker Image

@@ -1,20 +1,3 @@
-#
-# Enables schema build script. If enabled, hibernate validation is not executed
-# even if ${spring.jpa.hibernate.ddl-auto:validate} is set. Enable this only
-# temporarily, during developement to compute schema difference for schema
-# migration purposes. This should never be checked in commented out.
-#
-#spring:
-#  jpa:
-#    properties:
-#      javax:
-#        persistence:
-#          schema-generation:
-#            create-source: metadata
-#            scripts:
-#              action: create
-#              create-target: target/schema-dev.sql
-
 booklink:
   security:
     cors-allow-origins:
