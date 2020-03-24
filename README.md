@@ -17,6 +17,22 @@ mvn clean spring-boot:run
 ```
 Backend will run on port `8080`. PostgreSQL will run on port `5432`. PgAdmin4 will run on port `5500`.
 
+To run against local `sandbox` environment:
+```
+# skip docker-compose
+cd [BOOKLINK_SANDBOX_PROJECT_DIR]
+./sandbox.sh local # launch persistence only
+cd [BOOKLINK_BACKEND_PROJECT_DIR]
+mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:postgresql://localhost:5432/booklink_sndbx_local -DAPP_BE_HIBERNATE_DDL_AUTO=validate"
+```
+
+To dump latest database schema, run the app with additional profile, almost always in local dev:
+```
+mvn clean spring-boot:run -Dspring-boot.run.profiles=local,dump-db-schema
+```
+Schema will be generated to `target/target/db-schema-latest.sql`. A schema is then compared with schema dump from 
+stable branch, say staging, and migration script is determined off a difference between the two.
+
 ## Local Docker Image
 Booklink [sandbox](https://github.com/mrazjava/booklink#sandbox) can run off a local image too. This is helpful when testing new feature prior merging to `develop` 
 ensuring that staging environment will not be negatively impacted by things like database schema changes or other high 
