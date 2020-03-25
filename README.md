@@ -18,7 +18,15 @@ mvn clean spring-boot:run
 Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 will run on port `5501`.
 
 ## Sandbox
-It is possible to run against [sandbox](https://github.com/mrazjava/booklink#sandbox) database, in which case `APP_BE_DB_URL` must be overriden.  It's also helpful to compare sandbox database to actively developed (latest) database schema in order to make a comparison when determining migration script:
+We can make a local docker image and run it off [sandbox](https://github.com/mrazjava/booklink#sandbox) `local` environment. This is helpful when testing new code prior merging to `develop` branch which is basis for sandbox staging. Running local image via sandbox is like simulating a staging environment; one can make sure that all automated upgrade scripts migrate correctly to central `develop` branch and that all tests are passing.
+
+We build a local image just like any other image, except we build it off a custom branch and tag it as `local`:
+```
+mvn clean package
+docker build -t mrazjava/booklink-backend:local .
+```
+
+It is possible also possible to run via `mvn` against [sandbox](https://github.com/mrazjava/booklink#sandbox) database, in which case `spring.datasource.url` must be overriden via `APP_BE_DB_URL` env variable. 
 
 To run against a `sandbox` database, say `local`:
 ```
@@ -27,17 +35,6 @@ cd [BOOKLINK_SANDBOX_PROJECT_DIR]
 cd [BOOKLINK_BACKEND_PROJECT_DIR]
 mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:postgresql://localhost:5432/booklink_sndbx_local -DAPP_BE_HIBERNATE_DDL_AUTO=validate"
 ```
-
-## Local Docker Image
-Booklink [sandbox](https://github.com/mrazjava/booklink#sandbox) can run off a local feature image too. This is helpful when testing new code prior merging to `develop` 
-which ensures that staging environment will not be negatively impacted by things like database schema changes or other high impact refactoring efforts. In other words, running local image via sandbox is like simulating a staging environment; one can make sure that all automated upgrade scripts migrate correctly to central `develop` branch and that all tests are passing.
-
-We build a local image just like any other image, except we build it off a custom branch and tag it as `local`:
-```
-mvn clean package
-docker build -t mrazjava/booklink-backend:local .
-```
-See sandbox for details on how to run off a local image.
 
 ## DB GUI
 There are number of graphical tools available to administer the database. Here are mentioned ones used for booklink development.
