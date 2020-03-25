@@ -37,6 +37,8 @@ Database schema will be validated because of `APP_BE_HIBERNATE_DDL_AUTO: validat
 #### AWS
 Database schema changes are migrated manually ("by hand"). Verified migration scripts from Sandbox (`stg`) are used as the basis for AWS manual db migration changes to `pre` which in turn are basis for AWS `live` migration.
 
+### Migration
+
 A new feature will often result in updated database schema (entity changes). A process of migrating database changes between environments is as follows:
 
 Database change migration scripts are computed as a difference between the old and new schemas. Once finished on a feature branch, we extract the latest schema script:
