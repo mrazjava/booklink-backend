@@ -24,15 +24,13 @@ cd [BOOKLINK_SANDBOX_PROJECT_DIR]
 cd [BOOKLINK_BACKEND_PROJECT_DIR]
 mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:postgresql://localhost:5432/booklink_sndbx_local -DAPP_BE_HIBERNATE_DDL_AUTO=validate"
 ```
-Note that in lieu of running `docker-compose up` we run sandbox which does the same thing (bringing up the database), 
-only for a different environment.
 
 ## Database Schema Management
 A new feature will often result in updated database schema (entity changes). A process of migrating database changes 
 between environments is as follows:
 
 * `local`: on application startup (`mvn spring-boot:run`) Hibernate will automatically generate schema due to  
-`spring.jpa.hibernate.ddl-auto:create` and import data from `src/main/resources/import.sql`.
+`spring.jpa.hibernate.ddl-auto:create`. Dummy data will be imported from `src/main/resources/import.sql`.
 * Sandbox: Hibernate will validate schema and fail if schema changes are not migrated. Schema changes are migrated 
 automatically via Flyway migration script on startup. It is a responsibility of a developer working on a feature to 
 introduce a working database migration script for Flyway.
