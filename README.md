@@ -20,19 +20,43 @@ Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 wi
 To run against local `sandbox` environment:
 ```
 cd [BOOKLINK_SANDBOX_PROJECT_DIR]
-./sandbox.sh local # launch persistence only
+./sandbox.sh local # launch persistence only enabling all sandbox databases
 cd [BOOKLINK_BACKEND_PROJECT_DIR]
 mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:postgresql://localhost:5432/booklink_sndbx_local -DAPP_BE_HIBERNATE_DDL_AUTO=validate"
 ```
-Note that in lieu of running `docker-compose up` we run sandbox which does the same thing bringing up the database, 
+Note that in lieu of running `docker-compose up` we run sandbox which does the same thing (bringing up the database), 
 only for a different environment.
 
-To dump latest database schema, run the app with additional profile, almost always in local dev:
+## Database Schema Management
+A new feature will often result in updated database schema (entity changes). A process of migrating database changes 
+between environments is as follows:
+
+* `local`: on application startup (`mvn spring-boot:run`) Hibernate will automatically generate schema due to  
+`spring.jpa.hibernate.ddl-auto:create` and import data from `src/main/resources/import.sql`.
+* Sandbox: Hibernate will validate schema and fail if schema changes are not migrated. Schema changes are migrated 
+automatically via Flyway migration script on startup. It is a responsibility of a developer working on a feature to 
+introduce a working database migration script for Flyway.
+* AWS: Database schema changes are migrated manually ("by hand"). Verified migration scripts from staging are used as 
+basis for AWS manual db migration changes.
+
+Database change migration scripts are computed as a difference between the old and new schemas.
+
+Once finished on a feature branch, we extract the latest schema script:
 ```
+# from a `feature/*` branch
 mvn clean spring-boot:run -Dspring-boot.run.profiles=local,dump-db-schema
 ```
-Schema will be generated to `target/db-schema-latest.sql`. A schema is then compared with schema dump from 
-stable branch, say staging, and migration script is determined off a difference between the two.
+Script will be available at `target/db-schema.sql`. Copy it to some other location.
+
+Then, we do the same thing against `develop` branch. By using staged codebase, we extract a stable database schema script 
+which is the basis for upgrade:
+```
+# from a `develop` branch
+mvn clean spring-boot:run -Dspring-boot.run.profiles=local,dump-db-schema
+```
+Again, copy script to some other location. Compare it with schema script generated from a feature branch. The difference 
+between the two scripts is basis for the migration script. Of course, we exercise common sense and tweak the DIFF if 
+necessary to accomplish a clean migration.
 
 ## Local Docker Image
 Booklink [sandbox](https://github.com/mrazjava/booklink#sandbox) can run off a local image too. This is helpful when testing new feature prior merging to `develop` 
