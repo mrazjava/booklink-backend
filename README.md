@@ -29,11 +29,11 @@ mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:p
 A new feature will often result in updated database schema (entity changes). A process of migrating database changes 
 between environments is as follows:
 
-* `local`: on application startup (`mvn spring-boot:run`) Hibernate will automatically generate schema due to  
+* `local`: on application startup (`mvn spring-boot:run`) Hibernate will build the database every time because of   
 `spring.jpa.hibernate.ddl-auto:create`. Dummy data will be imported from `src/main/resources/import.sql`.
-* Sandbox: Hibernate will validate schema and fail if schema changes are not migrated. Schema changes are migrated 
-automatically via Flyway migration script on startup. It is a responsibility of a developer working on a feature to 
-introduce a working database migration script for Flyway.
+* Sandbox: Hibernate will validate database schema and fail fast if schema does not match against the entities. However,  
+schema changes should be migrated automatically via Flyway (on startup) before hibernate validation kicks in. It is a 
+responsibility of a developer working on a feature to introduce a correct Flyway migration script.
 * AWS: Database schema changes are migrated manually ("by hand"). Verified migration scripts from staging are used as 
 basis for AWS manual db migration changes.
 
