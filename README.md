@@ -37,7 +37,7 @@ mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:p
 ```
 
 ## DB GUI
-There are number of graphical tools available to administer the database. Here are mentioned ones used for booklink development.
+There are number of graphical tools available to administer the database. Here are mentioned ones used for booklink:
 
 #### pgAdmin4
 Sandbox comes packaged with `pgAdmin4` but using it is not required to try the backend locally, or even to develop some basic functions. However, administering the database during the development will probably become a necessity at some point. All PostgreSQL and pgAdmin4 credentials are defined in `docker-compose.yml`.
@@ -45,7 +45,7 @@ Sandbox comes packaged with `pgAdmin4` but using it is not required to try the b
 Upon a first login to `pgAdmin4` server connection to docker container running postgres must be established. Remember that persistence layer runs off docker engine so for pgAdmin4 sees the database at `pg` host, not localhost.
 
 #### DBeaver
-An alternative and excellent GUI for local administration of the database is [DBeaver](https://dbeaver.io/).
+An alternative and excellent GUI for local administration of the database is [DBeaver](https://dbeaver.io/). This is a fat client which if preferred, must be downloaded and installed separately.
 
 ## Database Schema Management
 Default behavior of application with respect to the database varies depending on the environment:
