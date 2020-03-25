@@ -17,7 +17,10 @@ mvn clean spring-boot:run
 ```
 Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 will run on port `5501`.
 
-To run against a different database, say from a `sandbox` environment:
+## Sandbox
+It is possible to run against [sandbox](https://github.com/mrazjava/booklink#sandbox) database, in which case `APP_BE_DB_URL` must be overriden.  It's also helpful to compare sandbox database to actively developed (latest) database schema in order to make a comparison when determining migration script:
+
+To run against a `sandbox` database, say `local`:
 ```
 cd [BOOKLINK_SANDBOX_PROJECT_DIR]
 ./sandbox.sh local # launch persistence only enabling all sandbox databases
@@ -35,11 +38,6 @@ mvn clean package
 docker build -t mrazjava/booklink-backend:local .
 ```
 See sandbox for details on how to run off a local image.
-
-## Sandbox
-It is possible to run against [sandbox](https://github.com/mrazjava/booklink#sandbox) local database, in which case 
-`APP_BE_DB_URL` must be overriden.  It's also helpful to compare sandbox staging database to actively developed 
-(latest) database version in order to compare schemas, etc.
 
 ## DB GUI
 There are number of graphical tools available to administer the database. Here are mentioned ones used for booklink development.
