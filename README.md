@@ -29,17 +29,14 @@ mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:p
 A new feature will often result in updated database schema (entity changes). A process of migrating database changes 
 between environments is as follows:
 
-* Local Development:
-    Upon application startup (`mvn spring-boot:run`) the database will be re-built every time because of 
-    `spring.jpa.hibernate.ddl-auto:create`. Dummy data will be imported from `src/main/resources/import.sql`.
-* Sandbox:
-    Database schema will be validated because of `spring.jpa.hibernate.ddl-auto:create` and application will fail 
-    fast if schema does not match against the entities. However, schema changes should be migrated automatically (via 
-    flyway) on startup before hibernate validation kicks in. It is a responsibility of a developer working on a feature 
-    to introduce a correct Flyway migration script.
-* AWS:
-    Database schema changes are migrated manually ("by hand"). Verified migration scripts from Sandbox (`stg`) are  
-    used as the basis for AWS manual db migration changes to `pre` which in turn are basis for AWS `live` migration.
+#### Local Development
+Upon application startup (`mvn spring-boot:run`) the database will be re-built every time because of `spring.jpa.hibernate.ddl-auto:create`. Dummy data will be imported from `src/main/resources/import.sql`.
+
+#### Sandbox
+Database schema will be validated because of `spring.jpa.hibernate.ddl-auto:create` and application will fail  fast if schema does not match against the entities. However, schema changes should be migrated automatically (via flyway) on startup before hibernate validation kicks in. It is a responsibility of a developer working on a feature to introduce a correct Flyway migration script.
+
+#### AWS
+Database schema changes are migrated manually ("by hand"). Verified migration scripts from Sandbox (`stg`) are used as the basis for AWS manual db migration changes to `pre` which in turn are basis for AWS `live` migration.
 
 Database change migration scripts are computed as a difference between the old and new schemas.
 
