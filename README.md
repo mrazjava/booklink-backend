@@ -36,6 +36,11 @@ docker build -t mrazjava/booklink-backend:local .
 ```
 See sandbox for details on how to run off a local image.
 
+## Sandbox
+It is possible to run against [sandbox](https://github.com/mrazjava/booklink#sandbox) local database, in which case 
+`APP_BE_DB_URL` must be overriden.  It's also helpful to compare sandbox staging database to actively developed 
+(latest) database version in order to compare schemas, etc.
+
 ## DB GUI
 There are number of graphical tools available to administer the database. Here are mentioned ones used for booklink development.
 
@@ -46,11 +51,6 @@ Upon a first login to `pgAdmin4` server connection to docker container running p
 
 #### DBeaver
 An alternative and excellent GUI for local administration of the database is [DBeaver](https://dbeaver.io/).
-
-## Sandbox
-It is possible to run against [sandbox](https://github.com/mrazjava/booklink#sandbox) local database, in which case 
-`APP_BE_DB_URL` must be overriden.  It's also helpful to compare sandbox staging database to actively developed 
-(latest) database version in order to compare schemas, etc.
 
 ## Database Schema Management
 Default behavior of application with respect to the database varies depending on the environment:
