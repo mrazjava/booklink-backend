@@ -26,8 +26,7 @@ mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:p
 ```
 
 ## Database Schema Management
-A new feature will often result in updated database schema (entity changes). A process of migrating database changes 
-between environments is as follows:
+Default behavior of application with respect to the database varies depending on the environment:
 
 #### Local Development
 Upon application startup (`mvn spring-boot:run`) the database will be re-built every time because of `spring.jpa.hibernate.ddl-auto:create`. Dummy data will be imported from `src/main/resources/import.sql`.
@@ -38,9 +37,9 @@ Database schema will be validated because of `spring.jpa.hibernate.ddl-auto:crea
 #### AWS
 Database schema changes are migrated manually ("by hand"). Verified migration scripts from Sandbox (`stg`) are used as the basis for AWS manual db migration changes to `pre` which in turn are basis for AWS `live` migration.
 
-Database change migration scripts are computed as a difference between the old and new schemas.
+A new feature will often result in updated database schema (entity changes). A process of migrating database changes between environments is as follows:
 
-Once finished on a feature branch, we extract the latest schema script:
+Database change migration scripts are computed as a difference between the old and new schemas. Once finished on a feature branch, we extract the latest schema script:
 ```
 # from a `feature/*` branch
 mvn clean spring-boot:run -Dspring-boot.run.profiles=local,dump-db-schema
