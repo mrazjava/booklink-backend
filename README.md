@@ -39,7 +39,7 @@ Database schema changes are migrated manually ("by hand"). Verified migration sc
 
 ### Migration
 
-A new feature will often result in updated database schema (entity changes). A process of migrating database changes between environments is as follows:
+A new feature will often result in updated database schema (entity changes). A process of migrating database changes from `local` feature to `stg` is as follows:
 
 Database change migration scripts are computed as a difference between the old and new schemas. Once finished on a feature branch, we extract the latest schema script:
 ```
