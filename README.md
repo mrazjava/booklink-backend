@@ -17,7 +17,7 @@ mvn clean spring-boot:run
 ```
 Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 will run on port `5501`.
 
-To run against local `sandbox` environment:
+To run against a different database, say from a `sandbox` environment:
 ```
 cd [BOOKLINK_SANDBOX_PROJECT_DIR]
 ./sandbox.sh local # launch persistence only enabling all sandbox databases
