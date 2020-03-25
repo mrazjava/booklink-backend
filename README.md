@@ -73,3 +73,6 @@ Full schema DDL will be available at `target/generated-resources/sql/ddl/auto/po
 Next, we switch to `develop` branch and run the same maven command again. This produces DDL for staging schema. The 
 two schemas are compared and the difference makes up the basis for migration script. Even though the DIFF is an 
 excellent starting point, the migration itself should be proof read and adjusted manually, then tested as needed.
+
+Once migration changes are ready, the are placed in `src/main/resources/db/migration/VXXX_*` file. If migration is 
+correctly scripted out, sandbox will apply it automatically.
