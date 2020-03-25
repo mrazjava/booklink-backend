@@ -12,7 +12,7 @@ public class RoleEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(name = "role_name")
     private String name;
 
     public Long getId() {

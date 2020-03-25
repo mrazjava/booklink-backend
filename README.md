@@ -60,22 +60,53 @@ Database schema will be validated because of `APP_BE_HIBERNATE_DDL_AUTO: validat
 Database schema changes are migrated manually ("by hand"). Verified migration scripts from Sandbox (`stg`) are used as the basis for AWS manual db migration changes to `pre` which in turn are basis for AWS `live` migration.
 
 ### Migration
-
 A new feature will often result in updated database schema (entity changes). A process of migrating database changes from `local` feature to `stg` is as follows:
 
-Database change migration scripts are computed as a difference between the old and new schemas. Once finished on a feature branch, we extract the latest schema script:
+Database change migration scripts are computed as a difference between the old and new schemas. Once finished on a feature branch, we extract the latest schema script. 
+ 
+From a `feature/*` branch with the latest entities:
 ```
-# from a `feature/*` branch
-mvn clean spring-boot:run -Dspring-boot.run.profiles=local,dump-db-schema
+mvn clean compile hibernate54-ddl:gen-ddl
 ```
-Script will be available at `target/db-schema.sql`. Copy it to some other location.
+Full schema DDL will be available at `target/generated-resources/sql/ddl/auto/postgresql95.sql`. Save this script to some location because it will be compared against DDL produced off `develop` branch.
 
-Then, we do the same thing against `develop` branch. By using staged codebase, we extract a stable database schema script 
-which is the basis for upgrade:
+Next, we switch to `develop` branch and run the same maven command again. This produces DDL for staging schema. The 
+two schemas are compared and the difference makes up the basis for migration script. Even though the DIFF is an 
+excellent starting point, the migration itself should be proof read and adjusted manually, then tested as needed. 
+
+## General Notes
+Tried maven plugin but seems to have issues so opted not to use it:
 ```
-# from a `develop` branch
-mvn clean spring-boot:run -Dspring-boot.run.profiles=local,dump-db-schema
+<plugin>
+    <groupId>de.jpdigital</groupId>
+    <artifactId>hibernate54-ddl-maven-plugin</artifactId>
+    <version>2.3.0</version>
+    <configuration>
+        <dialects>
+            <param>postgresql9</param>
+        </dialects>
+        <customDialects> <!-- Optional -->
+            <param>org.example.dialects.FooDBDialect</param>
+        </customDialects>
+        <packages>
+            <param>org.example.entities</param>
+        </packages>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>gen-ddl</goal>
+            </goals>
+            <phase>process-classes</phase>
+        </execution>
+    </executions>
+</plugin>
+``` 
+Generate schema DDL:
 ```
-Again, copy script to some other location. Compare it with schema script generated from a feature branch. The difference 
-between the two scripts is basis for the migration script. Of course, we exercise common sense and tweak the DIFF if 
-necessary to accomplish a clean migration.
+mvn hibernate54-ddl:gen-ddl
+```
+Help:
+```
+mvn hibernate54-ddl:help -Ddetail=true
+```
