@@ -72,41 +72,4 @@ Full schema DDL will be available at `target/generated-resources/sql/ddl/auto/po
 
 Next, we switch to `develop` branch and run the same maven command again. This produces DDL for staging schema. The 
 two schemas are compared and the difference makes up the basis for migration script. Even though the DIFF is an 
-excellent starting point, the migration itself should be proof read and adjusted manually, then tested as needed. 
-
-## General Notes
-Tried maven plugin but seems to have issues so opted not to use it:
-```
-<plugin>
-    <groupId>de.jpdigital</groupId>
-    <artifactId>hibernate54-ddl-maven-plugin</artifactId>
-    <version>2.3.0</version>
-    <configuration>
-        <dialects>
-            <param>postgresql9</param>
-        </dialects>
-        <customDialects> <!-- Optional -->
-            <param>org.example.dialects.FooDBDialect</param>
-        </customDialects>
-        <packages>
-            <param>org.example.entities</param>
-        </packages>
-    </configuration>
-    <executions>
-        <execution>
-            <goals>
-                <goal>gen-ddl</goal>
-            </goals>
-            <phase>process-classes</phase>
-        </execution>
-    </executions>
-</plugin>
-``` 
-Generate schema DDL:
-```
-mvn hibernate54-ddl:gen-ddl
-```
-Help:
-```
-mvn hibernate54-ddl:help -Ddetail=true
-```
+excellent starting point, the migration itself should be proof read and adjusted manually, then tested as needed.
