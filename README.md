@@ -76,3 +76,8 @@ excellent starting point, the migration itself should be proof read and adjusted
 
 Once migration changes are ready, the are placed in `src/main/resources/db/migration/VXXX_*` file. If migration is 
 correctly scripted out, sandbox will apply it automatically.
+
+To get more help on options available to `hibernate54-ddl` maven plugin, run:
+```
+mvn hibernate54-ddl:help -Ddetail=true
+```
