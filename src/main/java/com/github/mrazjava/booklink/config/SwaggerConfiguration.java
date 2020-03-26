@@ -1,6 +1,7 @@
 package com.github.mrazjava.booklink.config;
 
 import com.github.mrazjava.booklink.BooklinkApp;
+import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.info.BuildProperties;
@@ -8,20 +9,25 @@ import org.springframework.boot.info.GitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
  * @since 0.1.0
  */
 @Configuration
-public class SwaggerDocumentationConfiguration {
+public class SwaggerConfiguration {
+
+    public static final String HEADER_NOT_USED_MSG = "NOT USED - ignore";
 
     @Inject
     private Optional<BuildProperties> build;
@@ -45,7 +51,16 @@ public class SwaggerDocumentationConfiguration {
                 .build()
                 .directModelSubstitute(java.time.LocalDate.class, java.sql.Date.class)
                 .directModelSubstitute(java.time.OffsetDateTime.class, java.util.Date.class)
-                .apiInfo(generateInternalApiInfo(version, "booklink-backend", "booklink services (business logic)"));
+                .apiInfo(generateInternalApiInfo(version, "booklink-backend", "booklink services (business logic)"))
+                .globalOperationParameters(
+                        Collections.singletonList(new ParameterBuilder()
+                                .name(AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME)
+                                .description("auth token is required for all secured endpoints (login to obtain a token)")
+                                .modelRef(new ModelRef("string"))
+                                .parameterType("header")
+                                .required(true)
+                                .build())
+                );
 
         if (StringUtils.isNotBlank(swaggerhost)) {
             d.host(swaggerhost);

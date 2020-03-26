@@ -9,7 +9,7 @@
 
     <springProfile name="local">
         <logger name="com.github.mrazjava.booklink" level="TRACE"/>
-
+        <logger name="org.hibernate.type.descriptor.sql" level="DEBUG" />
     </springProfile>
 
     <springProfile name="pre,live">

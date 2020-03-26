@@ -1,15 +1,15 @@
 package com.github.mrazjava.booklink.service;
 
-import com.github.mrazjava.booklink.model.DbInfoResponse;
+import com.github.mrazjava.booklink.rest.model.DbInfoResponse;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Optional;
 
 /**
+ * @author AZ (mrazjava)
  * @since 0.2.0
  */
 @Component
