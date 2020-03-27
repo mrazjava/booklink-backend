@@ -73,7 +73,9 @@ public class UserService implements UserDetailsService {
         if(StringUtils.isEmpty(validatedUser.getToken()) || OffsetDateTime.now().isAfter(validatedUser.getTokenExpiry())) {
             validatedUser.setToken(UUID.randomUUID().toString());
             validatedUser.setTokenExpiry(OffsetDateTime.now().plusDays(3));
-            log.debug("issued new access token {}, expiry: {}", validatedUser.getToken(), validatedUser.getTokenExpiry());
+            if(log.isDebugEnabled()) {
+                log.debug("issued new access token {}, expiry: {}", validatedUser.getToken(), validatedUser.getTokenExpiry());
+            }
             validatedUser = userRepository.save(validatedUser);
         }
 

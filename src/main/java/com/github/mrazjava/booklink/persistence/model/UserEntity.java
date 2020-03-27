@@ -58,6 +58,11 @@ public class UserEntity implements UserDetails {
     public UserEntity() {
     }
 
+    public UserEntity(String token, OffsetDateTime tokenExpiry) {
+        setToken(token);
+        setTokenExpiry(tokenExpiry);
+    }
+
     public UserEntity(UserEntity source) {
         id = source.getId();
         email = source.getEmail();

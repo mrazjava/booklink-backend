@@ -1,7 +1,6 @@
 spring:
   profiles:
     active: ${APP_ENV:local}
-  data:
   cache:
     jcache:
       config: classpath:ehcache.xml
@@ -12,6 +11,8 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     open-in-view: false
   datasource:
+    platform: postgresql
+    initialization-mode: always
     url: ${APP_BE_DB_URL:jdbc:postgresql://localhost:5433/booklink}
     username: ${APP_BE_DB_USERNAME:bookworm}
     password: ${APP_BE_DB_PASSWORD:BL}
