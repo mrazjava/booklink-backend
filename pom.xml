@@ -189,17 +189,8 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>git-info</id>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
-                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
-                    <useNativeGit>true</useNativeGit>
+                    <offline>true</offline>
                 </configuration>
             </plugin>
             <plugin>
