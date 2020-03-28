@@ -35,7 +35,7 @@ jobs:
       - name: test, then build jar
         id: mvn-jar
         run: |
-          mvn -B clean package
+          mvn -B clean verify package
       - name: upload jar artifact
         uses: actions/upload-artifact@v1
         with:
@@ -46,6 +46,11 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_DIR }}
           path: Dockerfile
+      - name: upload DB schema artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ env.ARTIFACT_DIR }}
+          path: target/generated-resources/sql/ddl/auto/postgresql95.sql
   publish:
     runs-on: ubuntu-latest
     name: Package and Deploy
