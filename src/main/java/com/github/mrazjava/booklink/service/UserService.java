@@ -3,9 +3,11 @@ package com.github.mrazjava.booklink.service;
 import com.github.mrazjava.booklink.BooklinkException;
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
 import com.github.mrazjava.booklink.persistence.repository.UserRepository;
+import com.github.mrazjava.booklink.security.InvalidAccessTokenException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -71,11 +73,25 @@ public class UserService implements UserDetailsService {
         if(StringUtils.isEmpty(validatedUser.getToken()) || OffsetDateTime.now().isAfter(validatedUser.getTokenExpiry())) {
             validatedUser.setToken(UUID.randomUUID().toString());
             validatedUser.setTokenExpiry(OffsetDateTime.now().plusDays(3));
-            log.debug("issued new access token {}, expiry: {}", validatedUser.getToken(), validatedUser.getTokenExpiry());
+            if(log.isDebugEnabled()) {
+                log.debug("issued new access token {}, expiry: {}", validatedUser.getToken(), validatedUser.getTokenExpiry());
+            }
             validatedUser = userRepository.save(validatedUser);
         }
 
         return validatedUser;
+    }
+
+    public String deleteAuthToken(UserDetails credentials) {
+        Optional<UserEntity> userEntityResult = findUserByEmail(credentials.getUsername());
+        if(!userEntityResult.isPresent()) {
+            throw new UsernameNotFoundException("invalid user");
+        }
+        UserEntity userEntity = userEntityResult.get();
+        userEntity.setToken(null);
+        userEntity.setTokenExpiry(null);
+        userEntity = userRepository.save(userEntity);
+        return userEntity.getEmail();
     }
 
     @Override
@@ -84,5 +100,14 @@ public class UserService implements UserDetailsService {
         Optional<UserEntity> userEntityResult = findUserByEmail(username);
         userEntityResult.orElseThrow(() -> new UsernameNotFoundException("invalid user"));
         return userEntityResult.map(Function.identity()).get();
+    }
+
+    public static UserDetails getCredentials(Authentication auth) {
+
+        if(auth == null || auth.getPrincipal() == null) {
+            throw new InvalidAccessTokenException("no user credentials");
+        }
+
+        return (UserDetails)auth.getPrincipal();
     }
 }

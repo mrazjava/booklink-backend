@@ -5,6 +5,7 @@ import com.github.mrazjava.booklink.persistence.model.UserEntity;
 import com.github.mrazjava.booklink.rest.model.ErrorResponse;
 import com.github.mrazjava.booklink.rest.model.LoginRequest;
 import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
+import com.github.mrazjava.booklink.security.InvalidAccessTokenException;
 import com.github.mrazjava.booklink.service.UserService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -12,14 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
+import java.util.Optional;
 
 /**
  * @author AZ (mrazjava)
@@ -46,7 +47,7 @@ public class AuthenticationRestController {
             value = "Verify credentials and obtain authentication token",
             consumes = "application/json"
     )
-    @PostMapping("login")
+    @PatchMapping("login")
     @Produces("application/json")
     @ApiResponses(
             {
@@ -67,8 +68,7 @@ public class AuthenticationRestController {
             value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
             allowEmptyValue = true
     ))
-    public ResponseEntity<String> login(
-            @RequestBody(required = true) LoginRequest loginRequest, HttpServletRequest request) {
+    public ResponseEntity<String> login(@RequestBody(required = true) LoginRequest loginRequest) {
 
         log.debug("login request: {}", loginRequest.getEmail());
 
@@ -82,5 +82,29 @@ public class AuthenticationRestController {
         UserEntity userEntity = userService.ensureValidToken(authentication.getPrincipal());
 
         return ResponseEntity.ok(userEntity.getToken());
+    }
+
+    @ApiOperation(
+            value = "Removes a valid authentication token of a user. New token can be generated via login.",
+            consumes = "application/json"
+    )
+    @PatchMapping("logout")
+    @Produces("application/json")
+    @ApiResponses(
+            {
+                    @ApiResponse(
+                            message = "confirmed login id of a user whose auth token was removed",
+                            code = 200
+                    ),
+                    @ApiResponse(
+                            message = "invalid login",
+                            code = 401,
+                            response = ErrorResponse.class
+                    )
+            }
+    )
+    public ResponseEntity<String> logout(@ApiIgnore Authentication auth) {
+        UserDetails credentials = UserService.getCredentials(auth);
+        return ResponseEntity.ok(userService.deleteAuthToken(credentials));
     }
 }
