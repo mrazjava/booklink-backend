@@ -26,17 +26,16 @@ public class CustomDbInfoContributor implements InfoContributor {
     public void contribute(Info.Builder builder) {
 
         Map<String, String> database = new HashMap<>();
-builder.withDetail("database", database);
+        builder.withDetail("database", database);
 
         DbInfoResponse dbInfo = dbMetaInfoService.dbInfo();
 
-        if(StringUtils.isBlank(dbInfo.getInitError())) {
+        if (StringUtils.isBlank(dbInfo.getInitError())) {
             database.put("product", dbInfo.getDbName());
             database.put("version", dbInfo.getDbVersion());
             database.put("driver", dbInfo.getDriverVersion());
             database.put("url", dbInfo.getConnectedUrl());
-        }
-        else {
+        } else {
             database.put("init-error", dbInfo.getInitError());
         }
     }
