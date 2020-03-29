@@ -10,7 +10,9 @@ on:
       - 'Dockerfile'
       - '.github/workflows/pre-release.yml'
       - '.aws/pre-release.json'
-
+  pull_request:
+    branches:
+      - master
 env:
   DOCKER_IMAGE: docker.io/mrazjava/booklink-backend
   DOCKER_IMG_TAG: master
