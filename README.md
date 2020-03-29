@@ -11,11 +11,19 @@ Backend business logic of a booklink service. Exposes operations via REST. Used 
 - PostgreSQL / Hibernate
 
 ## Quick Start
+The fastest start is with default config out of the box:
 ```
 docker-compose up
 mvn clean spring-boot:run
 ```
 Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 will run on port `5501`.
+
+We can also run quickly against other environments using additional profiles. Here we run against a remote db (in 
+this case it's our privately secured, AWS `pre` release database environment):
+```
+mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1
+```
+See `src/main/resources/` for additional profiles or build your own.
 
 ## Sandbox
 We can make a local docker image and run it off [sandbox](https://github.com/mrazjava/booklink#sandbox) `local` environment. This is helpful when testing new code prior merging to `develop` branch which is basis for sandbox staging. Running local image via sandbox is like simulating a staging environment; one can make sure that all automated upgrade scripts migrate correctly to central `develop` branch and that all tests are passing.
@@ -24,11 +32,6 @@ We build a local image just like any other image, except we build it off a custo
 ```
 mvn clean package
 docker build -t mrazjava/booklink-backend:local .
-```
-
-Running with multiple profiles, say to a private remote db (in this case our secured, AWS `pre`):
-```
-mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1
 ```
 
 It is possible also possible to run via `mvn` against [sandbox](https://github.com/mrazjava/booklink#sandbox) database, in which case `spring.datasource.url` must be overriden via `APP_BE_DB_URL` env variable. 
