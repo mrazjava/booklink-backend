@@ -26,14 +26,20 @@ mvn clean package
 docker build -t mrazjava/booklink-backend:local .
 ```
 
+Running with multiple profiles, say to a private remote db (in this case our secured, AWS `pre`):
+```
+mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1
+```
+
 It is possible also possible to run via `mvn` against [sandbox](https://github.com/mrazjava/booklink#sandbox) database, in which case `spring.datasource.url` must be overriden via `APP_BE_DB_URL` env variable. 
 
-To run against a `sandbox` database, say `local`:
+To run against a `sandbox` database, say `local` adjusting config on-the-fly via ENV overrides:
 ```
-cd [BOOKLINK_SANDBOX_PROJECT_DIR]
-./sandbox.sh local # launch persistence only enabling all sandbox databases
-cd [BOOKLINK_BACKEND_PROJECT_DIR]
-mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:postgresql://localhost:5432/booklink_sndbx_local -DAPP_BE_HIBERNATE_DDL_AUTO=validate"
+mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:postgresql://localhost:5432/booklink_sndbx_local -DAPP_BE_HIBERNATE_DDL_AUTO=validate -DAPP_SPRING_DATA_INIT=never -DAPP_FLYWAY_ENABLED=true"
+```
+or, same thing with less typing using a pre-configured profile:
+```
+mvn clean spring-boot:run -Dspring-boot.run.profiles=local,sndbx-local
 ```
 
 ## DB GUI

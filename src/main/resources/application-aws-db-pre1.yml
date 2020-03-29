@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc-secretsmanager:postgresql://pre-1.cnzxipfrf9ok.eu-central-1.rds.amazonaws.com:5432/booklink
+    driver-class-name: com.amazonaws.secretsmanager.sql.AWSSecretsManagerPostgreSQLDriver
+    username: pre1/postgres
+    initialization-mode: never

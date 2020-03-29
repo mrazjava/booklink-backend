@@ -26,6 +26,7 @@ public class DbMetaInfoService {
 
             response.setDbName(dbMetadata.getDatabaseProductName());
             response.setDbVersion(dbMetadata.getDatabaseProductVersion());
+            response.setDriverName(dbMetadata.getDriverName());
             response.setDriverVersion(dbMetadata.getDriverVersion());
             response.setConnectedUrl(dbMetadata.getURL());
             response.setConnectedUsername(dbMetadata.getUserName());

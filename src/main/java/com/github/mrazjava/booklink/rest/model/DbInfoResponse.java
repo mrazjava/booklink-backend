@@ -10,6 +10,8 @@ public class DbInfoResponse {
 
     private String dbVersion;
 
+    private String driverName;
+
     private String driverVersion;
 
     private String connectedUrl;
@@ -17,6 +19,14 @@ public class DbInfoResponse {
     private String connectedUsername;
 
     private String initError;
+
+    public String getDriverName() {
+        return driverName;
+    }
+
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
 
     public String getDriverVersion() {
         return driverVersion;

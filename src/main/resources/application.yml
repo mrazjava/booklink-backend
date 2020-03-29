@@ -12,6 +12,7 @@ spring:
     open-in-view: false
   datasource:
     platform: postgresql
+    driver-class-name: ${APP_SPRING_DATA_DRIVER:org.postgresql.Driver}
     initialization-mode: ${APP_SPRING_DATA_INIT:always}
     url: ${APP_BE_DB_URL:jdbc:postgresql://localhost:5433/booklink}
     username: ${APP_BE_DB_USERNAME:bookworm}
