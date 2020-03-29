@@ -3,6 +3,7 @@
     <include resource="org/springframework/boot/logging/logback/base.xml" />
     <logger name="ch.qos.logback" level="warn" />
     <logger name="org.springframework " level="info" />
+    <logger name="org.springframework.jdbc.datasource.init" level="debug" />
     <logger name="org.apache" level="info" />
     <logger name="org.springframework.boot.autoconfigure.mongo.embedded" level="info" />
     <logger name="org.springframework.test" level="warn" />

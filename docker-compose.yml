@@ -1,11 +1,23 @@
 # builds backend docker image and bootstraps it with all the dependencies
-##
-version: '3.3'
+#
+version: '3.1'
+
 services:
-  backend:
-    build: .
-    image: localhost/backend-master:latest
-    ports:
-    - "8080:8080"
+
+  pg:
+    image: postgres:12.2 # https://hub.docker.com/_/postgres
+    restart: always
     environment:
-      APP_ENV: local
+      POSTGRES_DB: booklink
+      POSTGRES_USER: bookworm
+      POSTGRES_PASSWORD: BL
+    ports:
+      - 127.0.0.1:5433:5432
+  admin:
+    image: dpage/pgadmin4 # https://hub.docker.com/r/dpage/pgadmin4/
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pg@docker # used as a login id
+      PGADMIN_DEFAULT_PASSWORD: admin
+      GUNICORN_ACCESS_LOGFILE: /tmp/pgadmin4.log
+    ports:
+      - 127.0.0.1:5501:80
