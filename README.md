@@ -18,12 +18,14 @@ mvn clean spring-boot:run
 ```
 Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 will run on port `5501`.
 
-We can also run quickly against other environments using additional profiles. Here we run against a remote db (in 
-this case it's our privately secured, AWS `pre` release database environment):
+We can also run quickly against other environments using additional profiles. Here we run against our AWS `pre` release<sup>1</sup> 
+database:
 ```
 mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1
 ```
 See `src/main/resources/` for additional profiles or build your own.
+
+<sup>1</sup> | AWS resources have limited (admin) access from the outside world - use sandbox
 
 ## Sandbox
 We can make a local docker image and run it off [sandbox](https://github.com/mrazjava/booklink#sandbox) `local` environment. This is helpful when testing new code prior merging to `develop` branch which is basis for sandbox staging. Running local image via sandbox is like simulating a staging environment; one can make sure that all automated upgrade scripts migrate correctly to central `develop` branch and that all tests are passing.
