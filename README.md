@@ -11,7 +11,7 @@ Backend business logic of a booklink service. Exposes operations via REST. Used 
 - PostgreSQL / Hibernate
 
 ## Quick Start
-The fastest start is with default config out of the box:
+It's easiest to run with default config out of the box:
 ```
 docker-compose up
 mvn clean spring-boot:run
