@@ -17,6 +17,9 @@ spring:
     url: ${APP_BE_DB_URL:jdbc:postgresql://localhost:5433/booklink}
     username: ${APP_BE_DB_USERNAME:bookworm}
     password: ${APP_BE_DB_PASSWORD:BL}
+    hikari:
+      connection-timeout: ${APP_HIKARI_CON_TIMEOUT:5000}
+      connection-test-query: select 1
   flyway:
     enabled: ${APP_FLYWAY_ENABLED:false}
 info:

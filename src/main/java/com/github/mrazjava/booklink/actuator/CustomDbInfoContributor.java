@@ -25,6 +25,12 @@ public class CustomDbInfoContributor implements InfoContributor {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClass;
 
+    @Value("${spring.datasource.hikari.connection-timeout:30001}")
+    private Long hikariConnectionTimeout;
+
+    @Value("${spring.datasource.hikari.connection-test-query}")
+    private String hikariConnectionTestQuery;
+
 
     @Override
     public void contribute(Info.Builder builder) {
@@ -35,16 +41,20 @@ public class CustomDbInfoContributor implements InfoContributor {
 
         DbInfoResponse dbInfo = dbMetaInfoService.dbInfo();
 
+        database.put("driver-class-name", driverClass);
+        database.put("connection-test-query", hikariConnectionTestQuery);
+        database.put("connection-timeout (s)", hikariConnectionTimeout);
+
         if (StringUtils.isBlank(dbInfo.getInitError())) {
             dbDriver.put("name", dbInfo.getDriverName());
             dbDriver.put("version", dbInfo.getDriverVersion());
-            dbDriver.put("class", driverClass);
+
             database.put("product", dbInfo.getDbName());
             database.put("version", dbInfo.getDbVersion());
             database.put("driver", dbDriver);
             database.put("url", dbInfo.getConnectedUrl());
         } else {
-            database.put("init-error", dbInfo.getInitError());
+            database.put("error", dbInfo.getInitError());
         }
     }
 }
