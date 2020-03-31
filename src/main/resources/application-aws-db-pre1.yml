@@ -1,4 +1,12 @@
 # used by AWS admins - requires special access
+#
+# environmental variable configuration:
+# https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
+# https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html
+#
+# [booklink-rds]
+# mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1 -Dspring-boot.run.jvmArguments="-Daws.accessKeyId=AKIA2HMMDYL3I73LC7J3 -Daws.secretKey=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 -Daws.region=eu-central-1"
+#
 spring:
   jpa:
     hibernate:
