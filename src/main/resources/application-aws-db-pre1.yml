@@ -1,4 +1,9 @@
 # used by AWS admins - requires special access
+#
+# environmental variable configuration:
+# https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
+# https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html
+#
 spring:
   jpa:
     hibernate:

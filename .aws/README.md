@@ -23,3 +23,11 @@ Identity and Access Management is used to defined users, roles and access associ
 
 ## [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/)
 Used by booklink to monitor resources and check logs.
+
+# Maven Runs
+We can run the app locally against AWS resources if we have access. AWS IAM user `booklink` credentials are necessary 
+in order to establish successful connection:
+```
+mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1 -Dspring-boot.run.jvmArguments="-Daws.accessKeyId= -Daws.secretKey= -Daws.region=eu-central-1"
+```
+You can either create you own AWS could environment or talk to me to get RDS booklink access.

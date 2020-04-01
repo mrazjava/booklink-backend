@@ -41,19 +41,20 @@ public class CustomDbInfoContributor implements InfoContributor {
 
         DbInfoResponse dbInfo = dbMetaInfoService.dbInfo();
 
-        database.put("driver-class-name", driverClass);
         database.put("connection-test-query", hikariConnectionTestQuery);
         database.put("connection-timeout (s)", hikariConnectionTimeout);
 
         if (StringUtils.isBlank(dbInfo.getInitError())) {
             dbDriver.put("name", dbInfo.getDriverName());
             dbDriver.put("version", dbInfo.getDriverVersion());
+            dbDriver.put("class-name", driverClass);
 
             database.put("product", dbInfo.getDbName());
             database.put("version", dbInfo.getDbVersion());
             database.put("driver", dbDriver);
             database.put("url", dbInfo.getConnectedUrl());
         } else {
+            database.put("driver-class-name", driverClass);
             database.put("error", dbInfo.getInitError());
         }
     }
