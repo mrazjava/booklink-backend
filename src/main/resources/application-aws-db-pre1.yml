@@ -4,12 +4,6 @@
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
 # https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html
 #
-cloud:
-  aws:
-    region:
-      static: eu-central-1
-    stack:
-      auto: false
 spring:
   jpa:
     hibernate:

@@ -22,6 +22,12 @@ spring:
       connection-test-query: select 1
   flyway:
     enabled: ${APP_FLYWAY_ENABLED:false}
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ${AWS_REGION:eu-central-1}
 info:
   app:
     home-page: ${APP_BASE_URL:http://localhost:8080}/swagger-ui.html
