@@ -32,7 +32,7 @@ management:
     git:
       mode: full
   health:
-      enabled: false
+      enabled: true
   endpoint:
     metrics:
       enabled: true
