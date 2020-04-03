@@ -25,6 +25,12 @@ public class BooklinkApp {
 
     public static void main(String[] args) {
 
+        log.info(".... [{}]-[{}]-[{}]",
+                System.getenv("AWS_ACCESS_KEY_ID"),
+                System.getenv("AWS_SECRET_ACCESS_KEY"),
+                System.getenv("AWS_REGION")
+        );
+
         new SpringApplicationBuilder()
                 .sources(BooklinkApp.class)
                 .run(args);
