@@ -4,6 +4,11 @@
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
 # https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html
 #
+#
+# mvn clean spring-boot:run
+# -Dspring-boot.run.profiles=local,aws-db-pre1
+# -Dspring-boot.run.jvmArguments="-Daws.accessKeyId= -Daws.secretKey= -Daws.region=eu-central-1"
+#
 spring:
   jpa:
     hibernate:

@@ -9,9 +9,7 @@ import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.security.RolesAllowed;
@@ -106,4 +104,20 @@ public class ProofOfConceptRestController {
     public String securedAdmin(@ApiIgnore Authentication auth) {
         return "administrator says: " + OffsetDateTime.now().toEpochSecond();
     }
+
+    @ApiOperation(
+            value = "Encode password"
+    )
+    @PostMapping("/password/encode")
+    @Produces("application/text")
+    @ApiImplicitParams(@ApiImplicitParam(
+            name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
+            paramType = "header",
+            value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
+            allowEmptyValue = true
+    ))
+    public String encodePassword(@RequestParam String plainText, @ApiIgnore Authentication auth) {
+        return pocService.getEncodedPassword(plainText);
+    }
+
 }
