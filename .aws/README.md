@@ -31,3 +31,18 @@ in order to establish successful connection:
 mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1 -Dspring-boot.run.jvmArguments="-Daws.accessKeyId= -Daws.secretKey= -Daws.region=eu-central-1"
 ```
 You can either create you own AWS could environment or talk to me to get RDS booklink access.
+
+# EC2
+The AWS instance which hosts the pre-release container is a slim CentOS machine, with Docker and basic utilities. 
+No Java.  
+
+# Aws CLI
+In the perfect world, a docker container on local should run the same as the container on EC2. I found this 
+unforutnately to not be the case. Sometimes it's necessary to spend time SSH'ed into EC2 instance troubleshooting 
+running container so here are some useful commands:
+
+Verify secret
+```
+aws secretsmanager describe-secret --secret-id MyDemoSecret
+aws secretsmanager get-secret-value --secret-id MyDemoSecret --version-stage AWSCURRENT
+``` 
