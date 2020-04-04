@@ -1,15 +1,14 @@
 package com.github.mrazjava.booklink.actuator;
 
-import com.github.mrazjava.booklink.rest.model.DbInfoResponse;
-import com.github.mrazjava.booklink.service.DbMetaInfoService;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -22,19 +21,22 @@ public class AwsInfoContributor implements InfoContributor {
     @Override
     public void contribute(Info.Builder builder) {
 
-        Map<String, Object> aws = new HashMap<>();
+        Map<String, Object> aws = new LinkedHashMap<>();
         builder.withDetail("AWS", aws);
 
-        String region = StringUtils.firstNonEmpty(
-                System.getenv("AWS_REGION"),System.getProperty("aws.region"));
-        String accessKeyId = StringUtils.firstNonEmpty(
-                System.getenv("AWS_ACCESS_KEY_ID"), System.getProperty("aws.accessKeyId"));
-        String secret = StringUtils.firstNonEmpty(
-                System.getenv("AWS_SECRET_ACCESS_KEY"), System.getProperty("aws.secretKey"));
+        try {
+            AWSCredentials credentials = new DefaultAWSCredentialsProviderChain().getCredentials();
 
-        aws.put("region", region);
-        aws.put("access key", maskValue(accessKeyId, 6, '*'));
-        aws.put("secret", maskValue(secret, 4, '*'));
+            String region = StringUtils.firstNonEmpty(
+                    System.getenv("AWS_REGION"), System.getProperty("aws.region"));
+
+            aws.put("region", region);
+            aws.put("key", maskValue(credentials.getAWSAccessKeyId(), 6, '*'));
+            aws.put("secret", maskValue(credentials.getAWSSecretKey(), 4, '*'));
+        }
+        catch(SdkClientException e) {
+            aws.put("error", e.getMessage());
+        }
     }
 
     private String maskValue(String value, int unmaskedAtEnd, char mask) {
