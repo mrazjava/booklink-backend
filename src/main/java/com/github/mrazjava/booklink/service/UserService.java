@@ -70,7 +70,7 @@ public class UserService implements UserDetailsService {
 
         UserEntity validatedUser = (UserEntity)principal;
 
-        if(StringUtils.isEmpty(validatedUser.getToken()) || OffsetDateTime.now().isAfter(validatedUser.getTokenExpiry())) {
+        if(validatedUser.isTokenExpired()) {
             validatedUser.setToken(UUID.randomUUID().toString());
             validatedUser.setTokenExpiry(OffsetDateTime.now().plusDays(3));
             if(log.isDebugEnabled()) {

@@ -2,8 +2,10 @@ package com.github.mrazjava.booklink;
 
 import com.github.mrazjava.booklink.rest.model.ErrorResponse;
 import org.slf4j.Logger;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,6 +35,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse response = produceErrorResponse(ex, request);
         log.error("unexpected problem", ex);
         return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ErrorResponse response = produceErrorResponse(ex, request);
+        log.error("bad REST request", ex);
+        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BooklinkException.class)

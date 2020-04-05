@@ -35,7 +35,7 @@ jobs:
       - name: test, then build jar
         id: mvn-jar
         run: |
-          mvn -B clean package
+          mvn -B clean verify package
       - name: upload jar artifact
         uses: actions/upload-artifact@v1
         with:
