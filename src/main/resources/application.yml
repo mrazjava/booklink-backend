@@ -25,6 +25,7 @@ spring:
 info:
   app:
     home-page: ${APP_BASE_URL:http://localhost:8080}/swagger-ui.html
+    health: ${APP_BASE_URL:http://localhost:8080}/actuator/health
     git-repo: https://github.com/mrazjava/booklink
     description: "@project.description@"
 management:
