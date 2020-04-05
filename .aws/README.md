@@ -4,27 +4,29 @@ are verified, built and packaged into a docker image which is pushed to AWS.A ne
 
 `booklink` uses the following AWS features: 
 
-## [Amazon ECR](https://aws.amazon.com/ecr/)
+### [Amazon ECR](https://aws.amazon.com/ecr/)
 Elastic Container Registry is used by `booklink` to upload the docker image it builds during a github build pipeline. Once hosted on Amazon (ECR), it is then deployed using ECS.
 
-## [Amazon ECS](https://aws.amazon.com/ecs/)
+### [Amazon ECS](https://aws.amazon.com/ecs/)
 Elastic Container Service allows booklink to deploy a docker image with pre-defined specifications such as CPU, memory, number of instances and auto scaling.
 
 * Cluster: `booklink-ec2lx-cluster`
-* Service: `booklink-backend-svc` (staging)
+* Service: `booklink-backend-svc` (pre-release)
 * Task Definition: `booklink-backend-ec2-taskdef`
 * Container: `booklink-backend-contr`
 
-## [Amazon EC2](https://aws.amazon.com/ec2/)
+Once deployed, EC2 instance assumes IAM role to execute instance which is the sole provider of permissions.
+
+### [Amazon EC2](https://aws.amazon.com/ec2/)
 Elastic Compute Cloud is used to define actual VM hosts (machines) that ultimately host and run contenerized application (defined via ECS). A service in ECS always ends up running on a machine provided by EC2.
 
-## [Amazon IAM](https://aws.amazon.com/iam/)
+### [Amazon IAM](https://aws.amazon.com/iam/)
 Identity and Access Management is used to defined users, roles and access associated with individual services. For example, booklink application has its own user `booklink` which operates within certain context of roles and policies defined using IAM.
 
-## [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/)
-Used by booklink to monitor resources and check logs.
+### [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/)
+Log monitoring
 
-# Maven Runs
+## Maven Runs
 We can run the app locally against AWS resources if we have access. AWS IAM user `booklink` credentials are necessary 
 in order to establish successful connection:
 ```
@@ -32,11 +34,11 @@ mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1 -Dspring-
 ```
 You can either create you own AWS could environment or talk to me to get RDS booklink access.
 
-# EC2
+## EC2
 The AWS instance which hosts the pre-release container is a slim CentOS machine, with Docker and basic utilities. 
 No Java.  
 
-# Aws CLI
+## Aws CLI
 In the perfect world, a docker container on local should run the same as the container on EC2. I found this 
 unforutnately to not be the case. Sometimes it's necessary to spend time SSH'ed into EC2 instance troubleshooting 
 running container so here are some useful commands:
