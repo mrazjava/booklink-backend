@@ -108,7 +108,7 @@ public class UserEntity implements UserDetails {
     @Transient
     @Override
     public boolean isAccountNonExpired() {
-        return OffsetDateTime.now().isBefore(getTokenExpiry());
+        return true;
     }
 
     @Transient
@@ -143,6 +143,12 @@ public class UserEntity implements UserDetails {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @Transient
+    public boolean isTokenExpired() {
+        OffsetDateTime tokenExpiry = getTokenExpiry();
+        return tokenExpiry == null || OffsetDateTime.now().isAfter(tokenExpiry);
     }
 
     public OffsetDateTime getTokenExpiry() {
