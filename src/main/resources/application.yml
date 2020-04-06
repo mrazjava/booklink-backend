@@ -18,7 +18,7 @@ spring:
     username: ${APP_BE_DB_USERNAME:bookworm}
     password: ${APP_BE_DB_PASSWORD:BL}
     hikari:
-      connection-timeout: ${APP_HIKARI_CON_TIMEOUT:5000}
+      connection-timeout: ${APP_HIKARI_CON_TIMEOUT:1500}
       connection-test-query: select 1
   flyway:
     enabled: ${APP_FLYWAY_ENABLED:false}
@@ -28,19 +28,13 @@ info:
     health: ${APP_BASE_URL:http://localhost:8080}/actuator/health
     git-repo: https://github.com/mrazjava/booklink
     description: "@project.description@"
+server:
+  error:
+    include-stacktrace: never
 management:
-  info:
-    git:
-      mode: full
-  health:
-      enabled: true
   endpoint:
-    metrics:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: info,health,loggers
+    health:
+      show-details: always
 booklink:
   security:
     cors-allow-origins: ${CORS_ALLOW_ORIGINS:}

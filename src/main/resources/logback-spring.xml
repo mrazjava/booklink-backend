@@ -5,7 +5,8 @@
     <root level="info"/>
     <logger name="ch.qos.logback" level="warn" />
     <logger name="org.springframework " level="info" />
-    <logger name="org.apache " level="info" />
+    <logger name="org.apache" level="info" />
+    <logger name="org.springframework.boot.actuate.jdbc.DataSourceHealthIndicator" level="error" />
 
     <springProfile name="local">
         <logger name="com.github.mrazjava.booklink" level="TRACE"/>
