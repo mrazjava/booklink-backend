@@ -35,6 +35,13 @@ management:
   endpoint:
     health:
       show-details: always
+  endpoints:
+    web:
+      cors:
+        allowed-origins: ${CORS_ALLOW_ORIGINS:http://localhost:8090}
+        allowed-methods: GET
 booklink:
   security:
-    cors-allow-origins: ${CORS_ALLOW_ORIGINS:}
+    cors-allow-origins: ${CORS_ALLOW_ORIGINS:http://localhost:8090}
+
+
