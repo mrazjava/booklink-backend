@@ -2,6 +2,7 @@ package com.github.mrazjava.booklink.rest;
 
 import com.github.mrazjava.booklink.config.SwaggerConfiguration;
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
+import com.github.mrazjava.booklink.rest.model.AuthResponse;
 import com.github.mrazjava.booklink.rest.model.ErrorResponse;
 import com.github.mrazjava.booklink.rest.model.LoginRequest;
 import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
@@ -68,7 +69,7 @@ public class AuthenticationRestController {
             value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
             allowEmptyValue = true
     ))
-    public ResponseEntity<String> login(@RequestBody(required = true) LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(@RequestBody(required = true) LoginRequest loginRequest) {
 
         log.debug("login request: {}", loginRequest.getEmail());
 
@@ -79,9 +80,9 @@ public class AuthenticationRestController {
                 )
         );
 
-        UserEntity userEntity = userService.ensureValidToken(authentication.getPrincipal());
+        UserEntity ue = userService.ensureValidToken(authentication.getPrincipal());
 
-        return ResponseEntity.ok(userEntity.getToken());
+        return ResponseEntity.ok(new AuthResponse(ue.getToken(), ue.getFirstName(), ue.getLastName()));
     }
 
     @ApiOperation(
