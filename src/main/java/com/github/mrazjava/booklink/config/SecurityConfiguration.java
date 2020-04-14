@@ -87,6 +87,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
         configuration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/rest/**", configuration);
+        source.registerCorsConfiguration("/actuator/**", configuration);
         return source;
     }
 
