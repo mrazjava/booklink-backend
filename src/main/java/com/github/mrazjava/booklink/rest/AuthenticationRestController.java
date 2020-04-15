@@ -2,6 +2,7 @@ package com.github.mrazjava.booklink.rest;
 
 import com.github.mrazjava.booklink.config.SwaggerConfiguration;
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
+import com.github.mrazjava.booklink.rest.model.AuthResponse;
 import com.github.mrazjava.booklink.rest.model.ErrorResponse;
 import com.github.mrazjava.booklink.rest.model.LoginRequest;
 import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
@@ -21,6 +22,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author AZ (mrazjava)
@@ -68,7 +70,7 @@ public class AuthenticationRestController {
             value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
             allowEmptyValue = true
     ))
-    public ResponseEntity<String> login(@RequestBody(required = true) LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(@RequestBody(required = true) LoginRequest loginRequest) {
 
         log.debug("login request: {}", loginRequest.getEmail());
 
@@ -79,9 +81,11 @@ public class AuthenticationRestController {
                 )
         );
 
-        UserEntity userEntity = userService.ensureValidToken(authentication.getPrincipal());
+        UserEntity ue = userService.ensureValidToken(authentication.getPrincipal());
+        AuthResponse response = new AuthResponse(ue.getToken(), ue.getFirstName(), ue.getLastName())
+                .withRoles(ue.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()));
 
-        return ResponseEntity.ok(userEntity.getToken());
+        return ResponseEntity.ok(response);
     }
 
     @ApiOperation(
