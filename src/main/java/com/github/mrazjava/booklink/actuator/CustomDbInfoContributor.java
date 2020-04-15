@@ -25,12 +25,20 @@ public class CustomDbInfoContributor implements InfoContributor {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClass;
 
-    @Value("${spring.datasource.hikari.connection-timeout:30001}")
+    @Value("${spring.datasource.hikari.connection-timeout}")
     private Long hikariConnectionTimeout;
 
-    @Value("${spring.datasource.hikari.connection-test-query}")
-    private String hikariConnectionTestQuery;
+    @Value("${spring.datasource.validation-query}")
+    private String validationQuery;
 
+    @Value("${spring.datasource.max-active}")
+    private Integer maxActiveConnections;
+
+    @Value("${spring.datasource.initial-size}")
+    private Integer initialConnectionPoolSize;
+
+    @Value("${spring.datasource.max-idle}")
+    private Integer maxIdleConnections;
 
     @Override
     public void contribute(Info.Builder builder) {
@@ -38,11 +46,17 @@ public class CustomDbInfoContributor implements InfoContributor {
         Map<String, Object> database = new HashMap<>();
         builder.withDetail("database", database);
         Map<String, String> dbDriver = new HashMap<>();
+        Map<String, Object> dbConnectionInfo = new HashMap<>();
 
         DbInfoResponse dbInfo = dbMetaInfoService.dbInfo();
 
-        database.put("connection-test-query", hikariConnectionTestQuery);
-        database.put("connection-timeout (s)", hikariConnectionTimeout);
+        database.put("validation-query", validationQuery);
+        database.put("connection", dbConnectionInfo);
+
+        dbConnectionInfo.put("timeout", hikariConnectionTimeout);
+        dbConnectionInfo.put("max-active", maxActiveConnections);
+        dbConnectionInfo.put("initial-pool-size", initialConnectionPoolSize);
+        dbConnectionInfo.put("max-idle", maxIdleConnections);
 
         if (StringUtils.isBlank(dbInfo.getInitError())) {
             dbDriver.put("name", dbInfo.getDriverName());

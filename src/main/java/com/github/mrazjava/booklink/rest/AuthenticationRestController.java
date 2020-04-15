@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author AZ (mrazjava)
@@ -81,8 +82,10 @@ public class AuthenticationRestController {
         );
 
         UserEntity ue = userService.ensureValidToken(authentication.getPrincipal());
+        AuthResponse response = new AuthResponse(ue.getToken(), ue.getFirstName(), ue.getLastName())
+                .withRoles(ue.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()));
 
-        return ResponseEntity.ok(new AuthResponse(ue.getToken(), ue.getFirstName(), ue.getLastName()));
+        return ResponseEntity.ok(response);
     }
 
     @ApiOperation(
