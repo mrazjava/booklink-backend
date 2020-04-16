@@ -71,8 +71,8 @@ public class ProofOfConceptRestController {
             value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
             allowEmptyValue = true
     ))
-    public String securedHello() {
-        return "Howdy, it's " + new Date();
+    public String securedHello(@ApiIgnore Authentication auth) {
+        return pocService.sayHello(auth);
     }
 
     @ApiOperation(
@@ -82,7 +82,7 @@ public class ProofOfConceptRestController {
     @Produces("application/text")
     @RolesAllowed({"ROLE_FOO", "ROLE_ADMIN"})
     public String securedFoo(@ApiIgnore Authentication auth) {
-        return "foo says: " + UUID.randomUUID() + " (and you are: " + auth.getName() + ")";
+        return pocService.randomAlphanumeric();
     }
 
     @ApiOperation(
@@ -92,7 +92,7 @@ public class ProofOfConceptRestController {
     @Produces("application/text")
     @RolesAllowed({"ROLE_BAR", "ROLE_ADMIN"})
     public String securedBar() {
-        return "bar says: " + RandomStringUtils.randomAlphabetic(15);
+        return pocService.randomAlpha();
     }
 
     @ApiOperation(
@@ -102,7 +102,7 @@ public class ProofOfConceptRestController {
     @Produces("application/text")
     @RolesAllowed({"ROLE_ADMIN"})
     public String securedAdmin(@ApiIgnore Authentication auth) {
-        return "administrator says: " + OffsetDateTime.now().toEpochSecond();
+        return pocService.randomWords().toString();
     }
 
     @ApiOperation(
