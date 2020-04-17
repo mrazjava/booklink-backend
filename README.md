@@ -4,6 +4,10 @@
 # Booklink - core services
 Backend business logic of a booklink service. Exposes operations via REST. Used by frontends.
 
+## It's Alive
+- production (not setup yet)
+- [pre-release](http://ec2-3-124-3-167.eu-central-1.compute.amazonaws.com:8888/actuator/info)
+
 ## Stack
 - Java 11
 - Spring Boot
