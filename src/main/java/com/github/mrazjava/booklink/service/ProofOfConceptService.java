@@ -53,9 +53,28 @@ public class ProofOfConceptService {
     }
 
     public String sayHello(Authentication auth) {
-        return "Howdy, it's " + new Date() + " (and you are: " + auth.getName() + ")";
+        String[] greetings = {"Howdy %s, it's ", "Hello %s. Time is ", "Wuzzaaaaa %s! my time is ", "What's up %s. Time is ", "How do you do, %s? It's now ", "%s, time is: "};
+        int greetingIndx = new Random().nextInt((5 - 0) + 1) + 0;
+        return String.format(greetings[greetingIndx], shuffle(auth.getName())) + new Date();
     }
 
+    private String shuffle(String input){
+
+        if(System.currentTimeMillis() % 2 == 0) {
+            return input;
+        }
+
+        List<Character> characters = new ArrayList<Character>();
+        for(char c:input.toCharArray()){
+            characters.add(c);
+        }
+        StringBuilder output = new StringBuilder(input.length());
+        while(characters.size()!=0){
+            int randPicker = (int)(Math.random()*characters.size());
+            output.append(characters.remove(randPicker));
+        }
+        return output.toString();
+    }
     public String getEncodedPassword(String plainText) {
         return passwordEncoder.encode(plainText);
     }
