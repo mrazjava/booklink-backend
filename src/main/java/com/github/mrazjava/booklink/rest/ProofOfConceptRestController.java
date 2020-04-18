@@ -65,12 +65,6 @@ public class ProofOfConceptRestController {
     )
     @GetMapping("/secured/hello")
     @Produces("application/text")
-    @ApiImplicitParams(@ApiImplicitParam(
-            name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
-            paramType = "header",
-            value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
-            allowEmptyValue = true
-    ))
     public String securedHello(@ApiIgnore Authentication auth) {
         return pocService.sayHello(auth);
     }
