@@ -70,31 +70,31 @@ public class ProofOfConceptRestController {
     }
 
     @ApiOperation(
-            value = "Dummy secured endpoint; allowed roles: FOO|ADMIN"
+            value = "Dummy secured endpoint; allowed roles: FOO|ADMIN|DETECTIVE"
     )
     @GetMapping("/secured/foo")
     @Produces("application/text")
-    @RolesAllowed({"ROLE_FOO", "ROLE_ADMIN"})
+    @RolesAllowed({"ROLE_FOO", "ROLE_ADMIN", "ROLE_DETECTIVE"})
     public String securedFoo(@ApiIgnore Authentication auth) {
         return pocService.randomAlphanumeric();
     }
 
     @ApiOperation(
-            value = "Dummy secured endpoint; allowed roles: BAR|ADMIN"
+            value = "Dummy secured endpoint; allowed roles: BAR|ADMIN|DETECTIVE"
     )
     @GetMapping("/secured/bar")
     @Produces("application/text")
-    @RolesAllowed({"ROLE_BAR", "ROLE_ADMIN"})
+    @RolesAllowed({"ROLE_BAR", "ROLE_ADMIN", "ROLE_DETECTIVE"})
     public String securedBar() {
         return pocService.randomAlpha();
     }
 
     @ApiOperation(
-            value = "Dummy secured endpoint; allowed roles: ADMIN"
+            value = "Dummy secured endpoint; allowed roles: ADMIN|DETECTIVE"
     )
     @GetMapping("/secured/admin")
     @Produces("application/text")
-    @RolesAllowed({"ROLE_ADMIN"})
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_DETECTIVE"})
     public String securedAdmin(@ApiIgnore Authentication auth) {
         return pocService.randomWords().toString();
     }
