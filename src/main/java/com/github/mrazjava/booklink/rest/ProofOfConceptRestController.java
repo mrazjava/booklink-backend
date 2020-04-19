@@ -92,10 +92,10 @@ public class ProofOfConceptRestController {
     @ApiOperation(
             value = "Dummy secured endpoint; allowed roles: ADMIN|DETECTIVE"
     )
-    @GetMapping("/secured/admin")
+    @GetMapping("/secured/investigation")
     @Produces("application/text")
     @RolesAllowed({"ROLE_ADMIN", "ROLE_DETECTIVE"})
-    public String securedAdmin(@ApiIgnore Authentication auth) {
+    public String securedInvestigation(@ApiIgnore Authentication auth) {
         return pocService.randomWords().toString();
     }
 
