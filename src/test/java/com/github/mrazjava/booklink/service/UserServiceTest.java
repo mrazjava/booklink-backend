@@ -5,6 +5,7 @@ import com.github.mrazjava.booklink.persistence.model.UserEntity;
 import com.github.mrazjava.booklink.persistence.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,7 +19,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author AZ (mrazjava)
@@ -44,7 +45,7 @@ public class UserServiceTest {
     public void shouldRejectValidateTokenBadCredentials() {
         Assertions.assertThrows(
                 BadCredentialsException.class,
-                () -> userService.ensureValidToken(new Object())
+                () -> userService.login(new Object())
         );
     }
 
@@ -53,7 +54,12 @@ public class UserServiceTest {
         String token = UUID.randomUUID().toString();
         OffsetDateTime tokenExpiry = OffsetDateTime.now().plusDays(1);
         UserEntity user = new UserEntity(token, tokenExpiry);
-        UserEntity verifiedUser = userService.ensureValidToken(user);
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        when(userRepository.save(any())).thenReturn(user);
+        UserEntity verifiedUser = userService.login(user);
+        verify(userRepository, times(1)).save(captor.capture());
+        UserEntity loggedInUser = captor.getValue();
+        assertNotNull(loggedInUser.getLastLoginOn());
         assertEquals(token, verifiedUser.getToken());
     }
 
@@ -65,7 +71,7 @@ public class UserServiceTest {
 
         when(userRepository.save(any(UserEntity.class))).thenReturn(new UserEntity(newToken, null));
 
-        UserEntity verifiedUser = userService.ensureValidToken(new UserEntity(token, tokenExpiry));
+        UserEntity verifiedUser = userService.login(new UserEntity(token, tokenExpiry));
 
         assertNotNull(verifiedUser.getToken());
         assertEquals(newToken, verifiedUser.getToken());

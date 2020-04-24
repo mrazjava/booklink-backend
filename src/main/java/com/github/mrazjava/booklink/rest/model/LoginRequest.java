@@ -11,11 +11,20 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @ApiModel
 public class LoginRequest {
 
-    @ApiModelProperty(required = true, position = 1)
+    @ApiModelProperty(required = true)
     private String email;
 
-    @ApiModelProperty(required = true, position = 2)
+    @ApiModelProperty(required = true)
     private String password;
+
+    @ApiModelProperty
+    private String fbId;
+
+    @ApiModelProperty
+    private String fbFirstName;
+
+    @ApiModelProperty
+    private String fbLastName;
 
     public String getEmail() {
         return email;
@@ -31,6 +40,30 @@ public class LoginRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getFbId() {
+        return fbId;
+    }
+
+    public void setFbId(String fbId) {
+        this.fbId = fbId;
+    }
+
+    public String getFbFirstName() {
+        return fbFirstName;
+    }
+
+    public void setFbFirstName(String fbFirstName) {
+        this.fbFirstName = fbFirstName;
+    }
+
+    public String getFbLastName() {
+        return fbLastName;
+    }
+
+    public void setFbLastName(String fbLastName) {
+        this.fbLastName = fbLastName;
     }
 
     @Override

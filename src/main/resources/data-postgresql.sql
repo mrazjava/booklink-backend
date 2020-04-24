@@ -13,3 +13,4 @@ insert into bl_user_role values (1, 2);
 insert into bl_user_role values (2, 3);
 insert into bl_user_role values (3, 1);
 insert into bl_user_role values (5, 4);
+alter sequence user_sequence restart 6;

@@ -1,8 +1,11 @@
 package com.github.mrazjava.booklink.service;
 
 import com.github.mrazjava.booklink.BooklinkException;
+import com.github.mrazjava.booklink.persistence.model.RoleEntity;
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
+import com.github.mrazjava.booklink.persistence.repository.RoleRepository;
 import com.github.mrazjava.booklink.persistence.repository.UserRepository;
+import com.github.mrazjava.booklink.rest.model.LoginRequest;
 import com.github.mrazjava.booklink.security.InvalidAccessTokenException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -54,6 +58,32 @@ public class UserService implements UserDetailsService {
         return userRepository.findByToken(accessToken);
     }
 
+    public void prepareFacebookLogin(LoginRequest request) {
+
+        Optional<UserEntity> result = findUserByEmail(request.getEmail());
+        UserEntity userEntity;
+
+        if(result.isEmpty()) {
+            // auto register FB user
+            log.debug("new facebook user request:\n{}", request);
+
+            userEntity = new UserEntity(UUID.randomUUID().toString(), OffsetDateTime.now().plusDays(10));
+            userEntity.setFirstName(request.getFbFirstName());
+            userEntity.setLastName(request.getFbLastName());
+            userEntity.setEmail(request.getEmail());
+            userEntity.setPassword(passwordEncoder.encode(request.getFbId()));
+            userEntity.setActive(1);
+            userEntity.setRoles(Set.of(new RoleEntity(RoleEntity.ID_DETECTIVE)));
+            userEntity = userRepository.save(userEntity);
+
+        }
+        else {
+            userEntity = result.get();
+        }
+
+        request.setPassword(request.getFbId());
+    }
+
     /**
      * If access token is not present or if it's expired, new one is created. If token
      * exists and is not expired, it is returned.
@@ -62,7 +92,7 @@ public class UserService implements UserDetailsService {
      * @return user with a valid token
      * @throws BadCredentialsException if principal is of wrong type
      */
-    public UserEntity ensureValidToken(Object principal) {
+    public UserEntity login(Object principal) {
 
         if(!(principal instanceof UserEntity)) {
             throw new BadCredentialsException("wrong principal");
@@ -76,10 +106,11 @@ public class UserService implements UserDetailsService {
             if(log.isDebugEnabled()) {
                 log.debug("issued new access token {}, expiry: {}", validatedUser.getToken(), validatedUser.getTokenExpiry());
             }
-            validatedUser = userRepository.save(validatedUser);
         }
 
-        return validatedUser;
+        validatedUser.setLastLoginOn(OffsetDateTime.now());
+
+        return userRepository.save(validatedUser);
     }
 
     public String deleteAuthToken(UserDetails credentials) {

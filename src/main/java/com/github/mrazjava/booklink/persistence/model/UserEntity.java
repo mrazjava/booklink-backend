@@ -23,7 +23,7 @@ public class UserEntity implements UserDetails {
     static final int STATUS_LOCKED = 2;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_sequence")
     private Long id;
 
     @Column(unique = true)
@@ -50,7 +50,7 @@ public class UserEntity implements UserDetails {
     @Column
     private int active;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "bl_user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles;
 

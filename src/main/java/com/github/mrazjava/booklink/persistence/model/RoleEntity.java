@@ -8,12 +8,22 @@ import javax.persistence.*;
 @Entity(name = "bl_role")
 public class RoleEntity {
 
+    public static final long ID_DETECTIVE = 4l;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "role_name")
     private String name;
+
+    public RoleEntity() {
+
+    }
+
+    public RoleEntity(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;
