@@ -3,6 +3,7 @@ package com.github.mrazjava.booklink.service;
 import com.github.mrazjava.booklink.BooklinkException;
 import com.github.mrazjava.booklink.persistence.model.RoleEntity;
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
+import com.github.mrazjava.booklink.persistence.model.UserOriginEntity;
 import com.github.mrazjava.booklink.persistence.repository.RoleRepository;
 import com.github.mrazjava.booklink.persistence.repository.UserRepository;
 import com.github.mrazjava.booklink.rest.model.LoginRequest;
@@ -74,6 +75,7 @@ public class UserService implements UserDetailsService {
             userEntity.setPassword(passwordEncoder.encode(request.getFbId()));
             userEntity.setActive(1);
             userEntity.setRoles(Set.of(new RoleEntity(RoleEntity.ID_DETECTIVE)));
+            userEntity.setOrigin(new UserOriginEntity(UserOriginEntity.ID_FACEBOOK_ORIGIN));
             userEntity = userRepository.save(userEntity);
 
         }
@@ -108,9 +110,12 @@ public class UserService implements UserDetailsService {
             }
         }
 
+        OffsetDateTime lastLoginOn = validatedUser.getLastLoginOn();
         validatedUser.setLastLoginOn(OffsetDateTime.now());
+        UserEntity loginResult = new UserEntity(userRepository.save(validatedUser));
+        loginResult.setLastLoginOn(lastLoginOn);
 
-        return userRepository.save(validatedUser);
+        return loginResult;
     }
 
     public String deleteAuthToken(UserDetails credentials) {

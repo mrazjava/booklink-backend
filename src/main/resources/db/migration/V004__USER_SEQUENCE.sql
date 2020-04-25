@@ -1,1 +1,0 @@
-create sequence user_sequence increment by 1 start 6

@@ -3,24 +3,29 @@ package com.github.mrazjava.booklink.persistence.model;
 import javax.persistence.*;
 
 /**
- * @since 0.2.0
+ * @since 0.2.7
  */
-@Entity(name = "bl_role")
-public class RoleEntity {
+@Entity(name = "bl_user_origin")
+public class UserOriginEntity {
 
-    public static final long ID_DETECTIVE = 4l;
+    public static final long ID_BOOKLINK_ORIGIN = 1;
+    public static final long ID_FACEBOOK_ORIGIN = 2;
+    public static final long ID_GOOGLE_ORIGIN = 3;
 
     @Id
     private Long id;
 
-    @Column(name = "role_name")
+    @Column(name = "origin_name")
     private String name;
 
-    public RoleEntity() {
-
+    public UserOriginEntity() {
     }
 
-    public RoleEntity(Long id) {
+    public UserOriginEntity(long id) {
+        this.id = id;
+    }
+
+    public UserOriginEntity(Long id) {
         this.id = id;
     }
 

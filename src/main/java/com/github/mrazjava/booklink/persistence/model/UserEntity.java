@@ -32,6 +32,9 @@ public class UserEntity implements UserDetails {
     @Column(name = "pwd")
     private String password;
 
+    @Column(name = "last_pwd_change")
+    private OffsetDateTime lastPwdChange;
+
     @Column(name = "last_login_on")
     private OffsetDateTime lastLoginOn;
 
@@ -46,6 +49,10 @@ public class UserEntity implements UserDetails {
 
     @Column(name = "l_name")
     private String lastName;
+
+    @ManyToOne
+    @JoinColumn(name = "origin_id", referencedColumnName = "id")
+    private UserOriginEntity origin;
 
     @Column
     private int active;
@@ -67,12 +74,15 @@ public class UserEntity implements UserDetails {
         id = source.getId();
         email = source.getEmail();
         password = source.getPassword();
+        lastPwdChange = source.getLastPwdChange();
+        lastLoginOn = source.getLastLoginOn();
         token = source.getToken();
         tokenExpiry = source.getTokenExpiry(); // immutable, ref copy ok
         firstName = source.getFirstName();
         lastName = source.getLastName();
         active = source.getActive();
         roles = new HashSet<>(source.getRoles());
+        origin = source.getOrigin();
     }
 
     public Long getId() {
@@ -137,6 +147,14 @@ public class UserEntity implements UserDetails {
         this.password = password;
     }
 
+    public OffsetDateTime getLastPwdChange() {
+        return lastPwdChange;
+    }
+
+    public void setLastPwdChange(OffsetDateTime lastPwdChange) {
+        this.lastPwdChange = lastPwdChange;
+    }
+
     public String getToken() {
         return token;
     }
@@ -192,11 +210,19 @@ public class UserEntity implements UserDetails {
     }
 
     public Set<RoleEntity> getRoles() {
-        return roles;
+        return roles == null ? new HashSet<>() : roles;
     }
 
     public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
+    }
+
+    public UserOriginEntity getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(UserOriginEntity origin) {
+        this.origin = origin;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.github.mrazjava.booklink.rest.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -20,6 +21,9 @@ public class AuthResponse {
 
     @ApiModelProperty
     private String lastName;
+
+    @ApiModelProperty
+    private OffsetDateTime lastLoginOn;
 
     @ApiModelProperty
     private List<String> roles;
@@ -53,6 +57,19 @@ public class AuthResponse {
 
     public AuthResponse withRoles(List<String> roles) {
         setRoles(roles);
+        return this;
+    }
+
+    public OffsetDateTime getLastLoginOn() {
+        return lastLoginOn;
+    }
+
+    public void setLastLoginOn(OffsetDateTime lastLoginOn) {
+        this.lastLoginOn = lastLoginOn;
+    }
+
+    public AuthResponse withLastLoginOn(OffsetDateTime lastLoginOn) {
+        setLastLoginOn(lastLoginOn);
         return this;
     }
 }
