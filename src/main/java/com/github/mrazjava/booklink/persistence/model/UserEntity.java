@@ -50,6 +50,9 @@ public class UserEntity implements UserDetails {
     @Column(name = "l_name")
     private String lastName;
 
+    @Column(name = "nick_name")
+    private String nickName;
+
     @ManyToOne
     @JoinColumn(name = "origin_id", referencedColumnName = "id")
     private UserOriginEntity origin;
@@ -80,6 +83,7 @@ public class UserEntity implements UserDetails {
         tokenExpiry = source.getTokenExpiry(); // immutable, ref copy ok
         firstName = source.getFirstName();
         lastName = source.getLastName();
+        nickName = source.getNickName();
         active = source.getActive();
         roles = new HashSet<>(source.getRoles());
         origin = source.getOrigin();
@@ -199,6 +203,14 @@ public class UserEntity implements UserDetails {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public int getActive() {
