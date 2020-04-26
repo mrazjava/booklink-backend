@@ -6,22 +6,23 @@ import com.github.mrazjava.booklink.rest.model.AuthResponse;
 import com.github.mrazjava.booklink.rest.model.ErrorResponse;
 import com.github.mrazjava.booklink.rest.model.LoginRequest;
 import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
-import com.github.mrazjava.booklink.security.InvalidAccessTokenException;
 import com.github.mrazjava.booklink.service.UserService;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -74,6 +75,10 @@ public class AuthenticationRestController {
 
         log.debug("login request: {}", loginRequest.getEmail());
 
+        if(StringUtils.isNotEmpty(loginRequest.getFbId())) {
+            userService.prepareFacebookLogin(loginRequest);
+        }
+
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -81,9 +86,10 @@ public class AuthenticationRestController {
                 )
         );
 
-        UserEntity ue = userService.ensureValidToken(authentication.getPrincipal());
+        UserEntity ue = userService.login(authentication.getPrincipal());
         AuthResponse response = new AuthResponse(ue.getToken(), ue.getFirstName(), ue.getLastName())
-                .withRoles(ue.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()));
+                .withRoles(ue.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))
+                .withLastLoginOn(ue.getLastLoginOn());
 
         return ResponseEntity.ok(response);
     }

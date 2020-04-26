@@ -23,7 +23,7 @@ public class UserEntity implements UserDetails {
     static final int STATUS_LOCKED = 2;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_sequence")
     private Long id;
 
     @Column(unique = true)
@@ -31,6 +31,9 @@ public class UserEntity implements UserDetails {
 
     @Column(name = "pwd")
     private String password;
+
+    @Column(name = "last_pwd_change")
+    private OffsetDateTime lastPwdChange;
 
     @Column(name = "last_login_on")
     private OffsetDateTime lastLoginOn;
@@ -47,10 +50,17 @@ public class UserEntity implements UserDetails {
     @Column(name = "l_name")
     private String lastName;
 
+    @Column(name = "nick_name")
+    private String nickName;
+
+    @ManyToOne
+    @JoinColumn(name = "origin_id", referencedColumnName = "id")
+    private UserOriginEntity origin;
+
     @Column
     private int active;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "bl_user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles;
 
@@ -67,12 +77,16 @@ public class UserEntity implements UserDetails {
         id = source.getId();
         email = source.getEmail();
         password = source.getPassword();
+        lastPwdChange = source.getLastPwdChange();
+        lastLoginOn = source.getLastLoginOn();
         token = source.getToken();
         tokenExpiry = source.getTokenExpiry(); // immutable, ref copy ok
         firstName = source.getFirstName();
         lastName = source.getLastName();
+        nickName = source.getNickName();
         active = source.getActive();
         roles = new HashSet<>(source.getRoles());
+        origin = source.getOrigin();
     }
 
     public Long getId() {
@@ -137,6 +151,14 @@ public class UserEntity implements UserDetails {
         this.password = password;
     }
 
+    public OffsetDateTime getLastPwdChange() {
+        return lastPwdChange;
+    }
+
+    public void setLastPwdChange(OffsetDateTime lastPwdChange) {
+        this.lastPwdChange = lastPwdChange;
+    }
+
     public String getToken() {
         return token;
     }
@@ -183,6 +205,14 @@ public class UserEntity implements UserDetails {
         this.lastName = lastName;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     public int getActive() {
         return active;
     }
@@ -192,11 +222,19 @@ public class UserEntity implements UserDetails {
     }
 
     public Set<RoleEntity> getRoles() {
-        return roles;
+        return roles == null ? new HashSet<>() : roles;
     }
 
     public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
+    }
+
+    public UserOriginEntity getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(UserOriginEntity origin) {
+        this.origin = origin;
     }
 
     @Override
