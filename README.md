@@ -6,7 +6,7 @@ Backend business logic of a booklink service. Exposes operations via REST. Used 
 
 ## It's Alive
 - production (not setup yet)
-- [pre-release](http://ec2-3-124-3-167.eu-central-1.compute.amazonaws.com:8888/actuator/info)
+- [pre-release](https://pre-be.booklinktrove.com/actuator/info)
 
 ## Stack
 - Java 11
