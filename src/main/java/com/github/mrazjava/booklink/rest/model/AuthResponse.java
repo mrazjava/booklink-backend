@@ -26,6 +26,9 @@ public class AuthResponse {
     private OffsetDateTime lastLoginOn;
 
     @ApiModelProperty
+    private Long origin;
+
+    @ApiModelProperty
     private List<String> roles;
 
 
@@ -70,6 +73,19 @@ public class AuthResponse {
 
     public AuthResponse withLastLoginOn(OffsetDateTime lastLoginOn) {
         setLastLoginOn(lastLoginOn);
+        return this;
+    }
+
+    public Long getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(Long origin) {
+        this.origin = origin;
+    }
+
+    public AuthResponse withOrigin(Long origin) {
+        setOrigin(origin);
         return this;
     }
 }

@@ -89,6 +89,7 @@ public class AuthenticationRestController {
         UserEntity ue = userService.login(authentication.getPrincipal());
         AuthResponse response = new AuthResponse(ue.getToken(), ue.getFirstName(), ue.getLastName())
                 .withRoles(ue.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))
+                .withOrigin(ue.getOrigin().getId())
                 .withLastLoginOn(ue.getLastLoginOn());
 
         return ResponseEntity.ok(response);
