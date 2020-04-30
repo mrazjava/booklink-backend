@@ -9,7 +9,7 @@ import javax.inject.Inject;
  * Determines which bean to use by default (interface binding), in cases where more
  * than one implementation exists.
  *
- * @since 0.1.0
+ * @author AZ
  */
 @Configuration
 public class PrimaryBeanResolver {

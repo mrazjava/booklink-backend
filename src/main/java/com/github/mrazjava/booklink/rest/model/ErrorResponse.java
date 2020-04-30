@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 /**
  * Generic error response in case of error scenarios for REST Service calls.
  *
- * @author AZ (mrazjava)
- * @since 0.2.0
+ * @author AZ
  */
 @ApiModel(value = "generic backend response",
         description = "returned in all error scenarios")

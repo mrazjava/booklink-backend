@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * @since 0.1.0
+ * @author AZ
  */
 @Api(
         tags = {"Proof of Concept"}

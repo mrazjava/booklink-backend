@@ -2,6 +2,7 @@ package com.github.mrazjava.booklink.rest;
 
 import com.github.mrazjava.booklink.config.SwaggerConfiguration;
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
+import com.github.mrazjava.booklink.persistence.model.UserOrigin;
 import com.github.mrazjava.booklink.rest.model.AuthResponse;
 import com.github.mrazjava.booklink.rest.model.ErrorResponse;
 import com.github.mrazjava.booklink.rest.model.LoginRequest;
@@ -26,8 +27,7 @@ import javax.ws.rs.Produces;
 import java.util.stream.Collectors;
 
 /**
- * @author AZ (mrazjava)
- * @since 0.2.0
+ * @author AZ
  */
 @Api(
         tags = {"Authentication"}
@@ -75,21 +75,27 @@ public class AuthenticationRestController {
 
         log.debug("login request: {}", loginRequest.getEmail());
 
+        UserOrigin loginOrigin;
+
         if(StringUtils.isNotEmpty(loginRequest.getFbId())) {
             userService.prepareFacebookLogin(loginRequest);
+            loginOrigin = UserOrigin.FACEBOOK;
+        }
+        else {
+            loginOrigin = UserOrigin.BOOKLINK;
         }
 
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
+                        String.format("%s#%s", loginOrigin, loginRequest.getEmail()),
                         loginRequest.getPassword()
                 )
         );
 
-        UserEntity ue = userService.login(authentication.getPrincipal());
+        UserEntity ue = userService.login(authentication.getPrincipal(), loginOrigin);
         AuthResponse response = new AuthResponse(ue.getToken(), ue.getFirstName(), ue.getLastName())
                 .withRoles(ue.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))
-                .withOrigin(ue.getOrigin().getId())
+                .withOrigin(loginOrigin.getId())
                 .withLastLoginOn(ue.getLastLoginOn());
 
         return ResponseEntity.ok(response);

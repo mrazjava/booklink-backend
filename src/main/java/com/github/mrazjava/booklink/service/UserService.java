@@ -1,10 +1,9 @@
 package com.github.mrazjava.booklink.service;
 
-import com.github.mrazjava.booklink.BooklinkException;
 import com.github.mrazjava.booklink.persistence.model.RoleEntity;
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
+import com.github.mrazjava.booklink.persistence.model.UserOrigin;
 import com.github.mrazjava.booklink.persistence.model.UserOriginEntity;
-import com.github.mrazjava.booklink.persistence.repository.RoleRepository;
 import com.github.mrazjava.booklink.persistence.repository.UserRepository;
 import com.github.mrazjava.booklink.rest.model.LoginRequest;
 import com.github.mrazjava.booklink.security.InvalidAccessTokenException;
@@ -27,8 +26,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 
 /**
- * @author AZ(mrazjava)
- * @since 0.2.0
+ * @author AZ
  */
 @Service
 public class UserService implements UserDetailsService {
@@ -72,17 +70,23 @@ public class UserService implements UserDetailsService {
             userEntity.setFirstName(request.getFbFirstName());
             userEntity.setLastName(request.getFbLastName());
             userEntity.setEmail(request.getEmail());
-            userEntity.setPassword(passwordEncoder.encode(request.getFbId()));
+            userEntity.setPasswordFb(passwordEncoder.encode(request.getFbId()));
             userEntity.setActive(1);
             userEntity.setRoles(Set.of(new RoleEntity(RoleEntity.ID_DETECTIVE)));
-            userEntity.setOrigin(new UserOriginEntity(UserOriginEntity.ID_FACEBOOK_ORIGIN));
+            userEntity.setRegistrationOrigin(new UserOriginEntity(UserOrigin.FACEBOOK.getId()));
             userEntity = userRepository.save(userEntity);
 
         }
         else {
             userEntity = result.get();
+            if(StringUtils.isEmpty(userEntity.getPasswordFb())) {
+                // user already setup under different origin but first time FB login
+                userEntity.setPasswordFb(passwordEncoder.encode(request.getFbId()));
+                userRepository.save(userEntity);
+            }
         }
 
+        // fb auth does not provide password in the request; we need to build one
         request.setPassword(request.getFbId());
     }
 
@@ -91,10 +95,11 @@ public class UserService implements UserDetailsService {
      * exists and is not expired, it is returned.
      *
      * @param principal for which to verify the token as provided by authentication manager
+     * @param loginOrigin source from which user authenticated
      * @return user with a valid token
      * @throws BadCredentialsException if principal is of wrong type
      */
-    public UserEntity login(Object principal) {
+    public UserEntity login(Object principal, UserOrigin loginOrigin) {
 
         if(!(principal instanceof UserEntity)) {
             throw new BadCredentialsException("wrong principal");
@@ -112,7 +117,8 @@ public class UserService implements UserDetailsService {
 
         OffsetDateTime lastLoginOn = validatedUser.getLastLoginOn();
         validatedUser.setLastLoginOn(OffsetDateTime.now());
-        UserEntity loginResult = new UserEntity(userRepository.save(validatedUser));
+        validatedUser.setLastLoginOrigin(new UserOriginEntity(loginOrigin.getId()));
+        UserEntity loginResult = userRepository.save(validatedUser);
         loginResult.setLastLoginOn(lastLoginOn);
 
         return loginResult;
@@ -133,8 +139,26 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<UserEntity> userEntityResult = findUserByEmail(username);
+        log.debug("spring auth; fetching user: {}", username);
+
+        if(!username.contains("#")) {
+            log.error("malformed username: {} (expected format: ORIGIN#EMAIL)", username);
+            throw new UsernameNotFoundException(username);
+        }
+
+        String[] userNameTokens = username.split("#");
+
+        if(userNameTokens.length != 2) {
+            log.error("bad username token setup: {} (expecting exactly 2 tokens)");
+            throw new UsernameNotFoundException(username);
+        }
+
+        UserOrigin loginOrigin = UserOrigin.valueOf(userNameTokens[0]);
+        String email = userNameTokens[1];
+
+        Optional<UserEntity> userEntityResult = findUserByEmail(email);
         userEntityResult.orElseThrow(() -> new UsernameNotFoundException("invalid user"));
+        userEntityResult.get().setLastLoginOrigin(new UserOriginEntity(loginOrigin.getId()));
         return userEntityResult.map(Function.identity()).get();
     }
 

@@ -1,6 +1,8 @@
 package com.github.mrazjava.booklink.persistence.model;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,10 +15,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @since 0.2.0
+ * Defines user and core account settings such as authentication credentials. The main
+ * premise is that single account record represents any login method based on the same
+ * email address.
  */
 @Entity(name = "bl_user")
 public class UserEntity implements UserDetails {
+
+    private static final Logger log = LoggerFactory.getLogger(UserEntity.class);
 
     static final int STATUS_ACTIVE = 1;
 
@@ -29,9 +35,21 @@ public class UserEntity implements UserDetails {
     @Column(unique = true)
     private String email;
 
-    @Column(name = "pwd")
-    private String password;
+    /**
+     * native booklink password
+     */
+    @Column(name = "pwd_bk")
+    private String passwordBk;
 
+    /**
+     * password used by facebook oauth - this is NOT user's facebook password!
+     */
+    @Column(name = "pwd_fb")
+    private String passwordFb;
+
+    /**
+     * relevant only to native booklink password
+     */
     @Column(name = "last_pwd_change")
     private OffsetDateTime lastPwdChange;
 
@@ -54,8 +72,12 @@ public class UserEntity implements UserDetails {
     private String nickName;
 
     @ManyToOne
-    @JoinColumn(name = "origin_id", referencedColumnName = "id")
-    private UserOriginEntity origin;
+    @JoinColumn(name = "reg_origin_id", referencedColumnName = "id", nullable = false)
+    private UserOriginEntity registrationOrigin;
+
+    @ManyToOne
+    @JoinColumn(name = "last_login_origin_id", referencedColumnName = "id")
+    private UserOriginEntity lastLoginOrigin;
 
     @Column
     private int active;
@@ -71,22 +93,6 @@ public class UserEntity implements UserDetails {
     public UserEntity(String token, OffsetDateTime tokenExpiry) {
         setToken(token);
         setTokenExpiry(tokenExpiry);
-    }
-
-    public UserEntity(UserEntity source) {
-        id = source.getId();
-        email = source.getEmail();
-        password = source.getPassword();
-        lastPwdChange = source.getLastPwdChange();
-        lastLoginOn = source.getLastLoginOn();
-        token = source.getToken();
-        tokenExpiry = source.getTokenExpiry(); // immutable, ref copy ok
-        firstName = source.getFirstName();
-        lastName = source.getLastName();
-        nickName = source.getNickName();
-        active = source.getActive();
-        roles = new HashSet<>(source.getRoles());
-        origin = source.getOrigin();
     }
 
     public Long getId() {
@@ -142,13 +148,38 @@ public class UserEntity implements UserDetails {
         return getActive() == STATUS_ACTIVE;
     }
 
+    public String getPasswordBk() {
+        return passwordBk;
+    }
+
     @Override
     public String getPassword() {
+        String password;
+        long lastLoginId;
+        if(lastLoginOrigin == null) {
+            log.warn("computed password relies on lastLoginOrigin which is not set; assuming {}", UserOrigin.BOOKLINK);
+            lastLoginId = UserOrigin.BOOKLINK.getId();
+        }
+        else {
+            lastLoginId = lastLoginOrigin.getId();
+        }
+        UserOrigin loginOrigin = UserOrigin.fromId(lastLoginId);
+        switch(loginOrigin) {
+            case BOOKLINK:
+                password = passwordBk;
+                break;
+            case FACEBOOK:
+                password = passwordFb;
+                break;
+            case GOOGLE:
+            default:
+                password = null; // not supported
+        }
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordBk(String passwordBk) {
+        this.passwordBk = passwordBk;
     }
 
     public OffsetDateTime getLastPwdChange() {
@@ -157,6 +188,14 @@ public class UserEntity implements UserDetails {
 
     public void setLastPwdChange(OffsetDateTime lastPwdChange) {
         this.lastPwdChange = lastPwdChange;
+    }
+
+    public String getPasswordFb() {
+        return passwordFb;
+    }
+
+    public void setPasswordFb(String passwordFb) {
+        this.passwordFb = passwordFb;
     }
 
     public String getToken() {
@@ -229,12 +268,20 @@ public class UserEntity implements UserDetails {
         this.roles = roles;
     }
 
-    public UserOriginEntity getOrigin() {
-        return origin;
+    public UserOriginEntity getRegistrationOrigin() {
+        return registrationOrigin;
     }
 
-    public void setOrigin(UserOriginEntity origin) {
-        this.origin = origin;
+    public void setRegistrationOrigin(UserOriginEntity registrationOrigin) {
+        this.registrationOrigin = registrationOrigin;
+    }
+
+    public UserOriginEntity getLastLoginOrigin() {
+        return lastLoginOrigin;
+    }
+
+    public void setLastLoginOrigin(UserOriginEntity lastLoginOrigin) {
+        this.lastLoginOrigin = lastLoginOrigin;
     }
 
     @Override
