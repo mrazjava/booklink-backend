@@ -2,6 +2,7 @@ package com.github.mrazjava.booklink.service;
 
 import com.github.mrazjava.booklink.TestLogger;
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
+import com.github.mrazjava.booklink.persistence.model.UserOrigin;
 import com.github.mrazjava.booklink.persistence.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import javax.inject.Inject;
 import java.time.OffsetDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,7 +46,7 @@ public class UserServiceTest {
     public void shouldRejectValidateTokenBadCredentials() {
         Assertions.assertThrows(
                 BadCredentialsException.class,
-                () -> userService.login(new Object())
+                () -> userService.login(new Object(), UserOrigin.BOOKLINK)
         );
     }
 
@@ -55,9 +55,10 @@ public class UserServiceTest {
         String token = UUID.randomUUID().toString();
         OffsetDateTime tokenExpiry = OffsetDateTime.now().plusDays(1);
         UserEntity user = new UserEntity(token, tokenExpiry);
+        user.setLastLoginOn(OffsetDateTime.now().minusDays(5));
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         when(userRepository.save(any())).thenReturn(user);
-        UserEntity verifiedUser = userService.login(user);
+        UserEntity verifiedUser = userService.login(user, UserOrigin.BOOKLINK);
         verify(userRepository, times(1)).save(captor.capture());
         UserEntity loggedInUser = captor.getValue();
         assertNotNull(loggedInUser.getLastLoginOn());
@@ -72,7 +73,7 @@ public class UserServiceTest {
 
         when(userRepository.save(any(UserEntity.class))).thenReturn(new UserEntity(newToken, null));
 
-        UserEntity verifiedUser = userService.login(new UserEntity(token, tokenExpiry));
+        UserEntity verifiedUser = userService.login(new UserEntity(token, tokenExpiry), UserOrigin.BOOKLINK);
 
         assertNotNull(verifiedUser.getToken());
         assertEquals(newToken, verifiedUser.getToken());

@@ -4,7 +4,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @since 0.1.0
+ * @author AZ
  */
 @Configuration
 @EnableCaching

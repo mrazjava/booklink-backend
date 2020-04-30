@@ -3,8 +3,7 @@ package com.github.mrazjava.booklink.security;
 import com.github.mrazjava.booklink.BooklinkException;
 
 /**
- * @author AZ (mrazjava)
- * @since 0.2.0
+ * @author AZ
  */
 public class InvalidAccessTokenException extends BooklinkException {
 

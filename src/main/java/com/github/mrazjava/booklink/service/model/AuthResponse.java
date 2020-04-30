@@ -3,8 +3,7 @@ package com.github.mrazjava.booklink.service.model;
 import java.time.OffsetDateTime;
 
 /**
- * @author AZ (mrazjava)
- * @since 0.2.0
+ * @author AZ
  */
 public class AuthResponse {
 

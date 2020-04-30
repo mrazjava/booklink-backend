@@ -29,8 +29,7 @@ import java.util.stream.Collectors;
  * if a user produces a valid token (either existing or new) and the token is
  * NOT expired.
  *
- * @author AZ (mrazjava)
- * @since 0.2.0
+ * @author AZ
  */
 @Component
 public class AccessTokenSecurityFilter extends OncePerRequestFilter {

@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 /**
- * @author AZ (mrazjava)
- * @since 0.2.0
+ * @author AZ
  */
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 

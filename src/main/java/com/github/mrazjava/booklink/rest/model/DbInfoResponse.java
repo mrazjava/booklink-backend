@@ -1,8 +1,7 @@
 package com.github.mrazjava.booklink.rest.model;
 
 /**
- * @author AZ (mrazjava)
- * @since 0.2.0
+ * @author AZ
  */
 public class DbInfoResponse {
 

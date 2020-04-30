@@ -9,8 +9,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 /**
- * @author AZ (mrazjava)
- * @since 0.2.0
+ * @author AZ
  */
 @Component
 public class DbMetaInfoService {

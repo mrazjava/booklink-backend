@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 /**
- * @since 0.1.0
+ * @author AZ
  */
 @Configuration
 public class SwaggerConfiguration {

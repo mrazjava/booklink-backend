@@ -7,8 +7,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
- * @author AZ (mrazjava)
- * @since 0.2.2
+ * @author AZ
  */
 @ApiModel
 public class AuthResponse {

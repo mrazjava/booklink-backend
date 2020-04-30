@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,7 +34,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ErrorResponse> handleUnexpectedEx(Exception ex, WebRequest request) {
         ErrorResponse response = produceErrorResponse(ex, request);
-        log.error("unexpected problem", ex);
+        log.error("unexpected problem:", ex);
         return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -49,7 +50,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity(produceErrorResponse(ex, request), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
+    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
     public final ResponseEntity<ErrorResponse> handleInvalidUserEx(Exception ex, WebRequest request) {
         return new ResponseEntity(produceErrorResponse(ex, request), HttpStatus.CONFLICT);
     }
@@ -57,6 +58,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     private ErrorResponse produceErrorResponse(Exception ex, WebRequest request) {
         ErrorResponse response = new ErrorResponse(ERROR_MSG, ex.getMessage());
         response.setRequestData(request.getContextPath());
+        if(ex.getCause() != null) {
+            response.setExceptionRootCause(ex.getCause().getMessage());
+        }
         return response;
     }
 }

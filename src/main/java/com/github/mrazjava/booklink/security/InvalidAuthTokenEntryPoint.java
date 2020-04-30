@@ -21,8 +21,7 @@ import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
  * login page. Since we provide restful api, we want to return an error so that whatever
  * front end UI connects to it can decide if (and how) it wants to redirect.
  *
- * @author AZ (mrazjava)
- * @since 0.2.0
+ * @author AZ
  * @see com.github.mrazjava.booklink.config.SecurityConfiguration
  */
 @Component

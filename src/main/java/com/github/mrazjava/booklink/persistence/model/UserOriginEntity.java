@@ -8,10 +8,6 @@ import javax.persistence.*;
 @Entity(name = "bl_user_origin")
 public class UserOriginEntity {
 
-    public static final long ID_BOOKLINK_ORIGIN = 1;
-    public static final long ID_FACEBOOK_ORIGIN = 2;
-    public static final long ID_GOOGLE_ORIGIN = 3;
-
     @Id
     private Long id;
 
