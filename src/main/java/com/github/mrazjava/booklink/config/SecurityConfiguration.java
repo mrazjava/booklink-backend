@@ -78,32 +78,36 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
         log.info("enabling {} CORS origins:\n{}", corsAllowOrigins.size(), corsAllowOrigins);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/rest/**", getRestCorsConfiguration());
-        source.registerCorsConfiguration("/actuator/**", getActuatorCorsConfiguration());
-        source.registerCorsConfiguration("/webjars/**", getWebjarsCorsConfiguration());
+        source.registerCorsConfiguration(
+                "/rest/**", getRestCorsConfiguration(corsAllowOrigins));
+        source.registerCorsConfiguration(
+                "/actuator/**", getActuatorCorsConfiguration(corsAllowOrigins));
+        source.registerCorsConfiguration(
+                "/webjars/**", getWebjarsCorsConfiguration(List.of("https://pre-be.booklinktrove.com")));
 
         return source;
     }
 
-    private CorsConfiguration getRestCorsConfiguration() {
+    private CorsConfiguration getRestCorsConfiguration(List<String> allowedOrigins) {
 
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(corsAllowOrigins);
+        configuration.setAllowedOrigins(allowedOrigins);
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "PATCH", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
         return configuration;
     }
 
-    private CorsConfiguration getActuatorCorsConfiguration() {
+    private CorsConfiguration getActuatorCorsConfiguration(List<String> allowedOrigins) {
 
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(corsAllowOrigins);
+        configuration.setAllowedOrigins(allowedOrigins);
         configuration.setAllowedMethods(Arrays.asList("GET"));
+        configuration.setAllowedHeaders(List.of("*"));
         return configuration;
     }
 
-    private CorsConfiguration getWebjarsCorsConfiguration() {
-        return getActuatorCorsConfiguration();
+    private CorsConfiguration getWebjarsCorsConfiguration(List<String> allowedOrigins) {
+        return getActuatorCorsConfiguration(allowedOrigins);
     }
 
     @Override
