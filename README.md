@@ -23,7 +23,7 @@ mvn clean spring-boot:run
 Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 will run on port `5501`.
 
 It's possible to run without `docker-compose` but in that case database and other artifacts normally 
-faciliated by docker must be provided explicitly. Here is an example when we run booklink directly 
+faciliated by docker must be provided explicitly. Here is an example when we run<sup>1</sup> booklink directly 
 against AWS artifacts:
 ```
 mvn clean spring-boot:run -Dspring-boot.run.profiles=local,pre-aws
@@ -40,7 +40,10 @@ We build a local image just like any other image, except we build it off whateve
 mvn clean package
 docker build -t mrazjava/booklink-backend:local .
 ```
-
+Then, to run the image we just built off sandbox local:
+```
+./sandbox local -b
+```
 It is also possible to run via `mvn` against [sandbox](https://github.com/mrazjava/booklink#sandbox) database, in which case `spring.datasource.url` must be overriden via `APP_BE_DB_URL` env variable. 
 
 To run against a `sandbox` database, say `local` adjusting config on-the-fly via ENV overrides:
