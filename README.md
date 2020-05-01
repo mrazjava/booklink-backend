@@ -23,14 +23,14 @@ mvn clean spring-boot:run
 Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 will run on port `5501`.
 
 It's possible to run without `docker-compose` but in that case database and other artifacts normally 
-faciliated by docker must be provided explicitly. Here is an example when we run booklink directly 
+faciliated by docker must be provided explicitly. Here is an example when we run<sup>1</sup> booklink directly 
 against AWS artifacts:
 ```
-mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1
+mvn clean spring-boot:run -Dspring-boot.run.profiles=local,pre-aws
 ```
 See `src/main/resources/` for additional custom profiles, or build your own.
 
-<sup>1</sup> | AWS resources have limited (admin) access not available to the public - use sandbox
+<sup>1</sup> | Authenticates AWS with credentials/config from your `~/.aws/` directory. Booklinkt AWS resources have limited (admin) access not available to the public. Either use your own AWS infrastructure, contact me for special access, or use sandbox.
 
 ## Sandbox
 We can make a custom docker image from our latest work and run it off [sandbox](https://github.com/mrazjava/booklink#sandbox) `local` environment. This is helpful when testing new code prior merging to `develop`, which is the basis for sandbox staging. Running local image via sandbox is like simulating a staging environment; one can make sure that all automated db scripts migrate correctly and that all tests are passing.
@@ -40,14 +40,21 @@ We build a local image just like any other image, except we build it off whateve
 mvn clean package
 docker build -t mrazjava/booklink-backend:local .
 ```
-
+Then, to run the image we just built off sandbox local:
+```
+./sandbox local -b
+```
 It is also possible to run via `mvn` against [sandbox](https://github.com/mrazjava/booklink#sandbox) database, in which case `spring.datasource.url` must be overriden via `APP_BE_DB_URL` env variable. 
 
-To run against a `sandbox` database, say `local` adjusting config on-the-fly via ENV overrides:
+To run against a `sandbox` database, say `local`, first start sandbox bare bone:
+```
+./sandbox local
+```
+and adjusting config on-the-fly via ENV overrides, kick off maven run:
 ```
 mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:postgresql://localhost:5432/booklink_sndbx_local -DAPP_BE_HIBERNATE_DDL_AUTO=validate -DAPP_SPRING_DATA_INIT=never -DAPP_FLYWAY_ENABLED=true"
 ```
-or, same thing with less typing using a pre-configured profile:
+Here is the same maven run with less typing (using a pre-configured profile):
 ```
 mvn clean spring-boot:run -Dspring-boot.run.profiles=local,sndbx-local
 ```
