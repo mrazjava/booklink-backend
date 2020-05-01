@@ -46,11 +46,15 @@ Then, to run the image we just built off sandbox local:
 ```
 It is also possible to run via `mvn` against [sandbox](https://github.com/mrazjava/booklink#sandbox) database, in which case `spring.datasource.url` must be overriden via `APP_BE_DB_URL` env variable. 
 
-To run against a `sandbox` database, say `local` adjusting config on-the-fly via ENV overrides:
+To run against a `sandbox` database, say `local`, first start sandbox bare bone:
+```
+./sandbox local
+```
+and adjusting config on-the-fly via ENV overrides, kick off maven run:
 ```
 mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:postgresql://localhost:5432/booklink_sndbx_local -DAPP_BE_HIBERNATE_DDL_AUTO=validate -DAPP_SPRING_DATA_INIT=never -DAPP_FLYWAY_ENABLED=true"
 ```
-or, same thing with less typing using a pre-configured profile:
+Here is the same maven run with less typing (using a pre-configured profile):
 ```
 mvn clean spring-boot:run -Dspring-boot.run.profiles=local,sndbx-local
 ```
