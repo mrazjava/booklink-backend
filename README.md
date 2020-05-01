@@ -26,11 +26,11 @@ It's possible to run without `docker-compose` but in that case database and othe
 faciliated by docker must be provided explicitly. Here is an example when we run booklink directly 
 against AWS artifacts:
 ```
-mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1
+mvn clean spring-boot:run -Dspring-boot.run.profiles=local,pre-aws
 ```
 See `src/main/resources/` for additional custom profiles, or build your own.
 
-<sup>1</sup> | AWS resources have limited (admin) access not available to the public - use sandbox
+<sup>1</sup> | Authenticates AWS with credentials/config from your `~/.aws/` directory. Booklinkt AWS resources have limited (admin) access not available to the public. Either use your own AWS infrastructure, contact me for special access, or use sandbox.
 
 ## Sandbox
 We can make a custom docker image from our latest work and run it off [sandbox](https://github.com/mrazjava/booklink#sandbox) `local` environment. This is helpful when testing new code prior merging to `develop`, which is the basis for sandbox staging. Running local image via sandbox is like simulating a staging environment; one can make sure that all automated db scripts migrate correctly and that all tests are passing.

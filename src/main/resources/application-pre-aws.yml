@@ -10,8 +10,8 @@
 # mvn clean spring-boot:run -Dspring-boot.run.profiles=pre-aws
 # -Dspring-boot.run.jvmArguments="-Daws.accessKeyId= -Daws.secretKey= -Daws.region=eu-central-1"
 #
-# You can run either against your own AWS account environment or must inquire with mrazjava
-# for access to official AWS booklink env.
+# You can setup and run against your own AWS infrastructure or, you must inquire with me (mrazjava)
+# for access to official AWS environment for booklinktrove.
 #
 spring:
   jpa:
