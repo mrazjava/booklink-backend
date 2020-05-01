@@ -42,7 +42,7 @@ public class UserEntity implements UserDetails {
     private String passwordBk;
 
     /**
-     * password used by facebook oauth - this is NOT user's facebook password!
+     * password used by facebook auth into booklink - this is NOT user's facebook password!
      */
     @Column(name = "pwd_fb")
     private String passwordFb;
@@ -143,6 +143,7 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
+    @Transient
     @Override
     public boolean isEnabled() {
         return getActive() == STATUS_ACTIVE;
@@ -152,6 +153,7 @@ public class UserEntity implements UserDetails {
         return passwordBk;
     }
 
+    @Transient
     @Override
     public String getPassword() {
         String password;

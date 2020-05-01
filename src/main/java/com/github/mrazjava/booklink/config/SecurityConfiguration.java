@@ -70,21 +70,40 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
     }
 
     /**
-     * Restrict access to only known clients such as the frontend.
+     * Restrict access to only known clients such as frontends.
      */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
 
         log.info("enabling {} CORS origins:\n{}", corsAllowOrigins.size(), corsAllowOrigins);
 
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/rest/**", getRestCorsConfiguration());
+        source.registerCorsConfiguration("/actuator/**", getActuatorCorsConfiguration());
+        source.registerCorsConfiguration("/webjars/**", getWebjarsCorsConfiguration());
+
+        return source;
+    }
+
+    private CorsConfiguration getRestCorsConfiguration() {
+
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(corsAllowOrigins);
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "PATCH", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/rest/**", configuration);
-        source.registerCorsConfiguration("/actuator/**", configuration);
-        return source;
+        return configuration;
+    }
+
+    private CorsConfiguration getActuatorCorsConfiguration() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(corsAllowOrigins);
+        configuration.setAllowedMethods(Arrays.asList("GET"));
+        return configuration;
+    }
+
+    private CorsConfiguration getWebjarsCorsConfiguration() {
+        return getActuatorCorsConfiguration();
     }
 
     @Override
