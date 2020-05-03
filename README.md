@@ -30,7 +30,7 @@ mvn clean spring-boot:run -Dspring-boot.run.profiles=local,pre-aws
 ```
 See `src/main/resources/` for additional custom profiles, or build your own.
 
-<sup>1</sup> | Authenticates AWS with credentials/config from your `~/.aws/` directory. Booklinkt AWS resources have limited (admin) access not available to the public. Either use your own AWS infrastructure, contact me for special access, or use sandbox.
+<sup>1</sup> | Authenticates AWS with credentials/config from your `~/.aws/` directory. Booklink AWS resources have limited (admin) access not available to the public. Either use your own AWS infrastructure, contact me for special access, or use sandbox.
 
 ## Sandbox
 We can make a custom docker image from our latest work and run it off [sandbox](https://github.com/mrazjava/booklink#sandbox) `local` environment. This is helpful when testing new code prior merging to `develop`, which is the basis for sandbox staging. Running local image via sandbox is like simulating a staging environment; one can make sure that all automated db scripts migrate correctly and that all tests are passing.
@@ -40,7 +40,7 @@ We build a local image just like any other image, except we build it off whateve
 mvn clean package
 docker build -t mrazjava/booklink-backend:local .
 ```
-Then, to run the image we just built off sandbox local:
+Then, to run off sandbox `local` the image we have just built, invoke:
 ```
 ./sandbox local -b
 ```
