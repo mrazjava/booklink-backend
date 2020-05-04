@@ -95,12 +95,12 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1.0.2
         with:
           task-definition: ${{ env.ARTIFACT_DIR }}/pre-release.json
-          container-name: booklink-backend-contr
+          container-name: booklink-backend-pre-contr
           image: ${{ steps.push-image-to-aws.outputs.image }}
       - name: deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1.0.3
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: booklink-backend-svc
-          cluster: booklink-ec2lx-cluster
+          service: booklink-backend-pre-svc
+          cluster: booklink-ec2lx-pre-cluster
           wait-for-service-stability: false
