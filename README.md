@@ -5,7 +5,10 @@
 Backend business logic of a booklink service. Exposes operations via REST. Used by frontends.
 
 ## It's Alive
-- production (not setup yet)
+Booklink is deployed in AWS, and branded as booklinktrove.com. Because we are self funded for the time being, we spin off production 
+environment only periodically to test releases. Keeping production environment down until we are ready with the go-live helps us save on our AWS bill. However, our 
+pre-release environment is available 24/7 although it is an environment hosted in European zone with fairly small resources.
+- [production](https://be.booklinktrove.com/actuator/info)
 - [pre-release](https://pre-be.booklinktrove.com/actuator/info)
 
 ## Stack
