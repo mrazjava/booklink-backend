@@ -12,7 +12,7 @@ is assembled and pushed to ECR. The version is derived from version defined via 
 A live release is made manually by creating a new revision of a live task pointing to a final version of the docker 
 image.
 
-Some more details on the backend topology follow. 
+Some more details on the backend AWS infostructure. 
 
 ## Topology
 Domain is managed via [Route53](https://aws.amazon.com/route53/). [Application load balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html) 
@@ -25,7 +25,7 @@ which in turn manage task definitions. The EC2 instances are elastic in nature a
 and `live`. As ASGs are linked to TGs, whenever new EC2 instance is spawned up it automatically joins a target group so 
 that ECS services are always aware of container instances running them.
 
-> IMPORTANT: EC2 instances are Amazon AMI ECS optimized. They are not listed as default options and MUST be searched 
+> IMPORTANT: EC2 instances are Amazon ECS optimized AMIs. They are not listed as default options and MUST be searched 
 > in Amazon marketplace.
 
 Without ECS optimized image all dependencies such as docker and Amazon ECS agent must be installed on the instance. In 
