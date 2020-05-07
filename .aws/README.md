@@ -7,8 +7,8 @@ _master_ label. A new version of a [task definition](https://docs.aws.amazon.com
 is rendered and uploaded to AWS [ECS](https://aws.amazon.com/ecs/). This in turn tells the [service](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html) 
 to re-deploy the latest image as defined in the new specification of a task definition.
 
-Upon issued github release (which tags master branch), sources are built, tested and a final version of a docker image 
-is assembled and pushed to ECR. The version is derived from version definied via github release interface (eg: `vX.X.X`). 
+Upon issued [github release](https://github.com/mrazjava/booklink-backend/releases) (which tags master branch), sources are built, tested and a final version of a docker image 
+is assembled and pushed to ECR. The version is derived from version defined via github release interface (eg: `vX.X.X`). 
 A live release is made manually by creating a new revision of a live task pointing to a final version of the docker 
 image.
 
