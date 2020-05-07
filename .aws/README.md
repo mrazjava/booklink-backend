@@ -2,8 +2,8 @@
 Amazon Web Services is used as the hosting platform of booklink application.
 
 ## Overview
-Upon merge to `master` branch, sources are verified, built and packaged into a docker image which is pushed to AWS [ECR](https://aws.amazon.com/ecr/) with 
-'master' label. A new version of a [task definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definitions.html) 
+Upon merge to `master`, sources are verified, built and packaged into a docker image which is pushed to AWS [ECR](https://aws.amazon.com/ecr/) with 
+_master_ label. A new version of a [task definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definitions.html) 
 is rendered and uploaded to AWS [ECS](https://aws.amazon.com/ecs/). This in turn tells the [service](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html) 
 to re-deploy the latest image as defined in the new specification of a task definition.
 
@@ -15,10 +15,11 @@ image.
 Some more details on the backend topology follow. 
 
 ## Topology
-Domain is managed via Route53. Load balancers (LBs) are attached to alias records, `live` LB to `be.` subdomain, and `pre` 
-LB to `pre-be.` subdomain. Backend LBs listen only on port `443` which forwards traffic to respective target group (TG) linked 
-to an EC2 instance running the backend container. TGs are linked to ECS services which in turn manage task definitions. The 
-EC2 instances are elastic in nature as they are launched via 
+Domain is managed via [Route53](https://aws.amazon.com/route53/). [Application load balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html) 
+(ALBs) are attached to subdomain alias records (`be.` and `pre-be`). These backend ALBs listen only on port `443` which forwards traffic to respective 
+[target group](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html) (TG) linked 
+to an EC2 instance running the backend container. TGs are linked to ECS [services](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html) 
+which in turn manage task definitions. The EC2 instances are elastic in nature as they are launched via 
 [launch configurations](https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchConfiguration.html) and managed by 
 [auto scaling groups](https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html) (ASGs), one group for `pre` 
 and `live`. As ASGs are linked to TGs, whenever new EC2 instance is spawned up it automatically joins a target group so 
