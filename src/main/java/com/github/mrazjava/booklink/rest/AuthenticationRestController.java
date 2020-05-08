@@ -75,14 +75,18 @@ public class AuthenticationRestController {
 
         log.debug("login request: {}", loginRequest.getEmail());
 
-        UserOrigin loginOrigin;
+        UserOrigin loginOrigin = loginRequest.getOrigin();
 
-        if(StringUtils.isNotEmpty(loginRequest.getFbId())) {
-            userService.prepareFacebookLogin(loginRequest);
-            loginOrigin = UserOrigin.FACEBOOK;
-        }
-        else {
-            loginOrigin = UserOrigin.BOOKLINK;
+        switch(loginOrigin) {
+            case FACEBOOK:
+                userService.prepareFacebookLogin(loginRequest);
+                break;
+            case GOOGLE:
+                userService.prepareGoogleLogin(loginRequest);
+                break;
+            case BOOKLINK:
+            default:
+                // no special prep for booklink login needed
         }
 
         final Authentication authentication = authenticationManager.authenticate(
