@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
  * Defines user and core account settings such as authentication credentials. The main
  * premise is that single account record represents any login method based on the same
  * email address.
+ *
+ * @author AZ
  */
 @Entity(name = "bl_user")
 public class UserEntity implements UserDetails {
