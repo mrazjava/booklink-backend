@@ -1,0 +1,1 @@
+ALTER TABLE bl_user ADD COLUMN pwd_gl varchar(255) NULL;

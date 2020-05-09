@@ -1,5 +1,6 @@
 package com.github.mrazjava.booklink.actuator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.boot.actuate.info.GitInfoContributor;
 import org.springframework.boot.actuate.info.Info;
@@ -34,19 +35,25 @@ public class CustomGitInfoContributor extends GitInfoContributor {
 
     @Override
     public void contribute(Info.Builder builder) {
-        Map<String, Object> map = generateContent();
-        Map<String, Object> commitMap = getNestedMap(map, "commit");
+
+        Map<String, Object> gitMap = generateContent();
+        Map<String, Object> commitMap = getNestedMap(gitMap, "commit");
         GitProperties props = getProperties();
         props.forEach(e -> log.debug("**** GIT [{}]=[{}]", e.getKey(), e.getValue()));
+
         commitMap.put("message", props.get("commit.message.short"));
-        commitMap.put("id", props.get("commit.id"));
+        commitMap.put("id", props.get("commit.id.abbrev"));
         commitMap.put("author", props.get("commit.user.name"));
         commitMap.put("host", props.get("build.host"));
-        builder.withDetail("git", map);
+        builder.withDetail("git", gitMap);
 
-        GitProperties gitProps = getProperties();
+        String commitTime = dateFormat.format(Date.from(props.getCommitTime())); // reformat commit time
+        replaceValue(getNestedMap(gitMap, "commit"), "time", commitTime);
 
-        String commitTime = dateFormat.format(Date.from(gitProps.getCommitTime()));
-        replaceValue(getNestedMap(map, "commit"), "time", commitTime);
+        if(StringUtils.startsWith(props.getBranch(), props.getShortCommitId())) {
+            // branch name will reflect commit id (due to detached state) if we're tagged, so show it accordingly
+            replaceValue(gitMap, "branch", String.format("%s (tag)", props.get("tags")));
+        }
+        gitMap.put("origin", props.get("remote.origin.url"));
     }
 }

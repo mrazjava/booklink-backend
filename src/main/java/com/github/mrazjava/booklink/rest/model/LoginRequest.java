@@ -1,5 +1,6 @@
 package com.github.mrazjava.booklink.rest.model;
 
+import com.github.mrazjava.booklink.persistence.model.UserOrigin;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,14 +17,20 @@ public class LoginRequest {
     @ApiModelProperty(required = true)
     private String password;
 
-    @ApiModelProperty
-    private String fbId;
+    @ApiModelProperty(required = true)
+    private UserOrigin origin;
+
+    // sm = (s)ocial (m)edia
 
     @ApiModelProperty
-    private String fbFirstName;
+    private String smId;
 
     @ApiModelProperty
-    private String fbLastName;
+    private String smFirstName;
+
+    @ApiModelProperty
+    private String smLastName;
+
 
     public String getEmail() {
         return email;
@@ -41,28 +48,36 @@ public class LoginRequest {
         this.password = password;
     }
 
-    public String getFbId() {
-        return fbId;
+    public UserOrigin getOrigin() {
+        return origin;
     }
 
-    public void setFbId(String fbId) {
-        this.fbId = fbId;
+    public void setOrigin(UserOrigin origin) {
+        this.origin = origin;
     }
 
-    public String getFbFirstName() {
-        return fbFirstName;
+    public String getSmId() {
+        return smId;
     }
 
-    public void setFbFirstName(String fbFirstName) {
-        this.fbFirstName = fbFirstName;
+    public void setSmId(String smId) {
+        this.smId = smId;
     }
 
-    public String getFbLastName() {
-        return fbLastName;
+    public String getSmFirstName() {
+        return smFirstName;
     }
 
-    public void setFbLastName(String fbLastName) {
-        this.fbLastName = fbLastName;
+    public void setSmFirstName(String smFirstName) {
+        this.smFirstName = smFirstName;
+    }
+
+    public String getSmLastName() {
+        return smLastName;
+    }
+
+    public void setSmLastName(String smLastName) {
+        this.smLastName = smLastName;
     }
 
     @Override

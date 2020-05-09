@@ -64,13 +64,13 @@ public class UserService implements UserDetailsService {
 
         if(result.isEmpty()) {
             // auto register FB user
-            log.debug("new facebook user request:\n{}", request);
+            log.debug("new FACEBOOK user request:\n{}", request);
 
             userEntity = new UserEntity(UUID.randomUUID().toString(), OffsetDateTime.now().plusDays(10));
-            userEntity.setFirstName(request.getFbFirstName());
-            userEntity.setLastName(request.getFbLastName());
+            userEntity.setFirstName(request.getSmFirstName());
+            userEntity.setLastName(request.getSmLastName());
             userEntity.setEmail(request.getEmail());
-            userEntity.setPasswordFb(passwordEncoder.encode(request.getFbId()));
+            userEntity.setPasswordFb(passwordEncoder.encode(request.getSmId()));
             userEntity.setActive(1);
             userEntity.setRoles(Set.of(new RoleEntity(RoleEntity.ID_DETECTIVE)));
             userEntity.setRegistrationOrigin(new UserOriginEntity(UserOrigin.FACEBOOK.getId()));
@@ -81,13 +81,46 @@ public class UserService implements UserDetailsService {
             userEntity = result.get();
             if(StringUtils.isEmpty(userEntity.getPasswordFb())) {
                 // user already setup under different origin but first time FB login
-                userEntity.setPasswordFb(passwordEncoder.encode(request.getFbId()));
+                userEntity.setPasswordFb(passwordEncoder.encode(request.getSmId()));
                 userRepository.save(userEntity);
             }
         }
 
-        // fb auth does not provide password in the request; we need to build one
-        request.setPassword(request.getFbId());
+        // fb auth does not provide password in the request; we need to forward one for the purposes of auth
+        request.setPassword(request.getSmId());
+    }
+
+    public void prepareGoogleLogin(LoginRequest request) {
+
+        Optional<UserEntity> result = findUserByEmail(request.getEmail());
+        UserEntity userEntity;
+
+        if(result.isEmpty()) {
+            // auto register GL user
+            log.debug("new GOOGLE user request:\n{}", request);
+
+            userEntity = new UserEntity(UUID.randomUUID().toString(), OffsetDateTime.now().plusDays(10));
+            userEntity.setFirstName(request.getSmFirstName());
+            userEntity.setLastName(request.getSmLastName());
+            userEntity.setEmail(request.getEmail());
+            userEntity.setPasswordGl(passwordEncoder.encode(request.getSmId()));
+            userEntity.setActive(1);
+            userEntity.setRoles(Set.of(new RoleEntity(RoleEntity.ID_DETECTIVE)));
+            userEntity.setRegistrationOrigin(new UserOriginEntity(UserOrigin.GOOGLE.getId()));
+            userEntity = userRepository.save(userEntity);
+
+        }
+        else {
+            userEntity = result.get();
+            if(StringUtils.isEmpty(userEntity.getPasswordFb())) {
+                // user already setup under different origin but first time GL login
+                userEntity.setPasswordGl(passwordEncoder.encode(request.getSmId()));
+                userRepository.save(userEntity);
+            }
+        }
+
+        // gl auth does not provide password in the request; we need to build one
+        request.setPassword(request.getSmId());
     }
 
     /**

@@ -1,42 +1,35 @@
 # Notes on AWS
-Amazon Web Services is used as the hosting platform of booklink application. Upon merge to `master` branch, sources 
-are verified, built and packaged into a docker image which is pushed to AWS.A new version of a [task definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definitions.html) is rendered and uploaded to AWS. This in turn tells the [service](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html) to re-deploy the latest docker image as defined in the new specification of a task definition.
+Amazon Web Services is used as the hosting platform of booklink application.
 
-`booklink` uses the following AWS features: 
+## Overview
+Upon merge to `master`, sources are verified, built and packaged into a docker image which is pushed to AWS [ECR](https://aws.amazon.com/ecr/) with 
+_master_ label. A new version of a [task definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definitions.html) 
+is rendered and uploaded to AWS [ECS](https://aws.amazon.com/ecs/). This in turn tells the [service](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html) 
+to re-deploy the latest image as defined in the new specification of a task definition.
 
-### [Amazon ECR](https://aws.amazon.com/ecr/)
-Elastic Container Registry is used by `booklink` to upload the docker image it builds during a github build pipeline. Once hosted on Amazon (ECR), it is then deployed using ECS.
+Upon issued [github release](https://github.com/mrazjava/booklink-backend/releases) (which tags master branch), sources are built, tested and a final version of a docker image 
+is assembled and pushed to ECR. The version is derived from version defined via github release interface (eg: `vX.X.X`). 
+A live release is made manually by creating a new revision of a live task pointing to a final version of the docker 
+image.
 
-### [Amazon ECS](https://aws.amazon.com/ecs/)
-Elastic Container Service allows booklink to deploy a docker image with pre-defined specifications such as CPU, memory, number of instances and auto scaling.
+Some more details on the backend AWS infostructure. 
 
-* Cluster: `booklink-ec2lx-cluster`
-* Service: `booklink-backend-svc` (pre-release)
-* Task Definition: `booklink-backend-ec2-taskdef`
-* Container: `booklink-backend-contr`
+## Topology
+Domain is managed via [Route53](https://aws.amazon.com/route53/). [Application load balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html) 
+(ALBs) are attached to subdomain alias records (`be.` and `pre-be`). These backend ALBs listen only on port `443` which forwards traffic to respective 
+[target group](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html) (TG) linked 
+to an EC2 instance running the backend container. TGs are linked to ECS [services](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html) 
+which in turn manage task definitions. The EC2 instances are elastic in nature as they are launched via 
+[launch configurations](https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchConfiguration.html) and managed by 
+[auto scaling groups](https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html) (ASGs), one group for `pre` 
+and `live`. As ASGs are linked to TGs, whenever new EC2 instance is spawned up it automatically joins a target group so 
+that ECS services are always aware of container instances running them.
 
-Once deployed, EC2 instance assumes IAM role to execute instance which is the sole provider of permissions.
+> IMPORTANT: EC2 instances are Amazon ECS optimized AMIs. They are not listed as default options and MUST be searched 
+> in Amazon marketplace.
 
-### [Amazon EC2](https://aws.amazon.com/ec2/)
-Elastic Compute Cloud is used to define actual VM hosts (machines) that ultimately host and run contenerized application (defined via ECS). A service in ECS always ends up running on a machine provided by EC2.
-
-### [Amazon IAM](https://aws.amazon.com/iam/)
-Identity and Access Management is used to defined users, roles and access associated with individual services. For example, booklink application has its own user `booklink` which operates within certain context of roles and policies defined using IAM.
-
-### [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/)
-Log monitoring
-
-## Maven Runs
-We can run the app locally against AWS resources if we have access. AWS IAM user `booklink` credentials are necessary 
-in order to establish successful connection:
-```
-mvn clean spring-boot:run -Dspring-boot.run.profiles=local,aws-db-pre1 -Dspring-boot.run.jvmArguments="-Daws.accessKeyId= -Daws.secretKey= -Daws.region=eu-central-1"
-```
-You can either create you own AWS could environment or talk to me to get RDS booklink access.
-
-## EC2
-The AWS instance which hosts the pre-release container is a slim CentOS machine, with Docker and basic utilities. 
-No Java.  
+Without ECS optimized image all dependencies such as docker and Amazon ECS agent must be installed on the instance. In 
+addition, non ECS optimized image will not automatically join ECS cluster of choice defined in the launch configuration!
 
 ## Aws CLI
 In the perfect world, a docker container on local should run the same as the container on EC2. I found this 

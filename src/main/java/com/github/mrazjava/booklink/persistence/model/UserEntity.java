@@ -1,5 +1,6 @@
 package com.github.mrazjava.booklink.persistence.model;
 
+import com.github.mrazjava.booklink.BooklinkException;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,12 @@ public class UserEntity implements UserDetails {
      */
     @Column(name = "pwd_fb")
     private String passwordFb;
+
+    /**
+     * password used by google auth into booklink - this is NOT user's google password!
+     */
+    @Column(name = "pwd_gl")
+    private String passwordGl;
 
     /**
      * relevant only to native booklink password
@@ -174,8 +181,10 @@ public class UserEntity implements UserDetails {
                 password = passwordFb;
                 break;
             case GOOGLE:
+                password = passwordGl;
+                break;
             default:
-                password = null; // not supported
+                throw new BooklinkException(String.format("unsupported login origin: %s", loginOrigin));
         }
         return password;
     }
@@ -198,6 +207,14 @@ public class UserEntity implements UserDetails {
 
     public void setPasswordFb(String passwordFb) {
         this.passwordFb = passwordFb;
+    }
+
+    public String getPasswordGl() {
+        return passwordGl;
+    }
+
+    public void setPasswordGl(String passwordGl) {
+        this.passwordGl = passwordGl;
     }
 
     public String getToken() {
