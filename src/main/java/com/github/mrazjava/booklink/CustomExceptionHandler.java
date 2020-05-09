@@ -60,7 +60,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             InvalidAccessTokenException.class
     })
     public final ResponseEntity<ErrorResponse> handleInvalidUserEx(Exception ex, WebRequest request) {
-        log.info("security problem: {}", ex.getMessage());
+        log.info("security gate: {}", ex.getMessage());
         return new ResponseEntity(produceErrorResponse(ex, request), HttpStatus.UNAUTHORIZED);
     }
 
