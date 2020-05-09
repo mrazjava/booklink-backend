@@ -1,5 +1,8 @@
 package com.github.mrazjava.booklink.persistence.model;
 
+/**
+ * @author AZ
+ */
 public enum UserOrigin {
     BOOKLINK(1),
     FACEBOOK(2),

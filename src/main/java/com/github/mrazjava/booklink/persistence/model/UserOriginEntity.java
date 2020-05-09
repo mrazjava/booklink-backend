@@ -3,7 +3,7 @@ package com.github.mrazjava.booklink.persistence.model;
 import javax.persistence.*;
 
 /**
- * @since 0.2.7
+ * @author AZ
  */
 @Entity(name = "bl_user_origin")
 public class UserOriginEntity {
