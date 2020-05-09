@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since 0.1.0
+ * @author AZ
  */
 @Component
 public class CustomBuildInfoContributor extends BuildInfoContributor {

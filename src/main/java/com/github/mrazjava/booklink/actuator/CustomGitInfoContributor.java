@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * @since 0.1.0
+ * @author AZ
  */
 @Component
 public class CustomGitInfoContributor extends GitInfoContributor {

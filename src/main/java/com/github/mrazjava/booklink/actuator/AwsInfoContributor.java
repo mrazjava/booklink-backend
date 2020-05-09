@@ -13,7 +13,6 @@ import java.util.Map;
 
 /**
  * @author AZ (mrazjava)
- * @since 0.2.0
  */
 @Component
 public class AwsInfoContributor implements InfoContributor {
