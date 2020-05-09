@@ -1,12 +1,15 @@
 package com.github.mrazjava.booklink;
 
 import com.github.mrazjava.booklink.rest.model.ErrorResponse;
+import com.github.mrazjava.booklink.security.InvalidAccessTokenException;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -50,9 +53,15 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity(produceErrorResponse(ex, request), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
+    @ExceptionHandler({
+            UsernameNotFoundException.class,
+            BadCredentialsException.class,
+            AccessDeniedException.class,
+            InvalidAccessTokenException.class
+    })
     public final ResponseEntity<ErrorResponse> handleInvalidUserEx(Exception ex, WebRequest request) {
-        return new ResponseEntity(produceErrorResponse(ex, request), HttpStatus.CONFLICT);
+        log.info("security problem: {}", ex.getMessage());
+        return new ResponseEntity(produceErrorResponse(ex, request), HttpStatus.UNAUTHORIZED);
     }
 
     private ErrorResponse produceErrorResponse(Exception ex, WebRequest request) {
