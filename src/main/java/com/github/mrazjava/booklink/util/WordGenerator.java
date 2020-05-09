@@ -6,8 +6,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- * @author AZ (mrazjava)
- * @since 0.2.3
+ * @author AZ
  * @see <a href="https://github.com/RazorSh4rk/random-word-api">Original Source</a>
  */
 @Component
