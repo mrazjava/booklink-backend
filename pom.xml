@@ -5,7 +5,7 @@
 
     <groupId>com.github.mrazjava.booklink</groupId>
     <artifactId>booklink-backend</artifactId>
-    <version>0.2.8</version>
+    <version>0.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>booklink-backend</name>
@@ -131,6 +131,17 @@
             <artifactId>h2</artifactId>
             <version>1.4.200</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.zonky.test</groupId>
+            <artifactId>embedded-database-spring-test</artifactId>
+            <version>1.5.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>2.4.16</version>
         </dependency>
     </dependencies>
 
@@ -283,6 +294,36 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <inputSpec>${basedir}/src/main/resources/depot-api.json</inputSpec>
+                    <language>java</language>
+                    <library>resttemplate</library>
+                    <output>${project.basedir}/target/generated-sources/</output>
+                    <apiPackage>com.github.mrazjava.booklink.rest.depot.client</apiPackage>
+                    <modelPackage>com.github.mrazjava.booklink.rest.depot.model</modelPackage>
+                    <invokerPackage>com.github.mrazjava.booklink.rest.depot</invokerPackage>
+                    <generateSupportingFiles>true</generateSupportingFiles>
+                    <generateApiTests>false</generateApiTests>
+                    <generateModelTests>false</generateModelTests>
+                    <generateApiDocumentation>false</generateApiDocumentation>
+                    <generateModelDocumentation>false</generateModelDocumentation>
+                    <configOptions>
+                        <dateLibrary>java8</dateLibrary>
+                        <sourceFolder>depot-api</sourceFolder>
+                        <interfaceOnly>true</interfaceOnly>
+                    </configOptions>
+                </configuration>
             </plugin>
         </plugins>
     </build>

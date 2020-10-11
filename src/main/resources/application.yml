@@ -48,6 +48,8 @@ management:
         allowed-origins: ${CORS_ALLOW_ORIGINS:http://localhost:8090}
         allowed-methods: GET
 booklink:
+  depot:
+    url: ${DEPOT_URL:http://localhost:8070/}
   security:
     cors-allow-origins: ${CORS_ALLOW_ORIGINS:http://localhost:8090}
 

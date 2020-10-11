@@ -1,5 +1,7 @@
 package com.github.mrazjava.booklink.service;
 
+import com.github.mrazjava.booklink.rest.depot.client.DepotAuthorApi;
+import com.github.mrazjava.booklink.rest.depot.model.DepotAuthor;
 import com.github.mrazjava.booklink.util.WordGenerator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -26,6 +28,10 @@ public class ProofOfConceptService {
 
     @Inject
     private WordGenerator wordGenerator;
+
+    @Inject
+    private DepotAuthorApi depotAuthorApi;
+
 
     public int randomCount() {
         int count = new Random().nextInt();
@@ -56,6 +62,10 @@ public class ProofOfConceptService {
         String[] greetings = {"Howdy %s, it's ", "Hello %s. Time is ", "Wuzzaaaaa %s! my time is ", "What's up %s. Time is ", "How do you do, %s? It's now ", "%s, time is: "};
         int greetingIndx = new Random().nextInt((5 - 0) + 1) + 0;
         return String.format(greetings[greetingIndx], shuffle(auth.getName())) + new Date();
+    }
+
+    public DepotAuthor depotFindAuthor(String id) {
+        return depotAuthorApi.findByIdUsingGET(id);
     }
 
     private String shuffle(String input){

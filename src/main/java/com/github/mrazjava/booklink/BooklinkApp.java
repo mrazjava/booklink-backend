@@ -1,10 +1,13 @@
 package com.github.mrazjava.booklink;
 
+import com.github.mrazjava.booklink.rest.depot.ApiClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -16,6 +19,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication(scanBasePackages = {
         "com.github.mrazjava.booklink"
 })
+@ComponentScan(excludeFilters={
+        // we define and configure swagger auto-generated client via DepotConfiguration
+        @ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value=ApiClient.class)}
+)
 @EnableJpaRepositories(
         basePackages = "com.github.mrazjava.booklink.persistence.repository")
 @EnableSwagger2
