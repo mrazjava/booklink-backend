@@ -17,13 +17,21 @@ pre-release environment is available 24/7, though it is an environment hosted in
 - REST / Swagger
 - PostgreSQL / Hibernate
 
+## Codegen
+REST API client sources (such as depot access) are auto generated. They can be manually generated with:
+```
+mvn clean swagger-codegen:generate
+``` 
+When importing project into an IDE for the first time, depending on IDE, action to generate sources will have to be 
+invoked to avoid compilation errors.
+
 ## Quick Start
 It's easiest to run with default config out of the box:
 ```
 docker-compose up
 mvn clean spring-boot:run
 ```
-Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 will run on port `5501`.
+Backend will run on port `8080`. PostgreSQL will run on port `5433`.
 
 It's possible to run without `docker-compose` but in that case database and other artifacts normally 
 faciliated by docker must be provided explicitly. Here is an example when we run<sup>1</sup> booklink directly 
