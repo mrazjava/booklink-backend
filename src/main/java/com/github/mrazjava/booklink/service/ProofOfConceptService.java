@@ -1,7 +1,8 @@
 package com.github.mrazjava.booklink.service;
 
-import com.github.mrazjava.booklink.rest.depot.client.DepotAuthorApi;
-import com.github.mrazjava.booklink.rest.depot.model.DepotAuthor;
+import com.github.mrazjava.booklink.rest.depot.ApiException;
+import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
+import com.github.mrazjava.booklink.rest.depot.DepotAuthorApi;
 import com.github.mrazjava.booklink.util.WordGenerator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -64,7 +65,7 @@ public class ProofOfConceptService {
         return String.format(greetings[greetingIndx], shuffle(auth.getName())) + new Date();
     }
 
-    public DepotAuthor depotFindAuthor(String id) {
+    public DepotAuthor depotFindAuthor(String id) throws ApiException {
         return depotAuthorApi.findByIdUsingGET(id);
     }
 

@@ -1,4 +1,4 @@
-package com.github.mrazjava.booklink.config;
+package com.github.mrazjava.booklink.security;
 
 import java.util.List;
 

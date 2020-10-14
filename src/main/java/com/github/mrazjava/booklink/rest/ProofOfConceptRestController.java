@@ -1,11 +1,11 @@
 package com.github.mrazjava.booklink.rest;
 
 import com.github.mrazjava.booklink.config.SwaggerConfiguration;
-import com.github.mrazjava.booklink.rest.depot.model.DepotAuthor;
+import com.github.mrazjava.booklink.rest.depot.ApiException;
+import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
 import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
 import com.github.mrazjava.booklink.service.ProofOfConceptService;
 import io.swagger.annotations.*;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +16,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Produces;
-import java.time.OffsetDateTime;
-import java.util.Date;
-import java.util.UUID;
 
 /**
  * @author AZ
@@ -126,7 +123,7 @@ public class ProofOfConceptRestController {
             value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
             allowEmptyValue = true
     ))
-    public DepotAuthor findAuthorById(@RequestParam String id) {
+    public DepotAuthor findAuthorById(@RequestParam String id) throws ApiException {
         return pocService.depotFindAuthor(id);
     }
 }

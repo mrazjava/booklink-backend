@@ -2,7 +2,6 @@ package com.github.mrazjava.booklink.integration;
 
 import com.github.mrazjava.booklink.persistence.model.UserEntity;
 import com.github.mrazjava.booklink.persistence.repository.UserRepository;
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
