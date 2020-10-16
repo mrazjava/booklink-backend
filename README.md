@@ -14,7 +14,7 @@ pre-release environment is available 24/7, though it is an environment hosted in
 ## Stack
 - Java 11
 - Spring Boot
-- REST / Swagger
+- REST / Swagger + Codegen
 - PostgreSQL / Hibernate
 
 ## Codegen
@@ -82,7 +82,9 @@ Database schema will be validated because of `APP_BE_HIBERNATE_DDL_AUTO: validat
 #### AWS
 Database schema changes are migrated manually ("by hand"). Verified migration scripts from Sandbox (`stg`) are used as the basis for AWS manual db migration changes to `pre` which in turn are basis for AWS `live` migration.
 
-### Other
+### Notes
+
+#### Dumping Hibernate Schema
 Full schema dump off Hibernate can be produced with maven:
 ```
 mvn clean compile hibernate54-ddl:gen-ddl
@@ -91,3 +93,7 @@ To get more help on options available to `hibernate54-ddl` maven plugin, run:
 ```
 mvn hibernate54-ddl:help -Ddetail=true
 ```
+#### Swagger Codegen vs Openapi Codegen
+[swagger-codegen](https://mvnrepository.com/artifact/io.swagger.codegen.v3/swagger-codegen) is the proprietary 
+implementation whereas [openapi-generator-maven-plugin](https://mvnrepository.com/artifact/org.openapitools/openapi-generator-maven-plugin) 
+is the equivalent community driven effort. Both produce compatible outcomes, though stability and bugs vary.
