@@ -25,7 +25,6 @@
         <java.version>11</java.version>
         <springfox.version>2.9.2</springfox.version>
         <swagger.codegen.version>3.0.20</swagger.codegen.version><!-- 3.0.21/22 have a bug which prevents proper function of spring logging -->
-        <resteasy.version>4.5.8.Final</resteasy.version>
         <skip.surefire.tests>false</skip.surefire.tests>
     </properties>
 
@@ -106,19 +105,9 @@
             <artifactId>commons-codec</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-client</artifactId>
-            <version>${resteasy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jackson2-provider</artifactId>
-            <version>${resteasy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-multipart-provider</artifactId>
-            <version>${resteasy.version}</version>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -129,10 +118,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -348,7 +340,7 @@
                 <configuration>
                     <inputSpec>${project.basedir}/src/main/resources/depot-api.json</inputSpec>
                     <language>java</language>
-                    <library>resteasy</library>
+                    <library>resttemplate</library>
                     <output>${project.basedir}/target/generated-sources/</output>
                     <apiPackage>${project.groupId}.rest.depot</apiPackage>
                     <modelPackage>${project.groupId}.rest.depot</modelPackage>
@@ -360,7 +352,7 @@
                     <generateApiDocumentation>false</generateApiDocumentation>
                     <generateModelDocumentation>false</generateModelDocumentation>
                     <configOptions>
-                        <dateLibrary>java8</dateLibrary>
+                        <dateLibrary>java8-localdatetime</dateLibrary>
                         <sourceFolder>depot-api</sourceFolder>
                         <interfaceOnly>true</interfaceOnly>
                     </configOptions>

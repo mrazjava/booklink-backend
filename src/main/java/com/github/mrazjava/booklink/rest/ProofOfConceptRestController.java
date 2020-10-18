@@ -1,7 +1,6 @@
 package com.github.mrazjava.booklink.rest;
 
 import com.github.mrazjava.booklink.config.SwaggerConfiguration;
-import com.github.mrazjava.booklink.rest.depot.ApiException;
 import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
 import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
 import com.github.mrazjava.booklink.service.ProofOfConceptService;
@@ -123,7 +122,7 @@ public class ProofOfConceptRestController {
             value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
             allowEmptyValue = true
     ))
-    public DepotAuthor findAuthorById(@RequestParam String id) throws ApiException {
+    public DepotAuthor findAuthorById(@RequestParam String id) {
         return pocService.depotFindAuthor(id);
     }
 }
