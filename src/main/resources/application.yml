@@ -6,6 +6,8 @@ spring:
   cache:
     jcache:
       config: classpath:ehcache.xml
+  mustache:
+    check-template-location: true
   jpa:
     show-sql: true
     hibernate:

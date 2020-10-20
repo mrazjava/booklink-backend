@@ -351,6 +351,14 @@
                     <generateModelTests>false</generateModelTests>
                     <generateApiDocumentation>false</generateApiDocumentation>
                     <generateModelDocumentation>false</generateModelDocumentation>
+                    <!-- enable templateDirectory with >3.0.20 -->
+                    <!--
+                    <templateDirectory>
+                        ${project.basedir}/src/main/resources/templates/swagger/
+                    </templateDirectory>
+                    -->
+                    <verbose>false</verbose>
+                    <skipOverwrite>false</skipOverwrite>
                     <configOptions>
                         <dateLibrary>java8-localdatetime</dateLibrary>
                         <sourceFolder>depot-api</sourceFolder>
