@@ -40,9 +40,9 @@ public class DepotConfiguration {
 
     @PostConstruct
     void initialize() {
-        log.info("............................................................");
+        log.info(".............................................................");
         log.info("setting base path for {} to: {}", ApiClient.class.getSimpleName(), depotBaseUrl);
-        log.info("............................................................");
+        log.info(".............................................................");
         apiClient.setBasePath(depotBaseUrl);
     }
 
