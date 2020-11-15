@@ -26,12 +26,16 @@ When importing project into an IDE for the first time, depending on IDE, action 
 invoked to avoid compilation errors.
 
 ## Quick Start
+Install `docker`, `docker-compose`. Clone and start [sandbox](https://github.com/mrazjava/booklink):
+```
+cd booklink/sandbox/
+./sandbox local
+```
 It's easiest to run with default config out of the box:
 ```
-docker-compose up
 mvn clean spring-boot:run
 ```
-Backend will run on port `8080`. PostgreSQL will run on port `5433`.
+Backend will run on port `8080`. PostgreSQL will run via sandbox on port `5432`.
 
 It's possible to run without `docker-compose` but in that case database and other artifacts normally 
 faciliated by docker must be provided explicitly. Here is an example when we run<sup>1</sup> booklink directly 
