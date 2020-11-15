@@ -1,6 +1,6 @@
 package com.github.mrazjava.booklink.actuator;
 
-import com.github.mrazjava.booklink.config.AllowedCorsEntries;
+import com.github.mrazjava.booklink.security.AllowedCorsEntries;
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.stereotype.Component;

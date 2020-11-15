@@ -1,9 +1,13 @@
 spring:
+  jackson:
+    default-property-inclusion: NON_NULL
   profiles:
     active: ${APP_ENV:local}
   cache:
     jcache:
       config: classpath:ehcache.xml
+  mustache:
+    check-template-location: true
   jpa:
     show-sql: true
     hibernate:
@@ -48,6 +52,8 @@ management:
         allowed-origins: ${CORS_ALLOW_ORIGINS:http://localhost:8090}
         allowed-methods: GET
 booklink:
+  depot:
+    url: ${DEPOT_URL:http://localhost:8070/}
   security:
     cors-allow-origins: ${CORS_ALLOW_ORIGINS:http://localhost:8090}
 

@@ -14,8 +14,16 @@ pre-release environment is available 24/7, though it is an environment hosted in
 ## Stack
 - Java 11
 - Spring Boot
-- REST / Swagger
+- REST / Swagger + Codegen
 - PostgreSQL / Hibernate
+
+## Codegen
+REST API client sources (such as depot access) are auto generated. They can be manually generated with:
+```
+mvn clean swagger-codegen:generate
+``` 
+When importing project into an IDE for the first time, depending on IDE, action to generate sources will have to be 
+invoked to avoid compilation errors.
 
 ## Quick Start
 It's easiest to run with default config out of the box:
@@ -23,7 +31,7 @@ It's easiest to run with default config out of the box:
 docker-compose up
 mvn clean spring-boot:run
 ```
-Backend will run on port `8080`. PostgreSQL will run on port `5433`. PgAdmin4 will run on port `5501`.
+Backend will run on port `8080`. PostgreSQL will run on port `5433`.
 
 It's possible to run without `docker-compose` but in that case database and other artifacts normally 
 faciliated by docker must be provided explicitly. Here is an example when we run<sup>1</sup> booklink directly 
@@ -74,7 +82,9 @@ Database schema will be validated because of `APP_BE_HIBERNATE_DDL_AUTO: validat
 #### AWS
 Database schema changes are migrated manually ("by hand"). Verified migration scripts from Sandbox (`stg`) are used as the basis for AWS manual db migration changes to `pre` which in turn are basis for AWS `live` migration.
 
-### Other
+### Notes
+
+#### Dumping Hibernate Schema
 Full schema dump off Hibernate can be produced with maven:
 ```
 mvn clean compile hibernate54-ddl:gen-ddl
@@ -83,3 +93,7 @@ To get more help on options available to `hibernate54-ddl` maven plugin, run:
 ```
 mvn hibernate54-ddl:help -Ddetail=true
 ```
+#### Swagger Codegen vs Openapi Codegen
+[swagger-codegen](https://mvnrepository.com/artifact/io.swagger.codegen.v3/swagger-codegen) is the proprietary 
+implementation whereas [openapi-generator-maven-plugin](https://mvnrepository.com/artifact/org.openapitools/openapi-generator-maven-plugin) 
+is the equivalent community driven effort. Both produce compatible outcomes, though stability and bugs vary.

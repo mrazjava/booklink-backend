@@ -1,6 +1,7 @@
 package com.github.mrazjava.booklink.config;
 
 import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
+import com.github.mrazjava.booklink.security.AllowedCorsEntries;
 import com.github.mrazjava.booklink.security.InvalidAuthTokenEntryPoint;
 import org.slf4j.Logger;
 import org.springframework.boot.context.properties.ConfigurationProperties;
