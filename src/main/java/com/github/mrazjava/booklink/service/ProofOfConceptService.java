@@ -1,13 +1,11 @@
 package com.github.mrazjava.booklink.service;
 
-import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
-import com.github.mrazjava.booklink.rest.depot.DepotAuthorApi;
 import com.github.mrazjava.booklink.util.WordGenerator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.time.OffsetDateTime;
@@ -17,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * @author AZ
  */
-@Component
+@Service
 public class ProofOfConceptService {
 
     @Inject
@@ -28,9 +26,6 @@ public class ProofOfConceptService {
 
     @Inject
     private WordGenerator wordGenerator;
-
-    @Inject
-    private DepotAuthorApi depotAuthorApi;
 
 
     public int randomCount() {
@@ -62,10 +57,6 @@ public class ProofOfConceptService {
         String[] greetings = {"Howdy %s, it's ", "Hello %s. Time is ", "Wuzzaaaaa %s! my time is ", "What's up %s. Time is ", "How do you do, %s? It's now ", "%s, time is: "};
         int greetingIndx = new Random().nextInt((5 - 0) + 1) + 0;
         return String.format(greetings[greetingIndx], shuffle(auth.getName())) + new Date();
-    }
-
-    public DepotAuthor depotFindAuthor(String id) {
-        return depotAuthorApi.findByIdUsingGET(id);
     }
 
     private String shuffle(String input){

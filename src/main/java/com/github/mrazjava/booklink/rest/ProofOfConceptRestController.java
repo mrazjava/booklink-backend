@@ -1,7 +1,6 @@
 package com.github.mrazjava.booklink.rest;
 
 import com.github.mrazjava.booklink.config.SwaggerConfiguration;
-import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
 import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
 import com.github.mrazjava.booklink.service.ProofOfConceptService;
 import io.swagger.annotations.*;
@@ -109,20 +108,5 @@ public class ProofOfConceptRestController {
     ))
     public String encodePassword(@RequestParam String plainText, @ApiIgnore Authentication auth) {
         return pocService.getEncodedPassword(plainText);
-    }
-
-    @ApiOperation(
-            value = "Search depot for author by id"
-    )
-    @GetMapping("/depot/author/find")
-    @Produces("application/text")
-    @ApiImplicitParams(@ApiImplicitParam(
-            name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
-            paramType = "header",
-            value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
-            allowEmptyValue = true
-    ))
-    public DepotAuthor findAuthorById(@RequestParam String id) {
-        return pocService.depotFindAuthor(id);
     }
 }

@@ -71,7 +71,7 @@ mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:p
 ```
 Here is the same maven run with less typing (using a pre-configured profile):
 ```
-mvn clean spring-boot:run -Dspring-boot.run.profiles=local,sndbx-local
+mvn clean spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 ## Database Schema Management
