@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.ws.rs.Produces;
+import java.util.List;
 
 /**
  * @author AZ (mrazjava)
@@ -38,16 +40,34 @@ public class DepotController {
             value = "Find author by id"
     )
     @GetMapping("/author/find")
-    @Produces("application/text")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DepotAuthor> findAuthorById(@ApiIgnore Authentication auth, @RequestParam String id) {
         return ResponseEntity.ok(depotService.findAuthorById(id).orElse(null));
+    }
+
+    @ApiOperation(
+            value = "Desired number of randomly selected authors which contain an image"
+    )
+    @GetMapping("/author/featured")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<DepotAuthor>> featuredAuthors(@ApiIgnore Authentication auth, @RequestParam Integer count) {
+        return ResponseEntity.ok(depotService.randomAuthorWithImage(count));
+    }
+
+    @ApiOperation(
+            value = "Find author by id"
+    )
+    @GetMapping("/author/search")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<DepotAuthor>> searchAuthors(@ApiIgnore Authentication auth, @RequestParam String search) {
+        return ResponseEntity.ok(depotService.searchAuthors(search));
     }
 
     @ApiOperation(
             value = "Compute counts"
     )
     @GetMapping("/counts")
-    @Produces("application/text")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams(@ApiImplicitParam(
             name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
             paramType = "header",

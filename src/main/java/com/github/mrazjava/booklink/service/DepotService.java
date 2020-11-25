@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
+
 @Service
 public class DepotService {
 
@@ -24,11 +26,12 @@ public class DepotService {
 
 
     public Optional<DepotAuthor> findAuthorById(String id) {
-        return Optional.ofNullable(authorApi.findByIdUsingGET(id));
+        return ofNullable(authorApi.findByIdUsingGET(id));
     }
 
-    public Optional<DepotAuthor> randomAuthorWithImage() {
-        return authorApi.randomWithImageUsingGET(1).stream().findFirst();
+    public List<DepotAuthor> randomAuthorWithImage(Integer count) {
+        return authorApi.randomRecordUsingGET(
+                ofNullable(count).orElse(1), null, true, null, null);
     }
 
     public List<DepotAuthor> searchAuthors(String text) {
@@ -36,7 +39,7 @@ public class DepotService {
     }
 
     public Optional<DepotWork> findWorkById(String id) {
-        return Optional.ofNullable(workApi.findByIdUsingGET2(id));
+        return ofNullable(workApi.findByIdUsingGET2(id));
     }
 
     public List<DepotWork> findWorksByAuthorId(String authorId) {
@@ -44,7 +47,8 @@ public class DepotService {
     }
 
     public Optional<DepotWork> randomWorkWithImage() {
-        return workApi.randomWithImageUsingGET2(1).stream().findFirst();
+        return workApi.randomRecordUsingGET2(1, null, true, null, null)
+                .stream().findFirst();
     }
 
     public List<DepotWork> searchWorks(String text) {
@@ -52,7 +56,7 @@ public class DepotService {
     }
 
     public Optional<DepotEdition> findEditionById(String id) {
-        return Optional.ofNullable(editionApi.findByIdUsingGET1(id));
+        return ofNullable(editionApi.findByIdUsingGET1(id));
     }
 
     public List<DepotEdition> findByAuthorId(String authorId) {
@@ -60,7 +64,8 @@ public class DepotService {
     }
 
     public Optional<DepotEdition> randomEditionWithImage() {
-        return editionApi.randomWithImageUsingGET1(1).stream().findFirst();
+        return editionApi.randomRecordUsingGET1(1, null, true, null, null)
+                .stream().findFirst();
     }
 
     public List<DepotEdition> searchEditions(String text) {
