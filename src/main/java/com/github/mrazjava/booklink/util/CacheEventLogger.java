@@ -12,7 +12,8 @@ public class CacheEventLogger implements CacheEventListener<Object, Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(CacheEventLogger.class);
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public void onEvent(CacheEvent cacheEvent) {
 
         LOG.info("CACHE! event={}, key={}\n* old-value={}\n* new-value={}",

@@ -1,7 +1,7 @@
 package com.github.mrazjava.booklink;
 
-import com.github.mrazjava.booklink.rest.model.ErrorResponse;
-import com.github.mrazjava.booklink.security.InvalidAccessTokenException;
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -9,14 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.inject.Inject;
+import com.github.mrazjava.booklink.rest.model.ErrorResponse;
+import com.github.mrazjava.booklink.security.InvalidAccessTokenException;
 
 /**
  * Intercept all exceptions, those known to the app as well as unexpected one and
@@ -38,19 +38,19 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<ErrorResponse> handleUnexpectedEx(Exception ex, WebRequest request) {
         ErrorResponse response = produceErrorResponse(ex, request);
         log.error("unexpected problem:", ex);
-        return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<ErrorResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ErrorResponse response = produceErrorResponse(ex, request);
         log.error("bad REST request", ex);
-        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BooklinkException.class)
     public final ResponseEntity<ErrorResponse> handleGenericBooklinkEx(Exception ex, WebRequest request) {
-        return new ResponseEntity(produceErrorResponse(ex, request), HttpStatus.CONFLICT);
+        return new ResponseEntity<ErrorResponse>(produceErrorResponse(ex, request), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({
@@ -61,7 +61,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     })
     public final ResponseEntity<ErrorResponse> handleInvalidUserEx(Exception ex, WebRequest request) {
         log.info("security gate: {}", ex.getMessage());
-        return new ResponseEntity(produceErrorResponse(ex, request), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<ErrorResponse>(produceErrorResponse(ex, request), HttpStatus.UNAUTHORIZED);
     }
 
     private ErrorResponse produceErrorResponse(Exception ex, WebRequest request) {

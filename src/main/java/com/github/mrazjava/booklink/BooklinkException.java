@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
  */
 public class BooklinkException extends RuntimeException {
 
-    private final String requestParameters;
+	private static final long serialVersionUID = 1528330058124351648L;
+
+	private final String requestParameters;
 
     private final HttpStatus httpErrorStatus;
 

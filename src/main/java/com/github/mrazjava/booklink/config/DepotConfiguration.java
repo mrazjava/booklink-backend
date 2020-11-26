@@ -1,18 +1,17 @@
 package com.github.mrazjava.booklink.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import org.slf4j.Logger;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
 /**
  * @author AZ (mrazjava)
@@ -20,9 +19,6 @@ import java.time.format.DateTimeFormatter;
  */
 @Configuration
 public class DepotConfiguration {
-
-    @Inject
-    private Logger log;
 
     @Bean
     public RestTemplate provideRestTemplate(RestTemplateBuilder restTemplateBuilder) {
