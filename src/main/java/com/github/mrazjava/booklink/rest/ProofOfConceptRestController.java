@@ -53,12 +53,7 @@ public class ProofOfConceptRestController {
                     )
             }
     )
-    @ApiImplicitParams(@ApiImplicitParam(
-            name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
-            paramType = "header",
-            value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
-            allowEmptyValue = true
-    ))
+    @SwaggerIgnoreAuthToken
     public ResponseEntity<Integer> countAll() {
         return new ResponseEntity<>(pocService.randomCount(), HttpStatus.OK);
     }
