@@ -1,14 +1,11 @@
 package com.github.mrazjava.booklink.rest;
 
-import com.github.mrazjava.booklink.config.SwaggerConfiguration;
-import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
-import com.github.mrazjava.booklink.rest.depot.DepotStats;
-import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
-import com.github.mrazjava.booklink.service.DepotService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import java.util.List;
+
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.Produces;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +14,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
-import javax.ws.rs.Produces;
-import java.util.List;
+import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
+import com.github.mrazjava.booklink.rest.depot.DepotStats;
+import com.github.mrazjava.booklink.service.DepotService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author AZ (mrazjava)
@@ -41,6 +42,7 @@ public class DepotController {
     )
     @GetMapping("/author/find")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @RolesAllowed("ROLE_DETECTIVE")
     public ResponseEntity<DepotAuthor> findAuthorById(@ApiIgnore Authentication auth, @RequestParam String id) {
         return ResponseEntity.ok(depotService.findAuthorById(id).orElse(null));
     }
@@ -50,7 +52,9 @@ public class DepotController {
     )
     @GetMapping("/author/featured")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<DepotAuthor>> featuredAuthors(@ApiIgnore Authentication auth, @RequestParam Integer count) {
+    @SwaggerIgnoreAuthToken
+    @PermitAll
+    public ResponseEntity<List<DepotAuthor>> featuredAuthors(@RequestParam Integer count) {
         return ResponseEntity.ok(depotService.randomAuthorWithImage(count));
     }
 
@@ -59,6 +63,8 @@ public class DepotController {
     )
     @GetMapping("/author/search")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @SwaggerIgnoreAuthToken
+    @PermitAll
     public ResponseEntity<List<DepotAuthor>> searchAuthors(@ApiIgnore Authentication auth, @RequestParam String search) {
         return ResponseEntity.ok(depotService.searchAuthors(search));
     }
@@ -68,12 +74,7 @@ public class DepotController {
     )
     @GetMapping("/counts")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParams(@ApiImplicitParam(
-            name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
-            paramType = "header",
-            value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
-            allowEmptyValue = true
-    ))
+    @RolesAllowed("ROLE_ADMIN")
     public ResponseEntity<DepotStats> counts() {
         return ResponseEntity.ok(depotService.getCounts());
     }
