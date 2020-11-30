@@ -1,11 +1,14 @@
 package com.github.mrazjava.booklink.rest;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Produces;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
 import com.github.mrazjava.booklink.rest.depot.DepotStats;
+import com.github.mrazjava.booklink.rest.model.depot.FeaturedWorkResponse;
 import com.github.mrazjava.booklink.service.DepotService;
 
 import io.swagger.annotations.Api;
@@ -77,5 +81,28 @@ public class DepotController {
     @RolesAllowed("ROLE_ADMIN")
     public ResponseEntity<DepotStats> counts() {
         return ResponseEntity.ok(depotService.getCounts());
+    }
+
+    @ApiOperation(
+            value = "Desired number of randomly selected works which contain an image"
+    )
+    @GetMapping("/work/featured")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @SwaggerIgnoreAuthToken
+    @PermitAll
+    public ResponseEntity<List<FeaturedWorkResponse>> featuredWorks(@RequestParam Integer count) {
+
+    	List<FeaturedWorkResponse> results = depotService.randomWorkWithImage(1).stream()
+    		.map(work -> {
+    			DepotAuthor author = work.getAuthors().stream()
+    					// FIXME: pull author but exclude an image (not needed here)
+    					.map(id -> depotService.findAuthorById(id).orElse(null))
+    					.filter(au -> Optional.ofNullable(au).map(a -> StringUtils.isNotBlank(a.getId())).orElse(false))
+    					.findFirst()
+    					.orElse(null);
+    			return new FeaturedWorkResponse(work, author);    			
+    		})
+    		.collect(Collectors.toList());
+        return ResponseEntity.ok(results);
     }
 }

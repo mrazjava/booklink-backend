@@ -813,6 +813,19 @@
         "title": "DepotEdition",
         "type": "object",
         "properties": {
+          "authorNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "authors": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "copyrightDate": {
             "type": "string"
           },
@@ -897,6 +910,19 @@
           },
           "weight": {
             "$ref": "#/components/schemas/Weight"
+          },
+          "workTitles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "works": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -981,6 +1007,13 @@
         "title": "DepotWork",
         "type": "object",
         "properties": {
+          "authors": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "created": {
             "type": "string",
             "format": "date-time"

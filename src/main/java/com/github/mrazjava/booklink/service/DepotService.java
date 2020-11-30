@@ -46,9 +46,9 @@ public class DepotService {
         return workApi.findByKeyUsingGET1(authorId);
     }
 
-    public Optional<DepotWork> randomWorkWithImage() {
-        return workApi.randomRecordUsingGET2(1, null, true, null, null)
-                .stream().findFirst();
+    public List<DepotWork> randomWorkWithImage(Integer count) {
+        return workApi.randomRecordUsingGET2(
+        		ofNullable(count).orElse(1), null, true, null, null);
     }
 
     public List<DepotWork> searchWorks(String text) {
