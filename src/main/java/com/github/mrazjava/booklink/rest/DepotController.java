@@ -25,6 +25,7 @@ import com.github.mrazjava.booklink.service.DepotService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -90,9 +91,9 @@ public class DepotController {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @SwaggerIgnoreAuthToken
     @PermitAll
-    public ResponseEntity<List<FeaturedWorkResponse>> featuredWorks(@RequestParam Integer count) {
+    public ResponseEntity<List<FeaturedWorkResponse>> featuredWorks(@ApiParam(value = "desired number of works", defaultValue = "1") @RequestParam(required = false, defaultValue = "1") Integer count) {
 
-    	List<FeaturedWorkResponse> results = depotService.randomWorkWithImage(1).stream()
+    	List<FeaturedWorkResponse> results = depotService.randomWorkWithImage(Optional.ofNullable(count).orElse(1)).stream()
     		.map(work -> {
     			DepotAuthor author = work.getAuthors().stream()
     					// FIXME: pull author but exclude an image (not needed here)

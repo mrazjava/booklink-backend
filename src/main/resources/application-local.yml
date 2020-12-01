@@ -1,3 +1,4 @@
 logging:
   pattern:
     console: '%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr([%30.30M]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n'
+swaggerhost: localhost:8080
