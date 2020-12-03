@@ -97,10 +97,15 @@ jobs:
           task-definition: ${{ env.ARTIFACT_DIR }}/pre-release.json
           container-name: booklink-backend-pre-contr
           image: ${{ steps.push-image-to-aws.outputs.image }}
-      - name: deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1.4.0
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: booklink-backend-pre-svc
-          cluster: booklink-ec2lx-pre-cluster
-          wait-for-service-stability: false
+#
+# In Nov 2020 disabled AWS load balancers to save on costs. Disabling this section to avoid what would 
+# have been an:
+# Error: The target group with targetGroupArn arn:aws:elasticloadbalancing:eu-central-1:***:targetgroup/BooklinkTargetGroup-BE-pre/caaeccfa00da706a does not have an associated load balancer. 
+#
+#      - name: deploy Amazon ECS task definition
+#        uses: aws-actions/amazon-ecs-deploy-task-definition@v1.4.0
+#        with:
+#          task-definition: ${{ steps.task-def.outputs.task-definition }}
+#          service: booklink-backend-pre-svc
+#          cluster: booklink-ec2lx-pre-cluster
+#          wait-for-service-stability: false
