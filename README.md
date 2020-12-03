@@ -77,6 +77,16 @@ Database schema changes are migrated manually ("by hand"). Verified migration sc
 ### Notes
 Miscellaneous information that may be useful depending on how project is used.
 
+#### Postgres
+Some useful pg queries.
+
+Query table by JSONB (top level) property:
+```
+select * from table t where t.jsonb_field @> '{"top_level_property": "some_value"}'
+-- OR equivalent 2nd form
+select * from table t where t.jsonb_field ->> 'top_level_property' = 'some_value'
+```
+
 #### Eclipse IDE
 M2E plugin lifecycle for hibernate DDL and swagger codegen are disabled in pom.xml so Eclipse should not complain. However, in order for Eclipse to recognize depot client code which is automatically generated, right click on 
 `target/generated-sources/depot-api` and choose `Build Path -> Use as Source Folder`.
