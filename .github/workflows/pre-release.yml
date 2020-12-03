@@ -72,14 +72,14 @@ jobs:
           docker login -u ${{ secrets.DOCKERHUB_LOGIN }} -p ${{ secrets.DOCKERHUB_PASSWORD }} docker.io
           docker push $DOCKER_IMAGE:$DOCKER_IMG_TAG
       - name: configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1.1.2
+        uses: aws-actions/configure-aws-credentials@v1.5.5
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
       - name: login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1.0.3
+        uses: aws-actions/amazon-ecr-login@v1.3.1
       - name: push image to Amazon ECR
         id: push-image-to-aws
         env:
@@ -92,13 +92,13 @@ jobs:
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$DOCKER_IMG_TAG"
       - name: fill in the new image ID in the Amazon ECS task definition
         id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1.0.2
+        uses: aws-actions/amazon-ecs-render-task-definition@v1.0.17
         with:
           task-definition: ${{ env.ARTIFACT_DIR }}/pre-release.json
           container-name: booklink-backend-pre-contr
           image: ${{ steps.push-image-to-aws.outputs.image }}
       - name: deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1.0.3
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1.4.0
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: booklink-backend-pre-svc
