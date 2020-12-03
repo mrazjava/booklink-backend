@@ -21,7 +21,7 @@ public class BooklinkApp {
 
     public static void main(String[] args) {
 
-        log.info("initializing Booklink backend....");
+        log.info("initializing Booklink backend...");
 
         new SpringApplicationBuilder()
                 .sources(BooklinkApp.class)
