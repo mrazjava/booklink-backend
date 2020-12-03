@@ -7,7 +7,9 @@ import com.github.mrazjava.booklink.BooklinkException;
  */
 public class InvalidAccessTokenException extends BooklinkException {
 
-    public InvalidAccessTokenException(String message) {
+	private static final long serialVersionUID = -47687245348086308L;
+
+	public InvalidAccessTokenException(String message) {
         super(message);
     }
 

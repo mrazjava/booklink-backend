@@ -64,6 +64,8 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKERHUB_LOGIN }} -p ${{ secrets.DOCKERHUB_PASSWORD }} docker.io
           docker push $DOCKER_IMAGE:$DOCKER_IMG_TAG
+          docker tag $DOCKER_IMAGE:$DOCKER_IMG_TAG $DOCKER_IMAGE:latest
+          docker push $DOCKER_IMAGE:latest
       - name: configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1.1.2
         with:

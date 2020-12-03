@@ -26,12 +26,16 @@ When importing project into an IDE for the first time, depending on IDE, action 
 invoked to avoid compilation errors.
 
 ## Quick Start
+Install `docker`, `docker-compose`. Clone and start [sandbox](https://github.com/mrazjava/booklink):
+```
+cd booklink/sandbox/
+./sandbox local
+```
 It's easiest to run with default config out of the box:
 ```
-docker-compose up
 mvn clean spring-boot:run
 ```
-Backend will run on port `8080`. PostgreSQL will run on port `5433`.
+Backend will run on port `8080`. PostgreSQL will run via sandbox on port `5432`.
 
 It's possible to run without `docker-compose` but in that case database and other artifacts normally 
 faciliated by docker must be provided explicitly. Here is an example when we run<sup>1</sup> booklink directly 
@@ -55,20 +59,8 @@ Then, to run off sandbox `local` the image we have just built, invoke:
 ```
 ./sandbox local -b
 ```
-It is also possible to run via `mvn` against [sandbox](https://github.com/mrazjava/booklink#sandbox) database, in which case `spring.datasource.url` must be overriden via `APP_BE_DB_URL` env variable. 
-
-To run against a `sandbox` database, say `local`, first start sandbox bare bone:
-```
-./sandbox local
-```
-and adjusting config on-the-fly via ENV overrides, kick off maven run:
-```
-mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-DAPP_BE_DB_URL=jdbc:postgresql://localhost:5432/booklink_sndbx_local -DAPP_BE_HIBERNATE_DDL_AUTO=validate -DAPP_SPRING_DATA_INIT=never -DAPP_FLYWAY_ENABLED=true"
-```
-Here is the same maven run with less typing (using a pre-configured profile):
-```
-mvn clean spring-boot:run -Dspring-boot.run.profiles=local,sndbx-local
-```
+Again, as mentioned in the quick start, by far the most convenient way to run the backend is with sandbox providing 
+the database resources only and invoking backend directly via `mvn`.
 
 ## Database Schema Management
 Default behavior of application with respect to the database varies depending on the environment:
@@ -83,6 +75,23 @@ Database schema will be validated because of `APP_BE_HIBERNATE_DDL_AUTO: validat
 Database schema changes are migrated manually ("by hand"). Verified migration scripts from Sandbox (`stg`) are used as the basis for AWS manual db migration changes to `pre` which in turn are basis for AWS `live` migration.
 
 ### Notes
+Miscellaneous information that may be useful depending on how project is used.
+
+#### Postgres
+Some useful pg queries.
+
+Query table by JSONB (top level) property:
+```
+select * from table t where t.jsonb_field @> '{"top_level_property": "some_value"}'
+-- OR equivalent 2nd form
+select * from table t where t.jsonb_field ->> 'top_level_property' = 'some_value'
+```
+
+#### Eclipse IDE
+M2E plugin lifecycle for hibernate DDL and swagger codegen are disabled in pom.xml so Eclipse should not complain. However, in order for Eclipse to recognize depot client code which is automatically generated, right click on 
+`target/generated-sources/depot-api` and choose `Build Path -> Use as Source Folder`.
+
+Last checked with Eclipse v. `2020-09`.
 
 #### Dumping Hibernate Schema
 Full schema dump off Hibernate can be produced with maven:

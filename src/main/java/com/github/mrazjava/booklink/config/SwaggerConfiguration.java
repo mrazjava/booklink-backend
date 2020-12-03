@@ -1,13 +1,21 @@
 package com.github.mrazjava.booklink.config;
 
-import com.github.mrazjava.booklink.BooklinkApp;
-import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
+import java.util.Collections;
+import java.util.Optional;
+
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.github.mrazjava.booklink.BooklinkApp;
+import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -18,10 +26,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import javax.inject.Inject;
-import java.util.Collections;
-import java.util.Optional;
-
 /**
  * @author AZ
  */
@@ -31,6 +35,9 @@ public class SwaggerConfiguration {
 
     public static final String HEADER_NOT_USED_MSG = "NOT USED - ignore";
 
+    @Inject
+    private Logger log;
+    
     @Inject
     private Optional<BuildProperties> build;
 
@@ -45,8 +52,9 @@ public class SwaggerConfiguration {
 
     @Bean
     public Docket internalAPI() {
+
         final String version = (build.isPresent()) ? build.get().getVersion() : "";
-        Docket d = new Docket(DocumentationType.SWAGGER_2)
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .groupName("booklink-" + version)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(BooklinkApp.class.getPackageName()))
@@ -65,9 +73,12 @@ public class SwaggerConfiguration {
                 );
 
         if (StringUtils.isNotBlank(swaggerhost)) {
-            d.host(swaggerhost);
+            log.info(".............................................................");
+            log.info("setting base path for {} (backend) to: {}", SwaggerConfiguration.class.getSimpleName(), swaggerhost);
+            log.info(".............................................................");        	
+            docket.host(swaggerhost);
         }
-        return d;
+        return docket;
     }
 
     private ApiInfo generateInternalApiInfo(String version, String title, String desc) {

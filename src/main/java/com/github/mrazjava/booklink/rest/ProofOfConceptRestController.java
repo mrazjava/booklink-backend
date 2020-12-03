@@ -1,20 +1,29 @@
 package com.github.mrazjava.booklink.rest;
 
-import com.github.mrazjava.booklink.config.SwaggerConfiguration;
-import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
-import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
-import com.github.mrazjava.booklink.service.ProofOfConceptService;
-import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
-
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Produces;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.mrazjava.booklink.config.SwaggerConfiguration;
+import com.github.mrazjava.booklink.security.AccessTokenSecurityFilter;
+import com.github.mrazjava.booklink.service.ProofOfConceptService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author AZ
@@ -25,9 +34,6 @@ import javax.ws.rs.Produces;
 @RestController
 @RequestMapping("rest/v1/poc")
 public class ProofOfConceptRestController {
-
-    @Inject
-    private Logger log;
 
     @Inject
     private ProofOfConceptService pocService;
@@ -47,12 +53,7 @@ public class ProofOfConceptRestController {
                     )
             }
     )
-    @ApiImplicitParams(@ApiImplicitParam(
-            name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
-            paramType = "header",
-            value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
-            allowEmptyValue = true
-    ))
+    @SwaggerIgnoreAuthToken
     public ResponseEntity<Integer> countAll() {
         return new ResponseEntity<>(pocService.randomCount(), HttpStatus.OK);
     }
@@ -109,20 +110,5 @@ public class ProofOfConceptRestController {
     ))
     public String encodePassword(@RequestParam String plainText, @ApiIgnore Authentication auth) {
         return pocService.getEncodedPassword(plainText);
-    }
-
-    @ApiOperation(
-            value = "Search depot for author by id"
-    )
-    @GetMapping("/depot/author/find")
-    @Produces("application/text")
-    @ApiImplicitParams(@ApiImplicitParam(
-            name = AccessTokenSecurityFilter.AUTHORIZATION_HEADER_NAME,
-            paramType = "header",
-            value = SwaggerConfiguration.HEADER_NOT_USED_MSG,
-            allowEmptyValue = true
-    ))
-    public DepotAuthor findAuthorById(@RequestParam String id) {
-        return pocService.depotFindAuthor(id);
     }
 }

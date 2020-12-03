@@ -1,9 +1,0 @@
-spring:
-  jpa:
-    hibernate:
-      ddl-auto: ${APP_BE_HIBERNATE_DDL_AUTO:validate}
-  datasource:
-    initialization-mode: ${APP_SPRING_DATA_INIT:never}
-    url: ${APP_BE_DB_URL:jdbc:postgresql://localhost:5432/booklink_sndbx_local}
-  flyway:
-    enabled: ${APP_FLYWAY_ENABLED:true}

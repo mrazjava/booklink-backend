@@ -25,7 +25,9 @@ import java.util.stream.Collectors;
 @Entity(name = "bl_user")
 public class UserEntity implements UserDetails {
 
-    private static final Logger log = LoggerFactory.getLogger(UserEntity.class);
+	private static final long serialVersionUID = -4085482946301042468L;
+
+	private static final Logger log = LoggerFactory.getLogger(UserEntity.class);
 
     static final int STATUS_ACTIVE = 1;
 

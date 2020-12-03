@@ -1,19 +1,16 @@
 package com.github.mrazjava.booklink.security;
 
-import org.slf4j.Logger;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerExceptionResolver;
+import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-import static com.github.mrazjava.booklink.security.AccessTokenSecurityFilter.ATTR_AUTH_TOKEN_STATUS;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 /**
  * Handler for requests which require authentication. Not invoked on endpoints configured
