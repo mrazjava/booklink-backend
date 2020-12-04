@@ -52,7 +52,7 @@ jobs:
       - name: extract git-tagged version
         id: extract-tagged-version
         run: |
-          echo "::set-env name=DOCKER_IMG_TAG::${GITHUB_REF/refs\/tags\//}"
+          echo "DOCKER_IMG_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: assemble docker image
         id: dockerize
         run: |
