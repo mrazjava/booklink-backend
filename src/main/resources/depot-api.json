@@ -12,7 +12,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0"
     },
-    "version": "202011v1"
+    "version": "202012v1"
   },
   "tags": [
     {
@@ -33,6 +33,165 @@
     }
   ],
   "paths": {
+    "/rest/v1/depot/author/flex/{id}": {
+      "get": {
+        "tags": [
+          "Author"
+        ],
+        "summary": "Find author matching a specific ID optionally exlude image(s)",
+        "operationId": "findByIdUsingGET",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "unique author ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imgS",
+            "in": "query",
+            "description": "fetch small img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgM",
+            "in": "query",
+            "description": "fetch medium img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgL",
+            "in": "query",
+            "description": "fetch large img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepotAuthor"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/rest/v1/depot/author/paged/all": {
+      "get": {
+        "tags": [
+          "Author"
+        ],
+        "summary": "Get all records, paginated",
+        "operationId": "getAllUsingGET",
+        "parameters": [
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "page number starting with 1",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "number of rows per page",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "imgS",
+            "in": "query",
+            "description": "include small img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgM",
+            "in": "query",
+            "description": "include medium img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgL",
+            "in": "query",
+            "description": "include large img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DepotAuthor"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/rest/v1/depot/author/random-record": {
       "get": {
         "tags": [
@@ -194,7 +353,7 @@
           "Author"
         ],
         "summary": "Find author matching a specific ID",
-        "operationId": "findByIdUsingGET",
+        "operationId": "findByIdUsingGET_1",
         "parameters": [
           {
             "name": "id",
@@ -246,6 +405,93 @@
             "style": "form",
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DepotEdition"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/rest/v1/depot/edition/paged/all": {
+      "get": {
+        "tags": [
+          "Edition"
+        ],
+        "summary": "Get all records, paginated",
+        "operationId": "getAllUsingGET_1",
+        "parameters": [
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "page number starting with 1",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "number of rows per page",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "imgS",
+            "in": "query",
+            "description": "include small img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgM",
+            "in": "query",
+            "description": "include medium img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgL",
+            "in": "query",
+            "description": "include large img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -436,7 +682,7 @@
           "Edition"
         ],
         "summary": "Find edition matching a specific ID",
-        "operationId": "findByIdUsingGET_1",
+        "operationId": "findByIdUsingGET_2",
         "parameters": [
           {
             "name": "id",
@@ -518,6 +764,93 @@
             "style": "form",
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DepotWork"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/rest/v1/depot/work/paged/all": {
+      "get": {
+        "tags": [
+          "Work"
+        ],
+        "summary": "Get all records, paginated",
+        "operationId": "getAllUsingGET_2",
+        "parameters": [
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "page number starting with 1",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "number of rows per page",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "imgS",
+            "in": "query",
+            "description": "include small img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgM",
+            "in": "query",
+            "description": "include medium img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgL",
+            "in": "query",
+            "description": "include large img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -708,7 +1041,7 @@
           "Work"
         ],
         "summary": "Find work matching a specific ID",
-        "operationId": "findByIdUsingGET_2",
+        "operationId": "findByIdUsingGET_3",
         "parameters": [
           {
             "name": "id",

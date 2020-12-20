@@ -26,7 +26,7 @@ public class DepotService {
 
 
     public Optional<DepotAuthor> findAuthorById(String id) {
-        return ofNullable(authorApi.findByIdUsingGET(id));
+        return ofNullable(authorApi.findByIdUsingGET1(id));
     }
 
     public List<DepotAuthor> randomAuthorWithImage(Integer count) {
@@ -39,7 +39,7 @@ public class DepotService {
     }
 
     public Optional<DepotWork> findWorkById(String id) {
-        return ofNullable(workApi.findByIdUsingGET2(id));
+        return ofNullable(workApi.findByIdUsingGET3(id));
     }
 
     public List<DepotWork> findWorksByAuthorId(String authorId) {
@@ -56,7 +56,7 @@ public class DepotService {
     }
 
     public Optional<DepotEdition> findEditionById(String id) {
-        return ofNullable(editionApi.findByIdUsingGET1(id));
+        return ofNullable(editionApi.findByIdUsingGET2(id));
     }
 
     public List<DepotEdition> findByAuthorId(String authorId) {
