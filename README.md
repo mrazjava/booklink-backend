@@ -78,11 +78,11 @@ Database schema changes are migrated manually ("by hand"). Verified migration sc
 Miscellaneous information that may be useful depending on how project is used.
 
 #### Remote Debugging
-Start the app with maven with these JVM parameters:
+Start the app via maven with these JVM parameters:
 ```
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
 ```
-Then from an IDE, setup debugger with these samve JVM args.
+Then from an IDE, setup debugger with these same JVM args.
 
 #### Postgres
 Some useful pg queries.
