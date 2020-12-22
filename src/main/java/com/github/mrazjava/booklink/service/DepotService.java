@@ -25,8 +25,8 @@ public class DepotService {
     private StatisticsApi statsApi;
 
 
-    public Optional<DepotAuthor> findAuthorById(String id) {
-        return ofNullable(authorApi.findByIdUsingGET1(id));
+    public Optional<DepotAuthor> findAuthorById(String id, Boolean imgS, Boolean imgM, Boolean imgL) {
+        return ofNullable(authorApi.findByIdUsingGET(id, imgS, imgM, imgL));
     }
 
     public List<DepotAuthor> randomAuthorWithImage(Integer count) {
@@ -38,8 +38,8 @@ public class DepotService {
         return authorApi.searchTextUsingGET(text, false, null);
     }
 
-    public Optional<DepotWork> findWorkById(String id) {
-        return ofNullable(workApi.findByIdUsingGET3(id));
+    public Optional<DepotWork> findWorkById(String id, Boolean imgS, Boolean imgM, Boolean imgL) {
+        return ofNullable(workApi.findByIdUsingGET4(id, imgS, imgM, imgL));
     }
 
     public List<DepotWork> findWorksByAuthorId(String authorId) {
@@ -55,8 +55,8 @@ public class DepotService {
         return workApi.searchTextUsingGET2(text, false, null);
     }
 
-    public Optional<DepotEdition> findEditionById(String id) {
-        return ofNullable(editionApi.findByIdUsingGET2(id));
+    public Optional<DepotEdition> findEditionById(String id, Boolean imgS, Boolean imgM, Boolean imgL) {
+        return ofNullable(editionApi.findByIdUsingGET2(id, imgS, imgM, imgL));
     }
 
     public List<DepotEdition> findByAuthorId(String authorId) {
@@ -70,6 +70,18 @@ public class DepotService {
 
     public List<DepotEdition> searchEditions(String text) {
         return editionApi.searchTextUsingGET1(text, false, null);
+    }
+    
+    public List<DepotAuthor> getAuthorsPaged(Integer pageNo, Integer pageSize, Boolean imgS, Boolean imgM, Boolean imgL) {
+    	return authorApi.getAllUsingGET(pageNo, pageSize, imgS, imgM, imgL);
+    }
+    
+    public List<DepotWork> getWorksPaged(Integer pageNo, Integer pageSize, Boolean imgS, Boolean imgM, Boolean imgL) {
+    	return workApi.getAllUsingGET2(pageNo, pageSize, imgS, imgM, imgL);
+    }
+    
+    public List<DepotEdition> getEditionsPaged(Integer pageNo, Integer pageSize, Boolean imgS, Boolean imgM, Boolean imgL) {
+    	return editionApi.getAllUsingGET1(pageNo, pageSize, imgS, imgM, imgL);
     }
 
     public DepotStats getCounts() {

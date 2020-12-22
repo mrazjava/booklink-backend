@@ -8,24 +8,30 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Produces;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
+import com.github.mrazjava.booklink.rest.depot.DepotEdition;
 import com.github.mrazjava.booklink.rest.depot.DepotStats;
+import com.github.mrazjava.booklink.rest.depot.DepotWork;
 import com.github.mrazjava.booklink.rest.model.depot.FeaturedWorkResponse;
 import com.github.mrazjava.booklink.service.DepotService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -45,11 +51,23 @@ public class DepotController {
     @ApiOperation(
             value = "Find author by id"
     )
-    @GetMapping("/author/find")
+    @GetMapping("/author/{id}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @RolesAllowed("ROLE_DETECTIVE")
-    public ResponseEntity<DepotAuthor> findAuthorById(@ApiIgnore Authentication auth, @RequestParam String id) {
-        return ResponseEntity.ok(depotService.findAuthorById(id).orElse(null));
+    public ResponseEntity<DepotAuthor> findAuthorById(
+    		@ApiIgnore Authentication auth, 
+    		@PathVariable String id,
+    		@ApiParam(value = "include small img?") @RequestParam(value = "imgS", required = false) Boolean imgS, 
+    		@ApiParam(value = "include medium img?") @RequestParam(value = "imgM", required = false) Boolean imgM, 
+    		@ApiParam(value = "include large img?") @RequestParam(value = "imgL", required = false) Boolean imgL    		
+    		) {
+    	DepotAuthor result = depotService.findAuthorById(
+    			id, 
+    			BooleanUtils.toBooleanDefaultIfNull(imgS, true), 
+    			BooleanUtils.toBooleanDefaultIfNull(imgM, true), 
+    			BooleanUtils.toBooleanDefaultIfNull(imgL, true)
+    			).orElse(null);
+    	return ResponseEntity.ok(result);
     }
 
     @ApiOperation(
@@ -83,6 +101,50 @@ public class DepotController {
     public ResponseEntity<DepotStats> counts() {
         return ResponseEntity.ok(depotService.getCounts());
     }
+    
+    @ApiOperation(value = "Fetch AUTHORS, paginated")
+    @GetMapping(path = "paged/authors")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(
+            {
+                    @ApiResponse(
+                            message = "ok",
+                            code = 200
+                    )
+            }
+    )
+    public ResponseEntity<List<DepotAuthor>> pagedAuthors(
+    		@ApiParam(value = "page number starting with 1", required = true) @RequestParam("pageNo") Integer pageNo, 
+    		@ApiParam(value = "number of rows per page") @RequestParam(value = "pageSize", required = false) Integer pageSize, 
+    		@ApiParam(value = "include small img?") @RequestParam(value = "imgS", required = false) Boolean imgS, 
+    		@ApiParam(value = "include medium img?") @RequestParam(value = "imgM", required = false) Boolean imgM, 
+    		@ApiParam(value = "include large img?") @RequestParam(value = "imgL", required = false) Boolean imgL
+    		) {
+    	List<DepotAuthor> results = depotService.getAuthorsPaged(pageNo, pageSize, imgS, imgM, imgL);
+    	return ResponseEntity.ok(results);
+    }
+
+    @ApiOperation(
+            value = "Find author by id"
+    )
+    @GetMapping("/work/{id}")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @RolesAllowed("ROLE_DETECTIVE")
+    public ResponseEntity<DepotWork> findWorkById(
+    		@ApiIgnore Authentication auth, 
+    		@PathVariable String id,
+    		@ApiParam(value = "include small img?") @RequestParam(value = "imgS", required = false) Boolean imgS, 
+    		@ApiParam(value = "include medium img?") @RequestParam(value = "imgM", required = false) Boolean imgM, 
+    		@ApiParam(value = "include large img?") @RequestParam(value = "imgL", required = false) Boolean imgL    		
+    		) {
+    	DepotWork result = depotService.findWorkById(
+    			id, 
+    			BooleanUtils.toBooleanDefaultIfNull(imgS, true), 
+    			BooleanUtils.toBooleanDefaultIfNull(imgM, true), 
+    			BooleanUtils.toBooleanDefaultIfNull(imgL, true)
+    			).orElse(null);
+    	return ResponseEntity.ok(result);
+    }
 
     @ApiOperation(
             value = "Desired number of randomly selected works which contain an image"
@@ -96,8 +158,7 @@ public class DepotController {
     	List<FeaturedWorkResponse> results = depotService.randomWorkWithImage(Optional.ofNullable(count).orElse(1)).stream()
     		.map(work -> {
     			DepotAuthor author = work.getAuthors().stream()
-    					// FIXME: pull author but exclude an image (not needed here)
-    					.map(id -> depotService.findAuthorById(id).orElse(null))
+    					.map(id -> depotService.findAuthorById(id, false, false, false).orElse(null))
     					.filter(au -> Optional.ofNullable(au).map(a -> StringUtils.isNotBlank(a.getId())).orElse(false))
     					.findFirst()
     					.orElse(null);
@@ -105,5 +166,71 @@ public class DepotController {
     		})
     		.collect(Collectors.toList());
         return ResponseEntity.ok(results);
+    }
+
+    @ApiOperation(value = "Fetch WORKS, paginated")
+    @GetMapping(path = "paged/works")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(
+            {
+                    @ApiResponse(
+                            message = "ok",
+                            code = 200
+                    )
+            }
+    )
+    public ResponseEntity<List<DepotWork>> pagedWorks(
+    		@ApiParam(value = "page number starting with 1", required = true) @RequestParam("pageNo") Integer pageNo, 
+    		@ApiParam(value = "number of rows per page") @RequestParam(value = "pageSize", required = false) Integer pageSize, 
+    		@ApiParam(value = "include small img?") @RequestParam(value = "imgS", required = false) Boolean imgS, 
+    		@ApiParam(value = "include medium img?") @RequestParam(value = "imgM", required = false) Boolean imgM, 
+    		@ApiParam(value = "include large img?") @RequestParam(value = "imgL", required = false) Boolean imgL
+    		) {
+    	List<DepotWork> results = depotService.getWorksPaged(pageNo, pageSize, imgS, imgM, imgL);
+    	return ResponseEntity.ok(results);
+    }
+
+    @ApiOperation(
+            value = "Find edition by id"
+    )
+    @GetMapping("/edition/{id}")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @RolesAllowed("ROLE_DETECTIVE")
+    public ResponseEntity<DepotEdition> findEditionById(
+    		@ApiIgnore Authentication auth, 
+    		@PathVariable String id,
+    		@ApiParam(value = "include small img?") @RequestParam(value = "imgS", required = false) Boolean imgS, 
+    		@ApiParam(value = "include medium img?") @RequestParam(value = "imgM", required = false) Boolean imgM, 
+    		@ApiParam(value = "include large img?") @RequestParam(value = "imgL", required = false) Boolean imgL    		
+    		) {
+    	DepotEdition result = depotService.findEditionById(
+    			id, 
+    			BooleanUtils.toBooleanDefaultIfNull(imgS, true), 
+    			BooleanUtils.toBooleanDefaultIfNull(imgM, true), 
+    			BooleanUtils.toBooleanDefaultIfNull(imgL, true)
+    			).orElse(null);
+    	return ResponseEntity.ok(result);
+    }
+
+    @ApiOperation(value = "Fetch EDITIONS, paginated")
+    @GetMapping(path = "paged/editions")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(
+            {
+                    @ApiResponse(
+                            message = "ok",
+                            code = 200
+                    )
+            }
+    )
+    public ResponseEntity<List<DepotEdition>> pagedEditions(
+    		@ApiParam(value = "page number starting with 1", required = true) @RequestParam("pageNo") Integer pageNo, 
+    		@ApiParam(value = "number of rows per page") @RequestParam(value = "pageSize", required = false) Integer pageSize, 
+    		@ApiParam(value = "include small img?") @RequestParam(value = "imgS", required = false) Boolean imgS, 
+    		@ApiParam(value = "include medium img?") @RequestParam(value = "imgM", required = false) Boolean imgM, 
+    		@ApiParam(value = "include large img?") @RequestParam(value = "imgL", required = false) Boolean imgL
+    		) {
+    	List<DepotEdition> results = depotService.getEditionsPaged(pageNo, pageSize, imgS, imgM, imgL);
+    	return ResponseEntity.ok(results);
     }
 }

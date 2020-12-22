@@ -14,6 +14,12 @@
     },
     "version": "202012v1"
   },
+  "servers": [
+    {
+      "url": "http://localhost:8070",
+      "description": "Inferred Url"
+    }
+  ],
   "tags": [
     {
       "name": "Author",
@@ -38,13 +44,13 @@
         "tags": [
           "Author"
         ],
-        "summary": "Find author matching a specific ID optionally exlude image(s)",
+        "summary": "Find record matching a specific ID optionally exluding image(s)",
         "operationId": "findByIdUsingGET",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "unique author ID",
+            "description": "unique record ID",
             "required": true,
             "style": "simple",
             "schema": {
@@ -434,6 +440,78 @@
         }
       }
     },
+    "/rest/v1/depot/edition/flex/{id}": {
+      "get": {
+        "tags": [
+          "Edition"
+        ],
+        "summary": "Find record matching a specific ID optionally exluding image(s)",
+        "operationId": "findByIdUsingGET_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "unique record ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imgS",
+            "in": "query",
+            "description": "fetch small img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgM",
+            "in": "query",
+            "description": "fetch medium img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgL",
+            "in": "query",
+            "description": "fetch large img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepotEdition"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/rest/v1/depot/edition/paged/all": {
       "get": {
         "tags": [
@@ -682,7 +760,7 @@
           "Edition"
         ],
         "summary": "Find edition matching a specific ID",
-        "operationId": "findByIdUsingGET_2",
+        "operationId": "findByIdUsingGET_3",
         "parameters": [
           {
             "name": "id",
@@ -777,6 +855,78 @@
                   "items": {
                     "$ref": "#/components/schemas/DepotWork"
                   }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/rest/v1/depot/work/flex/{id}": {
+      "get": {
+        "tags": [
+          "Work"
+        ],
+        "summary": "Find record matching a specific ID optionally exluding image(s)",
+        "operationId": "findByIdUsingGET_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "unique record ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imgS",
+            "in": "query",
+            "description": "fetch small img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgM",
+            "in": "query",
+            "description": "fetch medium img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "imgL",
+            "in": "query",
+            "description": "fetch large img?",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepotWork"
                 }
               }
             }
@@ -1041,7 +1191,7 @@
           "Work"
         ],
         "summary": "Find work matching a specific ID",
-        "operationId": "findByIdUsingGET_3",
+        "operationId": "findByIdUsingGET_5",
         "parameters": [
           {
             "name": "id",
