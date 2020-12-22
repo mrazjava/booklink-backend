@@ -1,5 +1,5 @@
 booklink:
-  auth-token-pattern: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+  auth-token-pattern: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
 logging:
   pattern:
     console: "%d{HH:mm:ss.SSS} [%M] %-5level %logger{36} - %msg%n"
