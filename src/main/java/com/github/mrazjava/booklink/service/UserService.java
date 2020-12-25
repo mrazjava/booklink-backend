@@ -54,6 +54,7 @@ public class UserService implements UserDetailsService {
     @PostConstruct
     void init() {
     	if(StringUtils.isNotBlank(authTokenPattern)) {
+    		log.info("initializing autho token paten to: {}", authTokenPattern);
     		uuidPattern = Pattern.compile(authTokenPattern);
     	}
     }
