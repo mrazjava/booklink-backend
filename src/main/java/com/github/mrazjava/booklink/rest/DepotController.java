@@ -53,7 +53,7 @@ public class DepotController {
     )
     @GetMapping("/author/{id}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @RolesAllowed("ROLE_DETECTIVE")
+    @PermitAll
     public ResponseEntity<DepotAuthor> findAuthorById(
     		@ApiIgnore Authentication auth, 
     		@PathVariable String id,
