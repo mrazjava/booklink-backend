@@ -1,14 +1,18 @@
 package com.github.mrazjava.booklink.service;
 
-import com.github.mrazjava.booklink.persistence.model.RoleEntity;
-import com.github.mrazjava.booklink.persistence.model.UserEntity;
-import com.github.mrazjava.booklink.persistence.model.UserOrigin;
-import com.github.mrazjava.booklink.persistence.model.UserOriginEntity;
-import com.github.mrazjava.booklink.persistence.repository.UserRepository;
-import com.github.mrazjava.booklink.rest.model.LoginRequest;
-import com.github.mrazjava.booklink.security.InvalidAccessTokenException;
+import java.time.OffsetDateTime;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.regex.Pattern;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,13 +21,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
-import java.time.OffsetDateTime;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.regex.Pattern;
+import com.github.mrazjava.booklink.persistence.model.RoleEntity;
+import com.github.mrazjava.booklink.persistence.model.UserEntity;
+import com.github.mrazjava.booklink.persistence.model.UserOrigin;
+import com.github.mrazjava.booklink.persistence.model.UserOriginEntity;
+import com.github.mrazjava.booklink.persistence.repository.UserRepository;
+import com.github.mrazjava.booklink.rest.model.LoginRequest;
+import com.github.mrazjava.booklink.security.InvalidAccessTokenException;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * @author AZ
@@ -40,9 +46,19 @@ public class UserService implements UserDetailsService {
     @Inject
     private PasswordEncoder passwordEncoder;
 
-    private final Pattern uuidPattern = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$");
+    private Pattern uuidPattern;
 
+    @Value("${booklink.auth-token-pattern:#{null}}")
+    private String authTokenPattern;
 
+    @PostConstruct
+    void init() {
+    	if(StringUtils.isNotBlank(authTokenPattern)) {
+    		log.info("initializing autho token paten to: {}", authTokenPattern);
+    		uuidPattern = Pattern.compile(authTokenPattern);
+    	}
+    }
+    
     public Optional<UserEntity> findUserByEmail(String email) {
 
         return userRepository.findByEmail(email);
@@ -50,7 +66,7 @@ public class UserService implements UserDetailsService {
 
     public Optional<UserEntity> fetchUserByAccessToken(String accessToken) {
 
-        if(StringUtils.isEmpty(accessToken) || !uuidPattern.matcher(accessToken).matches()) {
+        if(StringUtils.isEmpty(accessToken) || ofNullable(uuidPattern).map(p -> p.matcher(accessToken).matches()).orElse(false)) {
             return Optional.empty();
         }
 
