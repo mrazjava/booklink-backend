@@ -82,7 +82,7 @@ public class DepotController {
     }
 
     @ApiOperation(
-            value = "Find author by id"
+            value = "Free style author search by keyword(s) (bio, title, name, etc)"
     )
     @GetMapping("/author/search")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -97,7 +97,7 @@ public class DepotController {
     )
     @GetMapping("/counts")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @RolesAllowed("ROLE_ADMIN")
+    @PermitAll
     public ResponseEntity<DepotStats> counts() {
         return ResponseEntity.ok(depotService.getCounts());
     }
@@ -105,14 +105,7 @@ public class DepotController {
     @ApiOperation(value = "Fetch AUTHORS, paginated")
     @GetMapping(path = "paged/authors")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses(
-            {
-                    @ApiResponse(
-                            message = "ok",
-                            code = 200
-                    )
-            }
-    )
+    @PermitAll
     public ResponseEntity<List<DepotAuthor>> pagedAuthors(
     		@ApiParam(value = "page number starting with 1", required = true) @RequestParam("pageNo") Integer pageNo, 
     		@ApiParam(value = "number of rows per page") @RequestParam(value = "pageSize", required = false) Integer pageSize, 
@@ -129,7 +122,7 @@ public class DepotController {
     )
     @GetMapping("/work/{id}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @RolesAllowed("ROLE_DETECTIVE")
+    @PermitAll
     public ResponseEntity<DepotWork> findWorkById(
     		@ApiIgnore Authentication auth, 
     		@PathVariable String id,
@@ -171,14 +164,7 @@ public class DepotController {
     @ApiOperation(value = "Fetch WORKS, paginated")
     @GetMapping(path = "paged/works")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses(
-            {
-                    @ApiResponse(
-                            message = "ok",
-                            code = 200
-                    )
-            }
-    )
+    @PermitAll
     public ResponseEntity<List<DepotWork>> pagedWorks(
     		@ApiParam(value = "page number starting with 1", required = true) @RequestParam("pageNo") Integer pageNo, 
     		@ApiParam(value = "number of rows per page") @RequestParam(value = "pageSize", required = false) Integer pageSize, 
@@ -195,7 +181,7 @@ public class DepotController {
     )
     @GetMapping("/edition/{id}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @RolesAllowed("ROLE_DETECTIVE")
+    @PermitAll
     public ResponseEntity<DepotEdition> findEditionById(
     		@ApiIgnore Authentication auth, 
     		@PathVariable String id,
@@ -215,14 +201,7 @@ public class DepotController {
     @ApiOperation(value = "Fetch EDITIONS, paginated")
     @GetMapping(path = "paged/editions")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses(
-            {
-                    @ApiResponse(
-                            message = "ok",
-                            code = 200
-                    )
-            }
-    )
+    @PermitAll
     public ResponseEntity<List<DepotEdition>> pagedEditions(
     		@ApiParam(value = "page number starting with 1", required = true) @RequestParam("pageNo") Integer pageNo, 
     		@ApiParam(value = "number of rows per page") @RequestParam(value = "pageSize", required = false) Integer pageSize, 
