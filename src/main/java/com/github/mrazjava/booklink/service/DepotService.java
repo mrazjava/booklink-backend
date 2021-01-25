@@ -35,7 +35,7 @@ public class DepotService {
     }
 
     public List<DepotAuthor> searchAuthors(String text) {
-        return authorApi.searchTextUsingGET(text, false, null);
+        return authorApi.searchTextUsingGET(text, false, null, true, false, false);
     }
 
     public Optional<DepotWork> findWorkById(String id, Boolean imgS, Boolean imgM, Boolean imgL) {
@@ -52,7 +52,7 @@ public class DepotService {
     }
 
     public List<DepotWork> searchWorks(String text) {
-        return workApi.searchTextUsingGET2(text, false, null);
+        return workApi.searchTextUsingGET2(text, false, null, true, false, false);
     }
 
     public Optional<DepotEdition> findEditionById(String id, Boolean imgS, Boolean imgM, Boolean imgL) {
@@ -69,7 +69,7 @@ public class DepotService {
     }
 
     public List<DepotEdition> searchEditions(String text) {
-        return editionApi.searchTextUsingGET1(text, false, null);
+        return editionApi.searchTextUsingGET1(text, false, null, true, false, false);
     }
     
     public List<DepotAuthor> getAuthorsPaged(Integer pageNo, Integer pageSize, Boolean imgS, Boolean imgM, Boolean imgL) {

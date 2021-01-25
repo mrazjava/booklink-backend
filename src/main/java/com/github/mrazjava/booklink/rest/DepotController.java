@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Produces;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -30,8 +29,6 @@ import com.github.mrazjava.booklink.service.DepotService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -161,6 +158,17 @@ public class DepotController {
         return ResponseEntity.ok(results);
     }
 
+    @ApiOperation(
+            value = "Free style works search by keyword(s) (title, description, etc)"
+    )
+    @GetMapping("/work/search")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @SwaggerIgnoreAuthToken
+    @PermitAll
+    public ResponseEntity<List<DepotWork>> searchWorks(@ApiIgnore Authentication auth, @RequestParam String search) {
+        return ResponseEntity.ok(depotService.searchWorks(search));
+    }
+
     @ApiOperation(value = "Fetch WORKS, paginated")
     @GetMapping(path = "paged/works")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -196,6 +204,17 @@ public class DepotController {
     			BooleanUtils.toBooleanDefaultIfNull(imgL, true)
     			).orElse(null);
     	return ResponseEntity.ok(result);
+    }
+
+    @ApiOperation(
+            value = "Free style edition search by keyword(s) (title, description, etc)"
+    )
+    @GetMapping("/edition/search")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @SwaggerIgnoreAuthToken
+    @PermitAll
+    public ResponseEntity<List<DepotEdition>> searchEditions(@ApiIgnore Authentication auth, @RequestParam String search) {
+        return ResponseEntity.ok(depotService.searchEditions(search));
     }
 
     @ApiOperation(value = "Fetch EDITIONS, paginated")

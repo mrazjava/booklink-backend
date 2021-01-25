@@ -12,14 +12,8 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0"
     },
-    "version": "202012v1"
+    "version": "202101v1"
   },
-  "servers": [
-    {
-      "url": "http://localhost:8070",
-      "description": "Inferred Url"
-    }
-  ],
   "tags": [
     {
       "name": "Author",
@@ -324,6 +318,36 @@
             "style": "form",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "img-s",
+            "in": "query",
+            "description": "return small image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-m",
+            "in": "query",
+            "description": "return medium image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-l",
+            "in": "query",
+            "description": "return large image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -725,6 +749,36 @@
             "style": "form",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "img-s",
+            "in": "query",
+            "description": "return small image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-m",
+            "in": "query",
+            "description": "return medium image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-l",
+            "in": "query",
+            "description": "return large image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -1156,6 +1210,36 @@
             "style": "form",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "img-s",
+            "in": "query",
+            "description": "return small image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-m",
+            "in": "query",
+            "description": "return medium image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-l",
+            "in": "query",
+            "description": "return large image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
