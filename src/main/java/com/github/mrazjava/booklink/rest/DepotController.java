@@ -23,7 +23,7 @@ import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
 import com.github.mrazjava.booklink.rest.depot.DepotEdition;
 import com.github.mrazjava.booklink.rest.depot.DepotStats;
 import com.github.mrazjava.booklink.rest.depot.DepotWork;
-import com.github.mrazjava.booklink.rest.model.depot.FeaturedWorkResponse;
+import com.github.mrazjava.booklink.rest.model.depot.WorkResponse;
 import com.github.mrazjava.booklink.service.DepotService;
 
 import io.swagger.annotations.Api;
@@ -85,7 +85,7 @@ public class DepotController {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @SwaggerIgnoreAuthToken
     @PermitAll
-    public ResponseEntity<List<DepotAuthor>> searchAuthors(@ApiIgnore Authentication auth, @RequestParam String search) {
+    public ResponseEntity<List<DepotAuthor>> searchAuthors(@ApiIgnore Authentication auth, @RequestParam(name = "term") String search) {
         return ResponseEntity.ok(depotService.searchAuthors(search));
     }
 
@@ -143,16 +143,16 @@ public class DepotController {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @SwaggerIgnoreAuthToken
     @PermitAll
-    public ResponseEntity<List<FeaturedWorkResponse>> featuredWorks(@ApiParam(value = "desired number of works", defaultValue = "1") @RequestParam(required = false, defaultValue = "1") Integer count) {
+    public ResponseEntity<List<WorkResponse>> featuredWorks(@ApiParam(value = "desired number of works", defaultValue = "1") @RequestParam(required = false, defaultValue = "1") Integer count) {
 
-    	List<FeaturedWorkResponse> results = depotService.randomWorkWithImage(Optional.ofNullable(count).orElse(1)).stream()
+    	List<WorkResponse> results = depotService.randomWorkWithImage(Optional.ofNullable(count).orElse(1)).stream()
     		.map(work -> {
     			DepotAuthor author = work.getAuthors().stream()
     					.map(id -> depotService.findAuthorById(id, false, false, false).orElse(null))
     					.filter(au -> Optional.ofNullable(au).map(a -> StringUtils.isNotBlank(a.getId())).orElse(false))
     					.findFirst()
     					.orElse(null);
-    			return new FeaturedWorkResponse(work, author);    			
+    			return new WorkResponse(work, author);    			
     		})
     		.collect(Collectors.toList());
         return ResponseEntity.ok(results);
@@ -165,7 +165,7 @@ public class DepotController {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @SwaggerIgnoreAuthToken
     @PermitAll
-    public ResponseEntity<List<DepotWork>> searchWorks(@ApiIgnore Authentication auth, @RequestParam String search) {
+    public ResponseEntity<List<DepotWork>> searchWorks(@ApiIgnore Authentication auth, @RequestParam(name = "term") String search) {
         return ResponseEntity.ok(depotService.searchWorks(search));
     }
 
@@ -213,7 +213,7 @@ public class DepotController {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @SwaggerIgnoreAuthToken
     @PermitAll
-    public ResponseEntity<List<DepotEdition>> searchEditions(@ApiIgnore Authentication auth, @RequestParam String search) {
+    public ResponseEntity<List<DepotEdition>> searchEditions(@ApiIgnore Authentication auth, @RequestParam(name = "term") String search) {
         return ResponseEntity.ok(depotService.searchEditions(search));
     }
 

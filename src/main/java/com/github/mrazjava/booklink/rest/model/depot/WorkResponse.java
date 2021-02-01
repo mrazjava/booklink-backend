@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel
-public class FeaturedWorkResponse {
+public class WorkResponse {
 
 	@JsonProperty
 	@ApiModelProperty
@@ -19,7 +19,7 @@ public class FeaturedWorkResponse {
 	private DepotAuthor author;
 
 
-	public FeaturedWorkResponse(DepotWork work, DepotAuthor author) {
+	public WorkResponse(DepotWork work, DepotAuthor author) {
 		this.work = work;
 		this.author = author;
 	}
