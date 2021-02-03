@@ -14,12 +14,6 @@
     },
     "version": "202101v1"
   },
-  "servers": [
-    {
-      "url": "http://localhost:8070",
-      "description": "Inferred Url"
-    }
-  ],
   "tags": [
     {
       "name": "Author",
