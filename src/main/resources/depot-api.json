@@ -14,6 +14,12 @@
     },
     "version": "202101v1"
   },
+  "servers": [
+    {
+      "url": "http://localhost:8070",
+      "description": "Inferred Url"
+    }
+  ],
   "tags": [
     {
       "name": "Author",
@@ -33,6 +39,81 @@
     }
   ],
   "paths": {
+    "/rest/v1/depot/author/find-all": {
+      "get": {
+        "tags": [
+          "Author"
+        ],
+        "summary": "Find records matching a group of IDs, optionally exluding image(s)",
+        "operationId": "findAllByIdUsingGET",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "comma separated list of IDs",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "img-s",
+            "in": "query",
+            "description": "return small image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-m",
+            "in": "query",
+            "description": "return medium image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-l",
+            "in": "query",
+            "description": "return large image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DepotAuthor"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/rest/v1/depot/author/flex/{id}": {
       "get": {
         "tags": [
@@ -52,9 +133,9 @@
             }
           },
           {
-            "name": "imgS",
+            "name": "img-s",
             "in": "query",
-            "description": "fetch small img?",
+            "description": "return small image? (default: false)",
             "required": false,
             "style": "form",
             "schema": {
@@ -62,9 +143,9 @@
             }
           },
           {
-            "name": "imgM",
+            "name": "img-m",
             "in": "query",
-            "description": "fetch medium img?",
+            "description": "return medium image? (default: false)",
             "required": false,
             "style": "form",
             "schema": {
@@ -72,9 +153,9 @@
             }
           },
           {
-            "name": "imgL",
+            "name": "img-l",
             "in": "query",
-            "description": "fetch large img?",
+            "description": "return large image? (default: false)",
             "required": false,
             "style": "form",
             "schema": {
@@ -212,7 +293,7 @@
             }
           },
           {
-            "name": "imgS",
+            "name": "img-s",
             "in": "query",
             "description": "with SMALL image? (requires operator)",
             "required": false,
@@ -222,7 +303,7 @@
             }
           },
           {
-            "name": "imgM",
+            "name": "img-m",
             "in": "query",
             "description": "with MEDIUM image? (requires operator)",
             "required": false,
@@ -232,7 +313,7 @@
             }
           },
           {
-            "name": "imgL",
+            "name": "img-l",
             "in": "query",
             "description": "with LARGE image? (requires operator)",
             "required": false,
@@ -464,6 +545,81 @@
         }
       }
     },
+    "/rest/v1/depot/edition/find-all": {
+      "get": {
+        "tags": [
+          "Edition"
+        ],
+        "summary": "Find records matching a group of IDs, optionally exluding image(s)",
+        "operationId": "findAllByIdUsingGET_1",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "comma separated list of IDs",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "img-s",
+            "in": "query",
+            "description": "return small image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-m",
+            "in": "query",
+            "description": "return medium image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-l",
+            "in": "query",
+            "description": "return large image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DepotEdition"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/rest/v1/depot/edition/flex/{id}": {
       "get": {
         "tags": [
@@ -483,9 +639,9 @@
             }
           },
           {
-            "name": "imgS",
+            "name": "img-s",
             "in": "query",
-            "description": "fetch small img?",
+            "description": "return small image? (default: false)",
             "required": false,
             "style": "form",
             "schema": {
@@ -493,9 +649,9 @@
             }
           },
           {
-            "name": "imgM",
+            "name": "img-m",
             "in": "query",
-            "description": "fetch medium img?",
+            "description": "return medium image? (default: false)",
             "required": false,
             "style": "form",
             "schema": {
@@ -503,9 +659,9 @@
             }
           },
           {
-            "name": "imgL",
+            "name": "img-l",
             "in": "query",
-            "description": "fetch large img?",
+            "description": "return large image? (default: false)",
             "required": false,
             "style": "form",
             "schema": {
@@ -643,7 +799,7 @@
             }
           },
           {
-            "name": "imgS",
+            "name": "img-s",
             "in": "query",
             "description": "with SMALL image? (requires operator)",
             "required": false,
@@ -653,7 +809,7 @@
             }
           },
           {
-            "name": "imgM",
+            "name": "img-m",
             "in": "query",
             "description": "with MEDIUM image? (requires operator)",
             "required": false,
@@ -663,7 +819,7 @@
             }
           },
           {
-            "name": "imgL",
+            "name": "img-l",
             "in": "query",
             "description": "with LARGE image? (requires operator)",
             "required": false,
@@ -925,6 +1081,81 @@
         }
       }
     },
+    "/rest/v1/depot/work/find-all": {
+      "get": {
+        "tags": [
+          "Work"
+        ],
+        "summary": "Find records matching a group of IDs, optionally exluding image(s)",
+        "operationId": "findAllByIdUsingGET_2",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "comma separated list of IDs",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "img-s",
+            "in": "query",
+            "description": "return small image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-m",
+            "in": "query",
+            "description": "return medium image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "img-l",
+            "in": "query",
+            "description": "return large image? (default: false)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DepotWork"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/rest/v1/depot/work/flex/{id}": {
       "get": {
         "tags": [
@@ -944,9 +1175,9 @@
             }
           },
           {
-            "name": "imgS",
+            "name": "img-s",
             "in": "query",
-            "description": "fetch small img?",
+            "description": "return small image? (default: false)",
             "required": false,
             "style": "form",
             "schema": {
@@ -954,9 +1185,9 @@
             }
           },
           {
-            "name": "imgM",
+            "name": "img-m",
             "in": "query",
-            "description": "fetch medium img?",
+            "description": "return medium image? (default: false)",
             "required": false,
             "style": "form",
             "schema": {
@@ -964,9 +1195,9 @@
             }
           },
           {
-            "name": "imgL",
+            "name": "img-l",
             "in": "query",
-            "description": "fetch large img?",
+            "description": "return large image? (default: false)",
             "required": false,
             "style": "form",
             "schema": {
@@ -1104,7 +1335,7 @@
             }
           },
           {
-            "name": "imgS",
+            "name": "img-s",
             "in": "query",
             "description": "with SMALL image? (requires operator)",
             "required": false,
@@ -1114,7 +1345,7 @@
             }
           },
           {
-            "name": "imgM",
+            "name": "img-m",
             "in": "query",
             "description": "with MEDIUM image? (requires operator)",
             "required": false,
@@ -1124,7 +1355,7 @@
             }
           },
           {
-            "name": "imgL",
+            "name": "img-l",
             "in": "query",
             "description": "with LARGE image? (requires operator)",
             "required": false,

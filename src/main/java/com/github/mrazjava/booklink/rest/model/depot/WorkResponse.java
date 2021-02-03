@@ -1,5 +1,7 @@
 package com.github.mrazjava.booklink.rest.model.depot;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
 import com.github.mrazjava.booklink.rest.depot.DepotWork;
@@ -16,11 +18,11 @@ public class WorkResponse {
 
 	@JsonProperty
 	@ApiModelProperty
-	private DepotAuthor author;
+	private List<DepotAuthor> authors;
 
 
-	public WorkResponse(DepotWork work, DepotAuthor author) {
+	public WorkResponse(DepotWork work, List<DepotAuthor> authors) {
 		this.work = work;
-		this.author = author;
+		this.authors = authors;
 	}
 }

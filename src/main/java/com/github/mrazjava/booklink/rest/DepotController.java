@@ -152,7 +152,7 @@ public class DepotController {
     					.filter(au -> Optional.ofNullable(au).map(a -> StringUtils.isNotBlank(a.getId())).orElse(false))
     					.findFirst()
     					.orElse(null);
-    			return new WorkResponse(work, author);    			
+    			return new WorkResponse(work, List.of(author));    			
     		})
     		.collect(Collectors.toList());
         return ResponseEntity.ok(results);
@@ -165,7 +165,7 @@ public class DepotController {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @SwaggerIgnoreAuthToken
     @PermitAll
-    public ResponseEntity<List<DepotWork>> searchWorks(@ApiIgnore Authentication auth, @RequestParam(name = "term") String search) {
+    public ResponseEntity<List<WorkResponse>> searchWorks(@ApiIgnore Authentication auth, @RequestParam(name = "term") String search) {
         return ResponseEntity.ok(depotService.searchWorks(search));
     }
 
