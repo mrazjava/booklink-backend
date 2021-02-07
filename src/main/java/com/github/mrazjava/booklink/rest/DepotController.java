@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Produces;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -24,14 +23,12 @@ import com.github.mrazjava.booklink.rest.depot.DepotAuthor;
 import com.github.mrazjava.booklink.rest.depot.DepotEdition;
 import com.github.mrazjava.booklink.rest.depot.DepotStats;
 import com.github.mrazjava.booklink.rest.depot.DepotWork;
-import com.github.mrazjava.booklink.rest.model.depot.FeaturedWorkResponse;
+import com.github.mrazjava.booklink.rest.model.depot.WorkResponse;
 import com.github.mrazjava.booklink.service.DepotService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -82,13 +79,13 @@ public class DepotController {
     }
 
     @ApiOperation(
-            value = "Find author by id"
+            value = "Free style author search by keyword(s) (bio, title, name, etc)"
     )
     @GetMapping("/author/search")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @SwaggerIgnoreAuthToken
     @PermitAll
-    public ResponseEntity<List<DepotAuthor>> searchAuthors(@ApiIgnore Authentication auth, @RequestParam String search) {
+    public ResponseEntity<List<DepotAuthor>> searchAuthors(@ApiIgnore Authentication auth, @RequestParam(name = "term") String search) {
         return ResponseEntity.ok(depotService.searchAuthors(search));
     }
 
@@ -97,7 +94,7 @@ public class DepotController {
     )
     @GetMapping("/counts")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @RolesAllowed("ROLE_ADMIN")
+    @PermitAll
     public ResponseEntity<DepotStats> counts() {
         return ResponseEntity.ok(depotService.getCounts());
     }
@@ -105,14 +102,7 @@ public class DepotController {
     @ApiOperation(value = "Fetch AUTHORS, paginated")
     @GetMapping(path = "paged/authors")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses(
-            {
-                    @ApiResponse(
-                            message = "ok",
-                            code = 200
-                    )
-            }
-    )
+    @PermitAll
     public ResponseEntity<List<DepotAuthor>> pagedAuthors(
     		@ApiParam(value = "page number starting with 1", required = true) @RequestParam("pageNo") Integer pageNo, 
     		@ApiParam(value = "number of rows per page") @RequestParam(value = "pageSize", required = false) Integer pageSize, 
@@ -129,7 +119,7 @@ public class DepotController {
     )
     @GetMapping("/work/{id}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @RolesAllowed("ROLE_DETECTIVE")
+    @PermitAll
     public ResponseEntity<DepotWork> findWorkById(
     		@ApiIgnore Authentication auth, 
     		@PathVariable String id,
@@ -153,32 +143,36 @@ public class DepotController {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @SwaggerIgnoreAuthToken
     @PermitAll
-    public ResponseEntity<List<FeaturedWorkResponse>> featuredWorks(@ApiParam(value = "desired number of works", defaultValue = "1") @RequestParam(required = false, defaultValue = "1") Integer count) {
+    public ResponseEntity<List<WorkResponse>> featuredWorks(@ApiParam(value = "desired number of works", defaultValue = "1") @RequestParam(required = false, defaultValue = "1") Integer count) {
 
-    	List<FeaturedWorkResponse> results = depotService.randomWorkWithImage(Optional.ofNullable(count).orElse(1)).stream()
+    	List<WorkResponse> results = depotService.randomWorkWithImage(Optional.ofNullable(count).orElse(1)).stream()
     		.map(work -> {
     			DepotAuthor author = work.getAuthors().stream()
     					.map(id -> depotService.findAuthorById(id, false, false, false).orElse(null))
     					.filter(au -> Optional.ofNullable(au).map(a -> StringUtils.isNotBlank(a.getId())).orElse(false))
     					.findFirst()
     					.orElse(null);
-    			return new FeaturedWorkResponse(work, author);    			
+    			return new WorkResponse(work, List.of(author));    			
     		})
     		.collect(Collectors.toList());
         return ResponseEntity.ok(results);
     }
 
+    @ApiOperation(
+            value = "Free style works search by keyword(s) (title, description, etc)"
+    )
+    @GetMapping("/work/search")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @SwaggerIgnoreAuthToken
+    @PermitAll
+    public ResponseEntity<List<WorkResponse>> searchWorks(@ApiIgnore Authentication auth, @RequestParam(name = "term") String search) {
+        return ResponseEntity.ok(depotService.searchWorks(search));
+    }
+
     @ApiOperation(value = "Fetch WORKS, paginated")
     @GetMapping(path = "paged/works")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses(
-            {
-                    @ApiResponse(
-                            message = "ok",
-                            code = 200
-                    )
-            }
-    )
+    @PermitAll
     public ResponseEntity<List<DepotWork>> pagedWorks(
     		@ApiParam(value = "page number starting with 1", required = true) @RequestParam("pageNo") Integer pageNo, 
     		@ApiParam(value = "number of rows per page") @RequestParam(value = "pageSize", required = false) Integer pageSize, 
@@ -195,7 +189,7 @@ public class DepotController {
     )
     @GetMapping("/edition/{id}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @RolesAllowed("ROLE_DETECTIVE")
+    @PermitAll
     public ResponseEntity<DepotEdition> findEditionById(
     		@ApiIgnore Authentication auth, 
     		@PathVariable String id,
@@ -212,17 +206,21 @@ public class DepotController {
     	return ResponseEntity.ok(result);
     }
 
+    @ApiOperation(
+            value = "Free style edition search by keyword(s) (title, description, etc)"
+    )
+    @GetMapping("/edition/search")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    @SwaggerIgnoreAuthToken
+    @PermitAll
+    public ResponseEntity<List<DepotEdition>> searchEditions(@ApiIgnore Authentication auth, @RequestParam(name = "term") String search) {
+        return ResponseEntity.ok(depotService.searchEditions(search));
+    }
+
     @ApiOperation(value = "Fetch EDITIONS, paginated")
     @GetMapping(path = "paged/editions")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @ApiResponses(
-            {
-                    @ApiResponse(
-                            message = "ok",
-                            code = 200
-                    )
-            }
-    )
+    @PermitAll
     public ResponseEntity<List<DepotEdition>> pagedEditions(
     		@ApiParam(value = "page number starting with 1", required = true) @RequestParam("pageNo") Integer pageNo, 
     		@ApiParam(value = "number of rows per page") @RequestParam(value = "pageSize", required = false) Integer pageSize, 
