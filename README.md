@@ -5,7 +5,7 @@
 Backend business logic of a booklink service. Exposes operations via REST. Used by frontends.
 
 ## It's Alive
-UPDATE (Feb 12, 2021): We no longer push to AWS due to prohibitive costs. We are looking into full kubernetes on the cloud with [digital ocean](https://www.digitalocean.com). This not will be updated as we migrate. In the meantime, 
+UPDATE (Feb 2021): We no longer push to AWS due to prohibitive costs. We are looking into full kubernetes on the cloud with [digital ocean](https://www.digitalocean.com). This not will be updated as we migrate. In the meantime, 
 to try out the latest release please use [sandbox](https://github.com/mrazjava/booklink/tree/master/sandbox).
 
 Booklink is deployed in AWS, and branded as booklinktrove.com. Because we are self funded for the time being, we spin production 
