@@ -23,7 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
-        <springfox.version>2.9.2</springfox.version>
+        <springfox.version>2.10.0</springfox.version>
         <swagger.codegen.version>3.0.20</swagger.codegen.version><!-- 3.0.21/22 have a bug which prevents proper function of spring logging -->
         <skip.surefire.tests>false</skip.surefire.tests>
     </properties>
